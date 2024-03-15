@@ -1,7 +1,7 @@
    <div class="row">
 
        <?php
-
+       
         if (count($classes)  > 0) {
             foreach ($classes as $cl => $row) {
                 $obj = (object) $row;

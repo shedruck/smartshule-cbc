@@ -27,7 +27,7 @@
                              </div>
 
 
-                             <div class="col-lg-4 col-md-6 col-sm-12 my_page">
+                             <div class="col-lg-4 col-md-6 col-sm-12 my_page" ids="summativebtn" onclick="loadPage(2)">
                                  <div class="card rounded-3 tx-fixed-white bg-primary">
                                      <div class="card-body">
                                          <div class="d-flex">
@@ -87,25 +87,34 @@
 
 
                  <!-- ROW-2 CLOSED -->
-                 
+
                  <script>
                      var BASE_URL = "<?php echo base_url() ?>";
+
                      $(document).ready(function() {
                          $("#formativebtn").click(function() {
+                             redirectToPage(1);
+                         });
 
-                             $(".my_page").hide();
-                             $("#myloader").addClass("loader");
-                             $("#myload").show();
-
-                             setTimeout(function() {
-                                 if (page == 1) {
-                                     window.location.href = BASE_URL + 'cbc/trs/begin_form';
-                                 }
-                             }, 1000);
-
-
+                         $("#summativebtn").click(function() {
+                             redirectToPage(2);
                          });
                      });
+
+                     function redirectToPage(page) {
+                         $(".my_page").hide();
+                         $("#myloader").addClass("loader");
+                         $("#myload").show();
+
+                         setTimeout(function() {
+                             if (page == 1) {
+                                 window.location.href = BASE_URL + 'cbc/trs/begin_form';
+                             } else if (page == 2) {
+                                 window.location.href = BASE_URL + 'cbc/trs/begin_summative_form';
+                             }
+                         }, 1000);
+                     }
+
 
                      function loadPage(page) {
                          $(".my_page").hide();
@@ -115,6 +124,8 @@
                          setTimeout(function() {
                              if (page == 1) {
                                  window.location.href = BASE_URL + 'cbc/trs/begin_form';
+                             } else if (page == 2) {
+                                 window.location.href = BASE_URL + 'cbc/trs/begin_summative_form';
                              }
                          }, 1000);
                      }

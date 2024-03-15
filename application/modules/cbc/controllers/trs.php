@@ -280,6 +280,14 @@ class Trs extends Trs_Controller
                 }
             }
 
+            function begin_summative_form(){
+                $data['classes'] = $this->cbc_tr->my_classes();
+                $classes = $this->cbc_tr->my_classes();
+                print_r($classes);
+                die;
+                $this->template->title('Summative Assessment')->build('teachers/formative_form', $data);  
+            }
+
            
 
  
