@@ -1,0 +1,93 @@
+a:12:{s:15:"controller_name";s:9:"book_list";s:10:"model_name";s:11:"book_list_m";s:13:"scaffold_code";s:2021:"  "thumbnail" :
+    {
+      "type"                 : "image",
+      "required"           : "FALSE",
+      "multilanguage"   : "FALSE",
+      "upload"  :
+      {
+        "allowed_types"  : "gif|jpg|png",
+        "encrypt_name"  : "TRUE",
+        "max_width"       : "2000",
+        "max_height"      : "1500",
+        "max_size"          : "2048"
+      },
+      "thumbnail" :
+      {
+       "maintain_ratio"   :  "FALSE",
+       "master_dim"       : "width",
+       "width"                : "100",
+       "height"               : "100"
+      }
+    },
+  "class" :
+    {
+      "type":"select",
+      "size":"1",
+      "required" :"TRUE",
+      "option_choose_one" :"TRUE",
+      "with_translations":"FALSE",
+      "options" :
+      {
+        "0" :
+        {
+          "text" : "class8",
+          "selected": "TRUE",
+          "value" : "class8"
+        },
+        "1" :
+        {
+          "text" : "class7",
+          "selected": "FALSE",
+          "value" : "class7"
+        }
+      }
+    },
+  "subject" :
+    {
+      "type":"select",
+      "size":"1",
+      "required" :"TRUE",
+      "option_choose_one" :"TRUE",
+      "with_translations":"FALSE",
+      "options" :
+      {
+        "0" :
+        {
+          "text" : "Spanish",
+          "selected": "TRUE",
+          "value" : "spanish"
+        },
+        "1" :
+        {
+          "text" : "English",
+          "selected": "FALSE",
+          "value" : "english"
+        }
+      }
+    },
+"book_name" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"publisher" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},"price" :
+{
+  "type" :  "number",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+}";s:18:"scaffold_delete_bd";s:1:"1";s:11:"scaffold_bd";s:1:"1";s:15:"scaffold_routes";s:1:"1";s:13:"scaffold_menu";s:1:"1";s:17:"create_controller";s:1:"1";s:12:"create_model";s:1:"1";s:18:"create_view_create";s:1:"1";s:16:"create_view_list";s:1:"1";s:19:"scaffold_model_type";s:12:"activerecord";}

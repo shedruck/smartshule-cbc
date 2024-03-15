@@ -1,0 +1,20 @@
+CREATE TABLE fee_structure (
+id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+fee_structure_date  INT(11), 
+school_class  varchar(32)  DEFAULT '' NOT NULL, 
+tution_fee  varchar(256)  DEFAULT '' NOT NULL, 
+examination_fee  varchar(256)  DEFAULT '' NOT NULL, 
+medical_subscription  varchar(256)  DEFAULT '' NOT NULL, 
+activity_fee  varchar(256)  DEFAULT '' NOT NULL, 
+registration  varchar(256)  DEFAULT '' NOT NULL, 
+computer_fee  varchar(256)  DEFAULT '' NOT NULL, 
+internet_fee  varchar(256)  DEFAULT '' NOT NULL, 
+academic_trips  varchar(256)  DEFAULT '' NOT NULL, 
+library  varchar(256)  DEFAULT '' NOT NULL, 
+student_union  varchar(256)  DEFAULT '' NOT NULL, 
+description  text  DEFAULT '' NOT NULL, 
+created_by INT(11), 
+modified_by INT(11), 
+created_on INT(11) , 
+modified_on INT(11) 
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

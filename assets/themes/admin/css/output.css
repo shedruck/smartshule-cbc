@@ -1,0 +1,127 @@
+/* 
+    Created on : Jun 12, 2016, 7:14:08 AM
+    Author     : ben
+*/
+.col-sm-3 {
+     width: 25%;
+} 
+.col-sm-6 {
+     width: 50%;
+}
+@media (min-width: 768px)
+{
+     .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11 {
+          float: left;
+     }
+     .col-sm-3 {
+          width: 25%;
+     }
+     .col-sm-6 {
+          width: 50%;
+     }
+}
+@media (min-width: 768px)
+{
+     .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11 {
+          float: left;
+     }
+}
+@media print
+{
+     .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11 {
+          float: left;
+     }
+}
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 { position: relative; min-height: 1px; padding-left: 15px; padding-right: 15px; }
+table { max-width: 100%; background-color: transparent; }
+th { text-align: left; font-weight: 400; color: rgb(48, 54, 65); }
+.invoice .table { width: 100%; margin-bottom: 17px; }
+.invoice .table > thead > tr > th, .invoice .table > tbody > tr > th, .invoice .table > tfoot > tr > th, .invoice .table > thead > tr > td, .invoice .table > tbody > tr > td, .invoice .table > tfoot > tr > td { padding: 8px; line-height: 1.42857; vertical-align: top; border-top-width: 1px; border-top-style: solid; border-top-color: rgb(235, 235, 235); }
+.invoice .table > thead > tr > th .progress, .invoice .table > tbody > tr > th .progress, .invoice .table > tfoot > tr > th .progress, .invoice .table > thead > tr > td .progress, .invoice .table > tbody > tr > td .progress, .invoice .table > tfoot > tr > td .progress { margin-bottom: 0px; }
+.invoice .table > thead > tr > th .label, .invoice .table > tbody > tr > th .label, .invoice .table > tfoot > tr > th .label, .invoice .table > thead > tr > td .label, .invoice .table > tbody > tr > td .label, .invoice .table > tfoot > tr > td .label { margin-left: 5px; margin-right: 5px; padding-left: 10px; padding-right: 10px; }
+.invoice .table > thead > tr > th { vertical-align: bottom; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: rgb(235, 235, 235); }
+.invoice .table > caption + thead > tr:first-child > th, .invoice .table > colgroup + thead > tr:first-child > th, .invoice .table > thead:first-child > tr:first-child > th, .invoice .table > caption + thead > tr:first-child > td, .invoice .table > colgroup + thead > tr:first-child > td, .invoice .table > thead:first-child > tr:first-child > td { border-top-width: 0px; }
+.invoice .table > tbody + tbody { border-top-width: 2px; border-top-style: solid; border-top-color: rgb(235, 235, 235); }
+.invoice .table .invoice .table { background-color: rgb(255, 255, 255); }
+.invoice .table-bordered { border: 1px solid rgb(235, 235, 235); }
+.invoice .table-bordered > thead > tr > th, .invoice .table-bordered > tbody > tr > th, .invoice .table-bordered > tfoot > tr > th, .invoice .table-bordered > thead > tr > td, .invoice .table-bordered > tbody > tr > td, .invoice .table-bordered > tfoot > tr > td { border: 1px solid rgb(235, 235, 235); }
+.invoice .table-bordered > thead > tr > th, .invoice .table-bordered > thead > tr > td { border-bottom-width: 1px;background-color: rgb(245, 245, 246); }
+.invoice .table-bordered > tfoot > tr > th, .invoice .table-bordered > tfoot > tr > td { border-top-width: 1px; color: rgb(166, 167, 170); background-color: rgb(245, 245, 246); }
+table col[class*="col-"] { float: none; display: table-column; }
+table td[class*="col-"], table th[class*="col-"] { float: none; display: table-cell; }
+.invoice .table > thead > tr > td.active, .invoice .table > tbody > tr > td.active, .invoice .table > tfoot > tr > td.active, .invoice .table > thead > tr > th.active, .invoice .table > tbody > tr > th.active, .invoice .table > tfoot > tr > th.active, .invoice .table > thead > tr.active > td, .invoice .table > tbody > tr.active > td, .invoice .table > tfoot > tr.active > td, .invoice .table > thead > tr.active > th, .invoice .table > tbody > tr.active > th, .invoice .table > tfoot > tr.active > th { background-color: rgb(242, 242, 244); }
+.invoice .table > thead > tr > td.active, .invoice .table > tbody > tr > td.active, .invoice .table > tfoot > tr > td.active, .invoice .table > thead > tr > th.active, .invoice .table > tbody > tr > th.active, .invoice .table > tfoot > tr > th.active, .invoice .table > thead > tr.active > td, .invoice .table > tbody > tr.active > td, .invoice .table > tfoot > tr.active > td, .invoice .table > thead > tr.active > th, .invoice .table > tbody > tr.active > th, .invoice .table > tfoot > tr.active > th { background-color: rgb(242, 242, 244); }
+.invoice .table-hover > tbody > tr > td.active:hover, .invoice .table-hover > tbody > tr > th.active:hover, .invoice .table-hover > tbody > tr.active:hover > td, .invoice .table-hover > tbody > tr.active:hover > th { background-color: rgb(229, 229, 232); }
+.invoice .table > thead > tr > td.success, .invoice .table > tbody > tr > td.success, .invoice .table > tfoot > tr > td.success, .invoice .table > thead > tr > th.success, .invoice .table > tbody > tr > th.success, .invoice .table > tfoot > tr > th.success, .invoice .table > thead > tr.success > td, .invoice .table > tbody > tr.success > td, .invoice .table > tfoot > tr.success > td, .invoice .table > thead > tr.success > th, .invoice .table > tbody > tr.success > th, .invoice .table > tfoot > tr.success > th { background-color: rgb(189, 237, 188); }
+.invoice .table > thead > tr > td.info, .invoice .table > tbody > tr > td.info, .invoice .table > tfoot > tr > td.info, .invoice .table > thead > tr > th.info, .invoice .table > tbody > tr > th.info, .invoice .table > tfoot > tr > th.info, .invoice .table > thead > tr.info > td, .invoice .table > tbody > tr.info > td, .invoice .table > tfoot > tr.info > td, .invoice .table > thead > tr.info > th, .invoice .table > tbody > tr.info > th, .invoice .table > tfoot > tr.info > th { background-color: rgb(197, 232, 247); }
+.invoice .table > thead > tr > td.warning, .invoice .table > tbody > tr > td.warning, .invoice .table > tfoot > tr > td.warning, .invoice .table > thead > tr > th.warning, .invoice .table > tbody > tr > th.warning, .invoice .table > tfoot > tr > th.warning, .invoice .table > thead > tr.warning > td, .invoice .table > tbody > tr.warning > td, .invoice .table > tfoot > tr.warning > td, .invoice .table > thead > tr.warning > th, .invoice .table > tbody > tr.warning > th, .invoice .table > tfoot > tr.warning > th { background-color: rgb(255, 239, 164); }
+.invoice .table > thead > tr > td.danger, .invoice .table > tbody > tr > td.danger, .invoice .table > tfoot > tr > td.danger, .invoice .table > thead > tr > th.danger, .invoice .table > tbody > tr > th.danger, .invoice .table > tfoot > tr > th.danger, .invoice .table > thead > tr.danger > td, .invoice .table > tbody > tr.danger > td, .invoice .table > tfoot > tr.danger > td, .invoice .table > thead > tr.danger > th, .invoice .table > tbody > tr.danger > th, .invoice .table > tfoot > tr.danger > th { background-color: rgb(255, 201, 201); }
+.invoice .table > thead > tr > .middle-align, .invoice .table > tbody > tr > .middle-align, .invoice .table > tfoot > tr > .middle-align { vertical-align: middle; }
+
+hr { margin-top: 17px; margin-bottom: 17px; border-width: 1px 0px 0px; border-top-style: solid; border-top-color: rgb(238, 238, 238); }
+.invoice { margin: 0px;}
+.invoice .invoice-left strong, .invoice .invoice-right strong { color: rgb(48, 54, 65); }
+.invoice .invoice-left > h3, .invoice .invoice-right > h3 { margin-top: 0px; color: #f00;}
+.invoice .invoice-right { text-align: right; }
+.invoice .margin { margin: 6px 0px; }
+@media print {
+     .hidden-print {
+          display: none !important;
+     }
+     .smf .content {
+          margin-left: 0px;   padding: 0px;
+     }
+     .content {
+          margin-left: 0px !important;
+          padding: 0px !important; 
+     }
+     .block-fluid {
+          margin-left: -15px;
+          margin-right: -15px; 
+     }
+     .row {
+          /*margin-left: -15px;
+          margin-right: -15px; */
+     }
+     .tip,  .alert {
+          display: none !important;
+     }
+     .invoice-left {
+          float: left !important;
+     }
+     .invoice-right {
+          float: right !important;
+          text-align: right !important;
+          top: -20px;
+          position: relative;
+     }
+     * {
+          text-shadow: none !important;
+           box-shadow: none !important;
+     }
+     .visible-print {
+          display: block !important;
+     }
+     tr.visible-print {
+          display: table-row !important;
+     }
+     th.visible-print,
+     td.visible-print {
+          display: table-cell !important;
+     }
+     .sidebar-menu {
+          display: none !important;
+     }
+}
+@media (max-width: 768px) {
+     .invoice .invoice-right {
+          text-align: left;
+          margin-top: 20px;
+     }
+     .invoice .margin {
+          margin: 15px 0;
+     }
+     .invoice table {
+          margin: 20px 0;
+     }
+}

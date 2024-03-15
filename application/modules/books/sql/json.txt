@@ -1,0 +1,101 @@
+a:12:{s:15:"controller_name";s:5:"books";s:10:"model_name";s:5:"books";s:13:"scaffold_code";s:1982:""title" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+
+  "author" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"publisher" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"year_published" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "FALSE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"isbn_number" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "FALSE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"category" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"edition" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "FALSE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"pages" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "FALSE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"copyright" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "FALSE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"shelf" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "FALSE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+   "memo"  :
+        {
+          "type": "textarea",
+          "minlength": "0",
+          "maxlength": "500",
+          "required" : "FALSE",
+          "multilanguage"  : "FALSE",
+          "ckeditor"  : "FALSE"
+        }
+           ";s:18:"scaffold_delete_bd";s:1:"1";s:11:"scaffold_bd";s:1:"1";s:15:"scaffold_routes";s:1:"1";s:13:"scaffold_menu";s:1:"1";s:17:"create_controller";s:1:"1";s:12:"create_model";s:1:"1";s:18:"create_view_create";s:1:"1";s:16:"create_view_list";s:1:"1";s:19:"scaffold_model_type";s:12:"activerecord";}

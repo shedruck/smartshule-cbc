@@ -1,0 +1,36 @@
+a:12:{s:15:"controller_name";s:10:"petty_cash";s:10:"model_name";s:10:"petty_cash";s:13:"scaffold_code";s:723:" "petty_date" :
+    {
+      "type"  : "datepicker",
+      "required" : "TRUE"
+    },
+"description" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"amount" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"person" :
+    {
+      "type"  : "selectbd",
+      "size"        : "1",
+      "required"  : "TRUE",
+      "options" :
+      {
+        "model"  : "users_m",
+        "field_value": "id",
+        "field_text": "first_name",
+        "order"      : "first_name ASC"
+      }
+    }";s:18:"scaffold_delete_bd";s:1:"1";s:11:"scaffold_bd";s:1:"1";s:15:"scaffold_routes";b:0;s:13:"scaffold_menu";b:0;s:17:"create_controller";s:1:"1";s:12:"create_model";s:1:"1";s:18:"create_view_create";s:1:"1";s:16:"create_view_list";s:1:"1";s:19:"scaffold_model_type";s:12:"activerecord";}

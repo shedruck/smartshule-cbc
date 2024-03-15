@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS  schemes_of_work (
+	id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+	year  varchar(256)  DEFAULT '' NOT NULL, 
+	term  varchar(256)  DEFAULT '' NOT NULL, 
+	level  varchar(256)  DEFAULT '' NOT NULL, 
+	week  varchar(256)  DEFAULT '' NOT NULL, 
+	lesson  text  , 
+	strand  varchar(256)  DEFAULT '' NOT NULL, 
+	substrand  varchar(256)  DEFAULT '' NOT NULL, 
+	specific_learning_outcomes  text  , 
+	key_inquiry_question  text  , 
+	learning_experinces  text  , 
+	learning_resources  text  , 
+	assessment  text  , 
+	reflection  text  , 
+	created_by INT(11), 
+	modified_by INT(11), 
+	created_on INT(11) , 
+	modified_on INT(11) 
+	) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

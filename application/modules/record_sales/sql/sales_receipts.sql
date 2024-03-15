@@ -1,0 +1,13 @@
+CREATE TABLE `sales_receipts` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`total` VARCHAR(256) NOT NULL DEFAULT '',
+	`created_by` INT(11) NULL DEFAULT NULL,
+	`student` INT(11) NULL DEFAULT NULL,
+	`modified_by` INT(11) NULL DEFAULT NULL,
+	`created_on` INT(11) NULL DEFAULT NULL,
+	`modified_on` INT(11) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=10;

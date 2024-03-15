@@ -1,0 +1,46 @@
+<?php
+$settings = $this->ion_auth->settings();
+echo form_open("admin/login", ' class="form-login" ');
+?>  
+<div class="login" style="text-align:center" id="login">
+    <?php if (!empty($settings)): ?>
+            <img src="<?php echo base_url('uploads/files/' . $settings->document); ?>" width="150" height="150" />
+    <?php else: ?>	
+            <img src="<?php echo base_url('assets/themes/default/img/logo.png/'); ?>" width="150" height="150" />
+    <?php endif; ?>
+    <div class="wrap">
+        <h1>Welcome. Please Log In</h1>
+        <?php
+        $str = is_array($message) ? $message['text'] : $message;
+        echo (isset($message) && !empty($message)) ? '
+                        <div class="alert alert-danger "> 
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </button> ' . $str . '   
+            </div>' : '';
+        ?> 
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input type="text" name="email"  placeholder="Email" class="form-control ">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-record"></i></span>
+                <input type="password" name="password"  placeholder="Password" class="form-control">
+            </div>          
+            <div class="dr"><span></span></div>                                
+        </div>                
+        <div class="row">
+            <div class="col-md-8 remember">                    
+                <input type="checkbox" name="rem"/> Remember me                    
+            </div>
+            <div class="col-md-4 TAR">
+                <input type="submit" class="btn btn-block btn-primary" value="Login"/>
+            </div>
+        </div>
+        <div class="dr"><span></span></div>
+		<a href="https://earlybirdschool.smartshule.com" class="btn btn-block btn-grey" value="Login"> <i class="glyphicon glyphicon"></i> Back to Main Page</a>
+    </div>
+</div>
+<?php
+echo form_close();

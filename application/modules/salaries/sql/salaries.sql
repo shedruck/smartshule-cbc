@@ -1,0 +1,19 @@
+CREATE TABLE `salaries` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`employee` VARCHAR(32) NOT NULL DEFAULT '',
+	`salary_method` VARCHAR(32) NOT NULL DEFAULT '',
+	`basic_salary` FLOAT NULL DEFAULT NULL,
+	`nhif` FLOAT NULL DEFAULT NULL,
+	`bank_account_no` VARCHAR(256) NOT NULL DEFAULT '',
+	`bank_name` VARCHAR(256) NOT NULL DEFAULT '',
+	`nhif_no` VARCHAR(256) NOT NULL DEFAULT '',
+	`nssf_no` VARCHAR(256) NOT NULL DEFAULT '',
+	`created_by` INT(11) NULL DEFAULT NULL,
+	`modified_by` INT(11) NULL DEFAULT NULL,
+	`created_on` INT(11) NULL DEFAULT NULL,
+	`modified_on` INT(11) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=21;

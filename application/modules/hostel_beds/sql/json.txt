@@ -1,0 +1,34 @@
+a:12:{s:15:"controller_name";s:11:"hostel_beds";s:10:"model_name";s:11:"hostel_beds";s:13:"scaffold_code";s:656:"   "room_id" :
+    {
+      "type":"select",
+      "size":"1",
+      "required" :"FALSE",
+      "option_choose_one" :"TRUE",
+      "with_translations":"FALSE",
+      "options" :
+      {
+        "0" :
+        {
+          "text" : "Spanish",
+          "selected": "TRUE",
+          "value" : "spanish"
+        },
+        "1" :
+        {
+          "text" : "English",
+          "selected": "FALSE",
+          "value" : "english"
+        }
+      }
+    }    
+,
+"bed_number" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "FALSE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+}
+  ";s:18:"scaffold_delete_bd";s:1:"1";s:11:"scaffold_bd";s:1:"1";s:15:"scaffold_routes";s:1:"1";s:13:"scaffold_menu";s:1:"1";s:17:"create_controller";s:1:"1";s:12:"create_model";s:1:"1";s:18:"create_view_create";s:1:"1";s:16:"create_view_list";s:1:"1";s:19:"scaffold_model_type";s:12:"activerecord";}

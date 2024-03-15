@@ -1,0 +1,113 @@
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 100 700;
+  src: url(../../fonts/MaterialSymbolsOutlined%5bFILL%2cGRAD%2copsz%2cwght%5d.woff2) format("woff2"), url(../../fonts/MaterialSymbolsOutlined%5bFILL%2cGRAD%2copsz%2cwght%5d.ttf) format("truetype")
+}
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-grid;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased
+}
+@font-face {
+  font-family: "Material Symbols Rounded";
+  font-style: normal;
+  font-weight: 100 700;
+  src: url(../../fonts/MaterialSymbolsRounded%5bFILL%2cGRAD%2copsz%2cwght%5d.woff2) format("woff2"), url(../../fonts/MaterialSymbolsRounded%5bFILL%2cGRAD%2copsz%2cwght%5d.ttf) format("truetype")
+}
+.material-symbols-rounded {
+  font-family: "Material Symbols Rounded";
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-grid;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased
+}
+.mat-icon {
+  --mat-size: 1.5rem;
+  --mat-wght: 300;
+  --mat-fill: 0;
+  --mat-grad: 0;
+  font-size: var(--mat-size);
+  font-variation-settings: "wght" var(--mat-wght), "FILL" var(--mat-fill), "GRAD" var(--mat-grad)
+}
+.mat-icon.fs-16 {
+  --mat-size: 16px
+}
+.mat-icon.fs-20 {
+  --mat-size: 20px
+}
+.mat-icon.fs-24 {
+  --mat-size: 24px
+}
+.mat-icon.fs-28 {
+  --mat-size: 28px
+}
+.mat-icon.fs-32 {
+  --mat-size: 32px
+}
+.mat-icon.fs-36 {
+  --mat-size: 36px
+}
+.mat-icon.fs-40 {
+  --mat-size: 40px
+}
+.mat-icon.fs-44 {
+  --mat-size: 44px
+}
+.mat-icon.fs-48 {
+  --mat-size: 48px
+}
+.mat-icon.fs-52 {
+  --mat-size: 52px
+}
+.mat-icon.fs-56 {
+  --mat-size: 56px
+}
+.mat-icon.fs-60 {
+  --mat-size: 60px
+}
+.mat-icon.fs-64 {
+  --mat-size: 64px
+}
+.mat-icon.fw-100 {
+  --mat-wght: 100
+}
+.mat-icon.fw-200 {
+  --mat-wght: 200
+}
+.mat-icon.fw-300 {
+  --mat-wght: 300
+}
+.mat-icon.fw-400 {
+  --mat-wght: 400
+}
+.mat-icon.fw-500 {
+  --mat-wght: 500
+}
+.mat-icon.fw-600 {
+  --mat-wght: 600
+}
+.mat-icon.fw-700 {
+  --mat-wght: 700
+}
+.mat-icon.solid {
+  --mat-fill: 1
+}

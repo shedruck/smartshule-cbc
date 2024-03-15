@@ -1,0 +1,287 @@
+
+       
+   
+
+<div class="card shadow-sm ctm-border-radius grow">
+
+<div class="card-body align-center">
+
+
+ <a href="" onClick="window.print(); return false" class="btn btn btn-primary"><i class="icos-printer "></i> Print</a>
+        <a href="<?php echo site_url('fee_payment/fee'); ?>" class="btn  btn btn-info"> Go Back</a>
+
+<div class="widget row">
+    <div class="col-md-12 slip">
+
+        <div class="statement">
+            <div class="table-responsive">
+                <div class="block invoice slip-content">
+                    <div class="text-center">
+					  <?php if (!empty($this->school->document)):
+																?>
+					    <a href="<?php echo base_url('') ?>" >
+										   <img src="<?php echo base_url('uploads/files/' . $this->school->document); ?>"  width="80"  height="80"  />
+										</a>
+						<?php else: ?> 
+								<a href="<?php echo base_url('') ?>" ><?php echo theme_image('logo.png', array('width' => "80", 'height' => "80")) ?></a>
+						<?php endif; ?>
+							<br>			
+                        <?php
+                        echo $this->school->school . ' <br>';
+                        if (!empty($this->school->tel))
+                        {
+                                echo $this->school->postal_addr . '<br> Tel:' . $this->school->tel . ' ' . $this->school->cell;
+                        }
+                        else
+                        {
+                                echo $this->school->postal_addr . ' Cell:' . $this->school->cell;
+                        }
+                        ?>
+                        </span>
+                        <br>
+                        <span class="center titles">STUDENT FEE STATEMENT AS AT: <?php echo date('d M, Y H:i', time()); ?>  </span>
+                        <hr>
+                    </div>
+                    <?php
+                    $stream = $this->ion_auth->get_stream();
+                    ?>	
+                    <div class="clearfix"></div>
+                    <div class="col-md-12">
+                        <div class="col-md-10 ">
+                            <b>Student:</b>
+                            <abbr ><?php echo $post->first_name . ' ' . $post->last_name; ?> </abbr>
+                            <span class="right">
+                                <b>Registration Number:</b>
+                                <?php
+                                if (!empty($post->old_adm_no))
+                                {
+                                        echo $post->old_adm_no;
+                                }
+                                else
+                                {
+                                        if ($post->admission_number)
+                                        {
+                                                echo $post->admission_number;
+                                        }
+                                }
+                                ?>
+                            </span>	
+
+                            <abbr> <b> &nbsp;&nbsp;Class: &nbsp;&nbsp;</b> <?php
+                                $clas = isset($cl[$class->class]) ? $cl[$class->class] : ' - ';
+                                $fclas = isset($cl[$class->class]) ? class_to_short($clas) : ' - ';
+                                $str = isset($stream[$class->stream]) ? $stream[$class->stream] : '  ';
+                                echo $fclas . ' ' . $str;
+                                ?></abbr>
+                        </div>		  
+                    </div>
+                    <?php
+                    $ibal = $arrs;
+                    ksort($payload);
+                    foreach ($payload as $y => $p):
+                            ksort($p);
+                            ?>
+                             <table class="table bordered custom-table table-hover">
+                                <tr >
+                                    <td colspan="2"><span class="highlight">  <strong>Year: <span><?php echo $y; ?></span>  </strong>  </span></td> 
+                                </tr> 
+                            </table>
+
+                            <?php
+                            foreach ($p as $term => $trans)
+                            {
+                                    ?>
+                                   <table class="table bordered custom-table table-hover">
+                                        <tr>
+                                            <td width="59%" style=""><b><?php echo $this->terms[$term]; ?></b></td> 
+                                            <td width="41%"  style="border-top: 0 !important;border-bottom: 0 !important;" class="rttx">Balance Brought Forward: <b><?php echo number_format($ibal, 2); ?></b></td>
+                                        </tr> 
+                                    </table>
+                                     <table class="table bordered custom-table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="3%">#</th>
+                                                <th width="10%">Date</th>
+                                                <th width="14%">Ref No</th>
+                                                <th width="32%">Description</th>
+                                                <th width="13%">Debit</th>
+                                                <th width="13%">Credit</th>
+                                                <th width="15%">Balance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody> <?php
+                                            $i = 0;
+                                            $dr = 0;
+                                            $cr = 0;
+                                            $wv = 0;
+                                            $idw = 0;
+                                            $exc = 0;
+                                            $exw = 0;
+                                            foreach ($trans as $type => $paidd)
+                                            {
+                                                    $exs = 0;
+                                                    sort_by_field($paidd, 'date');
+                                                    foreach ($paidd as $paid)
+                                                    {
+                                                            $paid = (object) $paid;
+                                                            // $debit = $type == 'Debit' ? $paid->amount : 0;
+                                                            $debit = $type == 'Debit' || $type == 'Transport' ? $paid->amount : 0;
+                                                            $credit = $type == 'Credit' ? $paid->amount : 0;
+
+                                                            if ($debit)
+                                                            {
+                                                                    $idw = $paid->date;
+                                                            }
+                                                            // $waiver = $type == 'Waivers' ? $paid->amount : 0;
+                                                             $waiver = $type == 'Waivers' || $type == 'Discount' ? $paid->amount : 0;
+                                                            $bw = 0;
+                                                            $bcg = 0;
+                                                            if (isset($paid->ex_type))
+                                                            {
+                                                                    $wva = $paid->ex_type == 2 ? $paid->amount : 0;
+                                                                    $cg = $paid->ex_type == 1 ? $paid->amount : 0;
+                                                                    $exc += $cg;
+                                                                    $bcg += $cg;
+                                                                    $exw += $wva;
+                                                                    $bw += $wva;
+                                                            }
+
+                                                            $dr += $debit;
+                                                            $cr += $credit;
+                                                            $wv += $waiver;
+
+                                                            $bal = ($debit + $bcg) - ($credit + $waiver + $bw);
+                                                            $ibal += $bal;
+                                                            $i++;
+                                                            ?><tr>
+                                                                <td><?php echo $i . '. '; ?></td>
+                                                                <td><?php
+                                                                    if ($idw)
+                                                                    {
+                                                                            $wdate = date('d/m/Y', $idw);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                            $wdate = isset($this->terms[$term]) ? $this->terms[$term] : '';
+                                                                    }
+                                                                    $tdate = $paid->date > 0 ? date('d/m/Y', $paid->date) : $paid->date;
+                                                                    echo $waiver ? $wdate : $tdate;
+                                                                    ?>
+                                                                </td>
+                                                                <td><?php echo $paid->refno ? $paid->refno : gen_string(); ?></td>
+                                                                <td>
+                                                                    <?php
+                                                                    $mess = ucwords($paid->desc);
+                                                                    if (is_numeric($mess) && $mess == 0)
+                                                                            $mess = 'Tuition Fee Payment';
+                                                                    elseif (is_numeric($mess))
+                                                                            $mess = $extras[$mess];
+
+                                                                    $wwv = $paid->desc ? 'Waiver - ' . $paid->desc : 'Fee Waiver';
+
+                                                                    echo $waiver ? $wwv : $mess;
+                                                                    ?>
+                                                                </td>
+                                                                <td class="rttx"><?php
+                                                                    if ($bcg)
+                                                                    {
+                                                                            echo number_format($bcg, 2);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                            echo number_format($debit, 2);
+                                                                    }
+                                                                    ?></td>
+                                                                <td class="rttx"><?php
+                                                                    if ($waiver)
+                                                                    {
+                                                                            echo number_format($waiver, 2);
+                                                                    }
+                                                                    elseif ($bw)
+                                                                    {
+                                                                            echo number_format($bw, 2);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                            echo number_format($credit, 2);
+                                                                    }
+                                                                    ?></td>
+                                                                <td class="rttx"><?php echo number_format($ibal, 2); ?></td>
+                                                            </tr>
+                                                    <?php } ?>
+                                            <?php } ?>
+                                            <tr style="border-bottom:3px #000 double;  ">
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td class="rttb"><b>TOTALS</b></td>
+                                                <td class="rttb"><?php echo number_format($dr + $exc, 2); ?></td>
+                                                <td class="rttb"><?php echo number_format($cr + $wv + $exw, 2); ?></td>
+                                                <td class="rttb"><?php echo number_format($ibal, 2); ?></td>
+                                            <tr>
+                                        </tbody>
+                                    </table>
+                                    <?php
+                            }
+                            ?>
+                            <?php
+                    endforeach;
+                    ?>
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="clearfix"></div>
+                            <div class="pull-right">                        
+                                <div class="total newrect"> 
+                                    <span class="highlight">
+                                        <strong><span>Balance: &nbsp;</span><?php echo number_format($ibal, 2); ?>  <?php echo ($ibal < 0) ? ' (Overpay)' : ''; ?>  <em></em></strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="center" style="border-top:1px solid #ccc">		
+                        <span class="center" style="font-size:0.8em !important;text-align:center !important;">
+                            <?php
+                            if (!empty($this->school->tel))
+                            {
+                                    echo $this->school->postal_addr . ' Tel:' . $this->school->tel . ' ' . $this->school->cell;
+                            }
+                            else
+                            {
+                                    echo $this->school->postal_addr . ' Cell:' . $this->school->cell;
+                            }
+                            ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<style>
+    .fless{width:100%; border:0;}
+    @media print{
+        td.nob{  border:none !important; background-color:#fff !important;}
+        .stt td, th {
+            border: 1px solid #ccc;
+        } 
+        table tr{
+            border:1px solid #666 !important;
+        }
+        table th{
+            border:1px solid #666 !important;
+        }
+        table td{
+            border:1px solid #666 !important;
+        }	
+        .highlight{
+            background-color:#000 !important;
+            color:#fff !important;
+        }
+    }
+</style>

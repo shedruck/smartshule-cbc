@@ -1,0 +1,19 @@
+CREATE TABLE `purchase_order` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`purchase_date` INT(11) NULL DEFAULT NULL,
+	`supplier` INT(9) NOT NULL,
+	`vat` INT(11) NULL DEFAULT NULL,
+	`due_date` INT(11) NULL DEFAULT NULL,
+	`total` FLOAT NULL DEFAULT NULL,
+	`balance` FLOAT NULL DEFAULT NULL,
+	`comment` TEXT NULL,
+	`status` INT(11) NULL DEFAULT NULL,
+	`created_by` INT(11) NULL DEFAULT NULL,
+	`modified_by` INT(11) NULL DEFAULT NULL,
+	`created_on` INT(11) NULL DEFAULT NULL,
+	`modified_on` INT(11) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=24;

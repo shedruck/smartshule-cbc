@@ -1,0 +1,17 @@
+CREATE TABLE `extra_curricular` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`student` INT(11) NULL DEFAULT NULL,
+	`activity` INT(11) NULL DEFAULT NULL,
+	`date_from` INT(11) NULL DEFAULT NULL,
+	`date_to` INT(11) NULL DEFAULT NULL,
+	`remarks` TEXT NULL,
+	`created_by` INT(11) NULL DEFAULT NULL,
+	`modified_by` INT(11) NULL DEFAULT NULL,
+	`created_on` INT(11) NULL DEFAULT NULL,
+	`modified_on` INT(11) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+ROW_FORMAT=COMPACT
+AUTO_INCREMENT=3;

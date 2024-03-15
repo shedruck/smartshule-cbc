@@ -1,0 +1,63 @@
+a:12:{s:15:"controller_name";s:24:"final_exams_certificates";s:10:"model_name";s:24:"final_exams_certificates";s:13:"scaffold_code";s:1203:""student" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"certificate_type" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"serial_number" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"mean_grade" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "TRUE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+"points" :
+{
+  "type" :  "text",
+  "minlength" :  "0",
+  "maxlength"  :  "60",
+  "required"  :  "FALSE",
+  "multilanguage" :  "FALSE",
+  "is_unique"  : "FALSE"
+},
+ "certificate" :
+    {
+      "type"                 : "file",
+      "required"           : "TRUE",
+      "multilanguage"   : "FALSE",
+      "upload"  :
+      {
+        "allowed_types"  : "pdf",
+        "encrypt_name"  : "TRUE",
+        "max_size"         : "2048"
+      }
+    }
+       
+    
+    
+    
+   
+   ";s:18:"scaffold_delete_bd";s:1:"1";s:11:"scaffold_bd";s:1:"1";s:15:"scaffold_routes";s:1:"1";s:13:"scaffold_menu";s:1:"1";s:17:"create_controller";s:1:"1";s:12:"create_model";s:1:"1";s:18:"create_view_create";s:1:"1";s:16:"create_view_list";s:1:"1";s:19:"scaffold_model_type";s:12:"activerecord";}
