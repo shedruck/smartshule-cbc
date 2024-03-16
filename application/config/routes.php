@@ -81,6 +81,8 @@ $route['parents/cbc/(:any)'] = 'cbc/parents/$1';
 $route['trs/cbc'] = 'cbc/cbc';
 $route['trs/cbc/(:any)'] = 'cbc/cbc/$1';
 
+
+
 $route['trs/diary'] = 'diary/diary';
 $route['trs/diary/extras'] = 'diary/diary/$1';
 $route['trs/diary/extras/(:any)'] = 'diary/diary/$1';
