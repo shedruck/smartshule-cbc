@@ -26,6 +26,7 @@ class Cbc_tr extends MY_Model
             $cls = isset($this->streams[$p->class]) ? $this->streams[$p->class] : 'Unknown Class';
             $tt = isset($pop[$p->class]) ? $pop[$p->class]  : 0;
             $fn[$p->class] = [
+                'id' => $p->class,
                 'name' => $cls,
                 'total' => $tt
             ];
