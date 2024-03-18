@@ -13,6 +13,16 @@
         allowClear: true,
     });
 
+    $(".js-example-placeholder-exam").select2({
+        placeholder: "Select an Exam",
+        allowClear: true,
+    });
+
+    $(".js-example-placeholder-grading").select2({
+        placeholder: "Select Grading",
+        allowClear: true,
+    });
+
     /* multiple select with placeholder */
     $(".js-example-placeholder-multiple").select2({
         placeholder: "Select a state"

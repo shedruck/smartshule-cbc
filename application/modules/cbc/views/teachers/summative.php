@@ -99,7 +99,7 @@
 
              $('#class_name').text(data.class);
 
-             var link = BASE_URL + 'cbc/trs/do_formative/' + k + '/' + item.id;
+             var link = BASE_URL + 'cbc/trs/do_summative/' + k + '/' + item.id;
 
              setTimeout(function() {
                $("#myloader").removeClass('loader');

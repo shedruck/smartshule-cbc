@@ -227,4 +227,37 @@ class Cbc_tr extends MY_Model
     {
         return $this->db->where('id',$id)->where('status',1)->get('cbc_tasks')->row();
     }
+
+    //Get Class Students
+    function get_stu_marks($sub,$exam,$stu) {
+        return $this->db
+                    ->where('sub',$sub)
+                    ->where('exam',$exam)
+                    ->where('student',$stu)
+                    ->get('cbc_marks')
+                    ->row();
+    }
+
+    //Function to Create CBC Marks
+    function create_marks($table,$data) {
+        $this->db->insert($table, $data);
+        return $this->db->insert_id();
+    }
+
+    //Update 
+    function update_with($id, $data, $table)
+    {
+        return $this->db->where('id', $id)->update($table, $data);
+    }
+
+    //Check whether marks for exam exist
+    function check_exists($sub,$exam,$cls) {
+        return $this->db
+                    ->where('sub',$sub)
+                    ->where('exam',$exam)
+                    ->where('class',$cls)
+                    ->get('cbc_marks')
+                    ->row();
+    }
+
 }
