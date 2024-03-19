@@ -38,7 +38,7 @@ if ($exam == 1) {
     <div class="alert-container inserted-alert">
         <div class="alert alert-solid-success" role="alert">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $this->session->flashdata('inserted_message')['text']; ?>
+            <i class="fa fa-check-circle-o me-2" aria-hidden="true"></i><?php echo $this->session->flashdata('inserted_message')['text']; ?>
         </div>
     </div>
 <?php endif; ?>
@@ -47,7 +47,7 @@ if ($exam == 1) {
     <div class="alert-container updated-alert">
         <div class="alert alert-solid-success" role="alert">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $this->session->flashdata('updated_message')['text']; ?>
+            <i class="fa fa-check-circle-o me-2" aria-hidden="true"></i><?php echo $this->session->flashdata('updated_message')['text']; ?>
         </div>
     </div>
 <?php endif; ?>
@@ -328,7 +328,7 @@ if ($exam == 1) {
 
     .inserted-alert {
         position: fixed;
-        bottom: 20px;
+        top: 20px;
         /* Adjust as needed */
         right: 20px;
         /* Adjust as needed */
@@ -338,7 +338,7 @@ if ($exam == 1) {
 
     .updated-alert {
         position: fixed;
-        bottom: 70px;
+        top: 70px;
         /* Adjust as needed */
         right: 20px;
         /* Adjust as needed */
