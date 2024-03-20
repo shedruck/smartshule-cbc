@@ -46,7 +46,8 @@ class Trs extends Trs_Controller
     }
 
     //Function to Summative
-    function do_summative($class,$subject,$exam = false) {
+    function do_summative($class, $subject, $exam = false)
+    {
         $this->load->helper('form');
         $args = func_get_args();
         $subjects = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
@@ -66,10 +67,10 @@ class Trs extends Trs_Controller
         if ($this->input->post()) {
             $k = 0;
             $kk = 0;
-           $post = (object) $this->input->post();
-           $stus = $post->student;
+            $post = (object) $this->input->post();
+            $stus = $post->student;
 
-           foreach ($stus as $keey => $st) {
+            foreach ($stus as $keey => $st) {
                 $form_data = array(
                     'sub' => $subject,
                     'exam' => $exam,
@@ -82,36 +83,43 @@ class Trs extends Trs_Controller
                 );
 
                 //Check if marks Exists
-                $checkmarks = $this->cbc_tr->get_stu_marks($subject,$exam,$st);
+                $checkmarks = $this->cbc_tr->get_stu_marks($subject, $exam, $st);
 
                 if ($checkmarks) {
                     //Update
                     $form_data['modified_by'] = $this->user->id;
-                    $form_data['modified_on'] = time(); 
-                    $done = $this->cbc_tr->update_with($checkmarks->id,$form_data,'cbc_marks');
+                    $form_data['modified_on'] = time();
+                    $done = $this->cbc_tr->update_with($checkmarks->id, $form_data, 'cbc_marks');
 
                     if ($done) {
                         $k++;
                     }
-
                 } else {
                     //Insert
                     $form_data['created_by'] = $this->user->id;
-                    $form_data['created_on'] = time(); 
-                    $ok = $this->cbc_tr->create_marks('cbc_marks',$form_data);
+                    $form_data['created_on'] = time();
+                    $ok = $this->cbc_tr->create_marks('cbc_marks', $form_data);
                     if ($ok) {
                         $kk++;
                     }
                 }
-           }
+            }
 
-           $mess = $kk.' records Inserted '.$k.' records updated.';
-           $this->session->set_flashdata('message', array('type' => 'success', 'text' => $mess));
-           redirect("cbc/trs/do_summative/".$class."/".$subject."/".$exam);
+
+            $inserted_message = $kk . ' records successfully Inserted.';
+            $this->session->set_flashdata('inserted_message', array('type' => 'success', 'text' => $inserted_message));
+
+            // Set session message for updated records
+            $updated_message = $k . ' records successfully updated.';
+            $this->session->set_flashdata('updated_message', array('type' => 'success', 'text' => $updated_message));
+
+            redirect("cbc/trs/do_summative/" . $class . "/" . $subject . "/" . $exam);
+
+
         }
 
         $data['attr'] = $args;
-        $data['gradings'] = $this->cbc_tr->populate('grading_system','id','title');
+        $data['gradings'] = $this->cbc_tr->populate('grading_system', 'id', 'title');
         $data['exam'] = $exam;
         $data['cls'] = $class;
         $data['sub'] = $subject;
@@ -351,12 +359,6 @@ class Trs extends Trs_Controller
     {
         $data['classes'] = $this->cbc_tr->my_classes();
         $cls = $this->cbc_tr->my_classes();
-        // $data['students'] = $this->cbc_m->get_students($cls['id']);
-        // echo '<pre>';
-        // print_r($cls);
-        // echo '</pre>';
-        // die();
-        // $classes = $this->cbc_tr->my_classes();
         $this->template->title('Summative Assessment')->build('teachers/summative', $data);
     }
 }

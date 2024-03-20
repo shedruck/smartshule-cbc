@@ -56,7 +56,7 @@
 
      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight">
        <div class="offcanvas-header">
-         <h6 class="fw-bold offcanvas-title">Select Exams</h6>
+         <h6 class="fw-bold offcanvas-title">Learning Areas</h6>
          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"><i class="fe fe-x fs-18"></i></button>
        </div>
        <div class="offcanvas-body">

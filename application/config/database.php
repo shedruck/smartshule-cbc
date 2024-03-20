@@ -18,7 +18,7 @@
  $db['default']['hostname'] = 'localhost';
  $db['default']['username'] = 'root';
  $db['default']['password'] = '';
- $db['default']['database'] = 'sms_cbc_2';
+ $db['default']['database'] = 'sms_cbc';
  $db['default']['dbdriver'] = 'mysqli';
  $db['default']['dbprefix'] = '';
  $db['default']['pconnect'] = TRUE;
