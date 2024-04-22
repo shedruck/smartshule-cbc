@@ -110,6 +110,7 @@ if ($exam == 1) {
                                                 <th class="text-center tx-fixed-white">ME - 3</th>
                                                 <th class="text-center tx-fixed-white">AE - 2</th>
                                                 <th class="text-center tx-fixed-white">BE - 1</th>
+                                                <th class="text-center tx-fixed-white">Clear</th>
                                             <?php endif; ?>
                                         </tr>
                                         <?php
@@ -139,10 +140,15 @@ if ($exam == 1) {
                                                 elseif ($extype == 2) :
                                                     $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
                                                 ?>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="4" name="score[<?php echo $p->id ?>]" id="Radio-md" <?php echo $score ? $score->score == 4 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="3" name="score[<?php echo $p->id ?>]" id="Radio-md" <?php echo $score ? $score->score == 3 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="2" name="score[<?php echo $p->id ?>]" id="Radio-md" <?php echo $score ? $score->score == 2 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="1" name="score[<?php echo $p->id ?>]" id="Radio-md" <?php echo $score ? $score->score == 1 ? 'checked' : '' : '' ?>></td>
+                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="4" name="score[<?php echo $p->id ?>]" id="Radio-md_4_<?php echo $p->id ?>" <?php echo $score ? $score->score == 4 ? 'checked' : '' : '' ?>></td>
+                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="3" name="score[<?php echo $p->id ?>]" id="Radio-md_3_<?php echo $p->id ?>" <?php echo $score ? $score->score == 3 ? 'checked' : '' : '' ?>></td>
+                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="2" name="score[<?php echo $p->id ?>]" id="Radio-md_2_<?php echo $p->id ?>" <?php echo $score ? $score->score == 2 ? 'checked' : '' : '' ?>></td>
+                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="1" name="score[<?php echo $p->id ?>]" id="Radio-md_1_<?php echo $p->id ?>" <?php echo $score ? $score->score == 1 ? 'checked' : '' : '' ?>></td>
+                                                    <td style="text-align: center;">
+                                                        <div class="form-check d-inline-block">
+                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked_<?php echo $p->id ?>">
+                                                        </div>
+                                                    </td>
                                                 <?php endif; ?>
                                             </tr>
 
@@ -281,6 +287,25 @@ if ($exam == 1) {
         });
     });
 </script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        <?php foreach ($students as $p) : ?>
+            var checkbox_<?php echo $p->id ?> = document.getElementById("flexCheckChecked_<?php echo $p->id ?>");
+            var radioButtons_<?php echo $p->id ?> = document.querySelectorAll('input[type="radio"][name="score[<?php echo $p->id ?>]"]');
+
+            checkbox_<?php echo $p->id ?>.addEventListener("change", function() {
+                // Uncheck the radio buttons
+                radioButtons_<?php echo $p->id ?>.forEach(function(radioButton) {
+                    radioButton.checked = false;
+                    radioButton.disabled = checkbox_<?php echo $p->id ?>.checked; // Disable the radio buttons if checkbox is checked
+                });
+            });
+        <?php endforeach; ?>
+    });
+</script>
+
 
 
 <style>
