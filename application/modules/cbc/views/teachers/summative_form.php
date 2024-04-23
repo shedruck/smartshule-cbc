@@ -185,20 +185,37 @@ if ($exam == 1) {
             </div>
             <div class="card-footer">
                 <div class="form-check d-inline-block">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
                     <label class="form-check-label" for="flexCheckChecked">
                         Confirm
                     </label>
                 </div>
                 <div class="float-end d-inline-block btn-list">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <a class="btn btn-secondary" id="cancelButton">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submitButton"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button>
+                    <a class="btn btn-secondary" id="cancelButton"><i class="fe fe-arrow-left-circle me-1 lh-base"></i>Cancel</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <?php echo form_close() ?>
+
+<!-- // disable submit button before confirm -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var checkbox = document.getElementById("flexCheckChecked");
+        var submitButton = document.getElementById("submitButton");
+
+        var isChecked = localStorage.getItem("confirmCheckbox");
+        checkbox.checked = isChecked === "true";
+        submitButton.disabled = !checkbox.checked;
+
+        checkbox.addEventListener("change", function() {
+            localStorage.setItem("confirmCheckbox", checkbox.checked);
+            submitButton.disabled = !checkbox.checked;
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {
@@ -254,7 +271,7 @@ if ($exam == 1) {
     });
 </script>
 
-
+<!-- prevent marks bigger then outof -->
 <script>
     $(document).ready(function() {
         $('form').submit(function(event) {
@@ -288,7 +305,7 @@ if ($exam == 1) {
     });
 </script>
 
-
+<!-- disable and clear radio buttons  -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         <?php foreach ($students as $p) : ?>
