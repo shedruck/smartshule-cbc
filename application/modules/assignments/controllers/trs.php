@@ -8,20 +8,145 @@ class Trs extends Trs_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('cbc_m');
-        $this->load->model('cbc_tr');
+        // $this->load->model('cbc_m');
+        // $this->load->model('cbc_tr');
+        $this->load->model('assignments_m');
         if (!$this->ion_auth->logged_in()) {
             redirect('/login');
         }
 
-        $this->cbc =  $this->cbc_tr;
+        // $this->cbc =  $this->cbc_tr;
     }
 
 
+    // public function index()
+    // {
+    //     //load view
+    //     $this->template->title(' CBC Assessment')->build('teachers/index', []);
+    // }
+
     public function index()
     {
-        //load view
-        $this->template->title(' CBC Assessment')->build('teachers/index', []);
+        $term = get_term(date('m'));
+        $year = date('Y');
+        $data['extras'] = $this->trs_m->get_current($term, $year);
+        $data['classes'] = $this->trs_m->list_my_classes();
+
+        $this->template->title('Assignments')->build('teachers/list', $data);
+    }
+
+    public function assign($class)
+    {
+        //Rules for validation
+        $this->form_validation->set_rules($this->_assign_validation());
+
+        $document = '';
+        if (!empty($_FILES['document']['name']))
+        {
+            $this->load->library('files_uploader');
+            $upload_data = $this->files_uploader->upload('document');
+            $document = $upload_data['file_name'];
+        }
+
+        //validate the fields of form
+        if ($this->form_validation->run())
+        {
+            $this->load->model('assignments/assignments_m');
+            $user = $this->ion_auth->get_user();
+            $form_data = array(
+                'subject' => $this->input->post('subject'),
+                'topic' => $this->input->post('topic'),
+                'subtopic' => $this->input->post('subtopic'),
+                'title' => $this->input->post('title'),
+                'start_date' => strtotime($this->input->post('start_date')),
+                'end_date' => strtotime($this->input->post('end_date')),
+                'assignment' => $this->input->post('assignment'),
+                'comment' => $this->input->post('comment'),
+                'document' => $document,
+                'created_by' => $user->id,
+                'created_on' => time()
+            );
+
+            $ok = $this->assignments_m->create($form_data);
+
+            if ($ok)
+            {
+                $values = array(
+                    'assgn_id' => $ok,
+                    'class' => $class,
+                    'created_by' => $user->id,
+                    'created_on' => time()
+                );
+
+                $this->assignments_m->insert_classes($values);
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+            }
+            else
+            {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+            }
+            redirect('trs/list_assign/' . $class);
+        }
+        else
+        {
+            $get = new StdClass();
+            foreach ($this->_assign_validation() as $field)
+            {
+                $get->{$field['field']} = set_value($field['field']);
+            }
+
+            $data['result'] = $get;
+        }
+		
+		$data['subjects'] = $this->portal_m->get_subject_assigned($class,$this->profile->id);
+        $this->template->title('Assignments')->build('teachers/create', $data);
+		
+    }
+
+    function _assign_validation()
+    {
+        $config = array(
+            array(
+                'field' => 'title',
+                'label' => 'Title',
+                'rules' => 'required|trim|xss_clean|max_length[260]'),
+		array(
+				'field' => 'subject',
+                'label' => 'subject',
+                'rules' => 'trim'),
+		array(
+				'field' => 'topic',
+                'label' => 'Topic',
+                'rules' => 'trim'),
+				
+		array(
+				'field' => 'subtopic',
+                'label' => 'Sub Topic',
+                'rules' => 'trim'),
+				
+            array(
+                'field' => 'start_date',
+                'label' => 'Start Date',
+                'rules' => 'required|xss_clean'),
+            array(
+                'field' => 'end_date',
+                'label' => 'End Date',
+                'rules' => 'required|xss_clean'),
+            array(
+                'field' => 'assignment',
+                'label' => 'Assignment',
+                'rules' => 'trim|min_length[0]'),
+            array(
+                'field' => 'comment',
+                'label' => 'Comment',
+                'rules' => 'trim'),
+            array(
+                'field' => 'document',
+                'label' => 'Document',
+                'rules' => 'trim'),
+        );
+        $this->form_validation->set_error_delimiters("<br /><span class='error'>", '</span>');
+        return $config;
     }
 
     function begin_form()
