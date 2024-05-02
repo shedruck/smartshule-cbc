@@ -169,6 +169,77 @@ class Diary extends Trs_Controller
     function create($page = 0)
     {
         $data['updType'] = 'create';
+        $data['page'] = ($this->uri->segment(4)) ? $this->uri->segment(4) : $page;
+
+        //Rules for validation
+        $this->form_validation->set_rules($this->validation());
+
+        //validate the fields of form
+        if ($this->form_validation->run()) {
+            $uploadDir = FCPATH . 'assets/uploads/';
+
+            $uploadedFiles = $_FILES['file'];
+
+            $fileCount = count($uploadedFiles['name']);
+
+            $form = [
+                'student' => $this->input->post('student'),
+                'activity' => $this->input->post('activity'),
+                'date_' => strtotime($this->input->post('date_')),
+                'status' => 0,
+                'verified' => 1,
+                'teacher_comment' => $this->input->post('teacher_comment'),
+                'created_by' => $this->user->id,
+                'created_on' => time()
+            ];
+
+            $id = $this->diary_m->create($form);
+
+            if ($id) {
+                if ($fileCount > 0) {
+                    for ($i = 0; $i < $fileCount; $i++) {
+                        $fileName = $_FILES['file']['name'][$i];
+                        $fileTmpName = $_FILES['file']['tmp_name'][$i];
+                        $fileSize = $_FILES['file']['size'][$i];
+                        $fileError = $_FILES['file']['error'][$i];
+
+                        $destination = $uploadDir . $fileName;
+
+                        if (move_uploaded_file($fileTmpName, $destination)) {
+                            $upform = [
+                                'student' => $this->input->post('student'),
+                                'diary_id' => $id,
+                                'filename' => $fileName,
+                                'created_by' => $this->user->id,
+                                'modified_on' => time()
+                            ];
+
+                            $this->diary_m->insert_dairy_filenames($upform);
+                        }
+                    }
+                }
+
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+            }
+
+            redirect('trs/diary');
+        } else {
+            $get = new StdClass();
+            foreach ($this->validation() as $field) {
+                $get->{$field['field']} = set_value($field['field']);
+            }
+            $data['students'] = $this->trs_m->my_students();
+            $data['result'] = $get;
+            //load the view and the layout
+            $this->template->title('Add Diary Entry')->build('trs/create', $data);
+        }
+    }
+
+    function create2($page = 0)
+    {
+        $data['updType'] = 'create';
         $data['page'] = ( $this->uri->segment(4) ) ? $this->uri->segment(4) : $page;
 
         //Rules for validation
@@ -195,6 +266,11 @@ class Diary extends Trs_Controller
                 'created_by' => $this->user->id,
                 'created_on' => time()
             ];
+
+            echo "<pre>";
+            print_r($form);
+            echo "<pre>";
+            die;
 
             $id = $this->diary_m->create($form);
 
@@ -233,7 +309,7 @@ class Diary extends Trs_Controller
             $this->template->title('Add Diary Entry')->build('trs/create', $data);
         }
     }
-    
+
     function create_ex($page = 0)
     {
         $data['updType'] = 'create';
