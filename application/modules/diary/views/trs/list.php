@@ -58,6 +58,7 @@
         <div class="clearfix"></div>
         <hr>
     </div>
+
     <div id="bg-default" class="panel-collapse collapse in">
         <div class="portlet-body">
             <?php if ($diary): ?>

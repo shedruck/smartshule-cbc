@@ -143,9 +143,10 @@ class Diary extends Trs_Controller
         $data['per'] = $config['per_page'];
 		 $data['classes'] = $this->trs_m->list_my_classes();
 
-        //load view
+         //load view
         $this->template->title(' Diary ')->build('trs/list', $data);
     }
+    
 
     public function extra()
     {
@@ -232,7 +233,7 @@ class Diary extends Trs_Controller
             $this->template->title('Add Diary Entry')->build('trs/create', $data);
         }
     }
-
+    
     function create_ex($page = 0)
     {
         $data['updType'] = 'create';
