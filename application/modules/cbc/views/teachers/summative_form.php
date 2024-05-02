@@ -86,7 +86,7 @@ if ($exam == 1) {
                         <?php
                         $checkmarko = $this->cbc_tr->check_exists($sub, $exam, $cls);
 
-                        echo form_dropdown('grading', ['' => 'Select Exam'] + $gradings, $checkmarko->gid, 'class="js-example-placeholder-grading js-states form-control" id="grading" required')
+                        echo form_dropdown('grading', ['' => 'Select Grading System'] + $gradings, $checkmarko->gid, 'class="js-example-placeholder-grading js-states form-control" id="grading" required')
                         ?>
                         <input type="number" id="input-placeholder" max="<?php echo $extype == 2 ? '4' : '100' ?>" name="outof" value="<?php echo $extype == 1 ? ($checkmarko) ? $checkmarko->outof : '' : '4' ?>" class="form-control mt-2" placeholder="Outof" <?php echo $extype == 2 ? 'readonly' : '' ?> required>
                     <?php endif; ?>
