@@ -21,7 +21,7 @@
         ['image', 'video'],
         ['clean']                                         // remove formatting button
     ];
-    var quill = new Quill('#editor', {
+    var quill = new Quill('.editor', {
         modules: {
             toolbar: toolbarOptions
         },
@@ -29,11 +29,11 @@
     });
 
     /* quill bubble editor */
-    var quill = new Quill('#editor1', {
-        modules: {
-            toolbar: undefined
-        },
-        theme: 'bubble'
-    });
+    // var quill = new Quill('.editor1', {
+    //     modules: {
+    //         toolbar: undefined
+    //     },
+    //     theme: 'bubble'
+    // });
 
 })();

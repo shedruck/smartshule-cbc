@@ -11,6 +11,7 @@ class Trs extends Trs_Controller
         // $this->load->model('cbc_m');
         // $this->load->model('cbc_tr');
         $this->load->model('assignments_m');
+        $this->load->model('trs_m');
         if (!$this->ion_auth->logged_in()) {
             redirect('/login');
         }
@@ -85,7 +86,7 @@ class Trs extends Trs_Controller
             {
                 $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
             }
-            redirect('trs/list_assign/' . $class);
+            redirect('assignments/trs/list_assign/' . $class);
         }
         else
         {
@@ -101,6 +102,214 @@ class Trs extends Trs_Controller
 		$data['subjects'] = $this->portal_m->get_subject_assigned($class,$this->profile->id);
         $this->template->title('Assignments')->build('teachers/create', $data);
 		
+    }
+
+    function mark_assign($id, $stud,$class,$sess=NULL)
+    {
+        //redirect if no $id
+        if (!$id)
+        {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('assignments/trs');
+        }
+        if (!$this->assignments_m->done_exists($id,$stud))
+        {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('assignments/trs/');
+        }
+
+        $data['p'] = $this->assignments_m->find_done($id);
+        
+        $data['class'] = $class;
+        $data['stud'] = $stud;
+      
+
+        $this->template->title('View Assignment')->build('teachers/view_done', $data);
+    }
+
+    function set_as_marked($id,$stud, $class, $sess=NULL)
+        {
+                //redirect if no $id
+            if (!$id && !$stud && !$class)
+                {
+                        $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+                        redirect('assignments/trs');
+                }
+				
+			 if (!$this->assignments_m->done_exists($id,$stud))
+				{
+					$this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+					redirect('assignments/trs');
+				}
+				
+				$p = $this->assignments_m->find_done($id);
+				
+				$file = $p->result;
+				
+				  $this->load->library('files_uploader');
+		  
+					 $dest = FCPATH . "/uploads/assignments/" . date('Y') . '/';
+						if (!is_dir($dest))
+						{
+								mkdir($dest, 0777, true);
+						} 
+						
+						 
+
+                if (!empty($_FILES['file']['name']))
+                {
+                       $uploadPath = $dest ;
+						$config['upload_path'] = $uploadPath;
+						$config['allowed_types'] = 'pdf|doc|docx|csv|xsl|xlsx';
+						
+						$this->load->library('upload', $config);
+						$this->upload->initialize($config);
+						//$this->upload->do_upload('file');
+				
+						$upload_data = $this->files_uploader->upload('file');
+						
+						$file = $upload_data['file_name'];
+						$file_size=$upload_data['file_size'];
+						$file_type=$upload_data['file_type'];
+                }
+				
+				$user = $this->ion_auth->get_user();
+						 $data = array(
+								'status' =>  1, 
+								'result' => $file,
+								'result_path' =>  'assignments/' . date('Y') . '/',
+								'comment' => $this->input->post('comment'), 
+								'points' => $this->input->post('points'), 
+								'out_of' => $this->input->post('out_of'), 
+								'date_marked' => time(), 
+								'marked_by' => $user -> id
+							);
+
+						$ok =  $this->portal_m->update_unenc('assignments_done',$id,$data);
+						  
+				
+                        if ($ok)
+                        {
+
+							 $tracker = array(
+							 
+									'student' => $stud,
+									'item_id' => $id,
+									'class' => $class,
+									'type' => 1,
+									'status' => 1,          
+									'created_by' => $this->ion_auth->get_user()->id,
+									'created_on' => time()
+								);
+								
+                            //$this->portal_m->create_unenc('assignments_tracker',$tracker);
+
+							$this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+						}
+						else{
+								 $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+							}		
+				
+				redirect('assignments/trs/mark_assign/'.$id.'/'.$stud.'/'.$class.'/'.$this->session->userdata['session_id']);
+
+		}
+
+    function view_assign($id, $class)
+    {
+        //redirect if no $id
+        if (!$id)
+        {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('assignments/trs');
+        }
+        if (!$this->assignments_m->exists($id))
+        {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('assignments/trs');
+        }
+
+        $data['p'] = $this->assignments_m->find($id);
+        $data['done'] = $this->assignments_m->done($id);
+        $data['class'] = $class;
+        $data['extras'] = 0;
+        if ($this->input->get())
+        {
+            $data['extras'] = 1;
+        }
+
+        $this->template->title('View Assignment')->build('teachers/view', $data);
+    }
+
+    public function edit_assign($id, $ref)
+    {
+        $asst = $this->assignments_m->find($id);
+        //Rules for validation
+        $this->form_validation->set_rules($this->_assign_validation());
+
+        $document = $asst->document;
+        if (!empty($_FILES['document']['name']))
+        {
+            $this->load->library('files_uploader');
+            $upload_data = $this->files_uploader->upload('document');
+            $document = $upload_data['file_name'];
+        }
+
+        //validate the fields of form
+        if ($this->form_validation->run())
+        {
+            $this->load->model('assignments/assignments_m');
+            $user = $this->ion_auth->get_user();
+            $form_data = array(
+                 'subject' => $this->input->post('subject'),
+                'topic' => $this->input->post('topic'),
+                'subtopic' => $this->input->post('subtopic'),
+				'title' => $this->input->post('title'),
+                'start_date' => strtotime($this->input->post('start_date')),
+                'end_date' => strtotime($this->input->post('end_date')),
+                'assignment' => $this->input->post('assignment'),
+                'comment' => $this->input->post('comment'),
+                'document' => $document,
+                'modified_by' => $user->id,
+                'modified_on' => time()
+            );
+            $ok = $this->assignments_m->update_attributes($id, $form_data);
+
+            if ($ok)
+            {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => 'Updated Successfully'));
+            }
+            else
+            {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+            }
+
+            $action = $this->input->post('extras') == 1 ? 'list_extras' : 'list_assign';
+            redirect('assignments/trs/' . $action . '/' . $ref);
+        }
+        else
+        {
+            $data['result'] = $asst;
+        }
+        $ex = 0;
+        if ($this->input->get())
+        {
+            $ex = 1;
+        }
+        $data['type'] = 'Edit';
+        $data['ex'] = $ex;
+		
+		$data['subjects'] = $this->portal_m->get_subject_assigned($ref,$this->profile->id);
+        $this->template->title('Assignments')->build('teachers/create', $data);
+    }
+
+    public function list_assign($id)
+    {
+        $data['assignments'] = $this->trs_m->get_assignments($id);
+        $data['classes'] = $this->trs_m->list_my_classes();
+        $data['ref'] = $id;
+        $data['extras'] = false;
+
+        $this->template->title('Assignments')->build('teachers/list_assign', $data);
     }
 
     function _assign_validation()

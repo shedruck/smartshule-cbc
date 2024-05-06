@@ -12,7 +12,7 @@ echo   form_open_multipart(current_url(), $attributes);
                     </i> ' . lang('web_list_all', array(':name' => 'Assignments')), 'class="btn btn-primary"'); ?>
                 </div>
             </div>
-            <div class="card-body p-0">
+            <div class="card-body p-0 mb-2">
                 <div class="row justify-content-center">
                     <div class="col-md-8 col-xl-8 col-lg-8 col-sm-12">
                         <div class='row m-2'>
@@ -53,10 +53,9 @@ echo   form_open_multipart(current_url(), $attributes);
                         <div class='row m-2'>
                             <div class="col-md-3" for='start_date'>Start Date <span class='required'>*</span></div>
                             <div class="col-md-9">
-                                <div id="datetimepicker1" class="input-group date form_datetime">
-                                    <input type="text" name="start_date" value="<?php if ($result->start_date) echo date('d M Y', $result->start_date); ?>" class="date form-control datepicker col-md-3">
-
-                                    <span class="input-group-addon "><i class="mdi mdi-calendar"></i></span>
+                                <div class="input-group">
+                                    <input type="text" name="start_date" value="<?php if ($result->start_date) echo date('d M Y', $result->start_date); ?>" class="date form-control datepicker">
+                                    <span class="input-group-text" id="basic-addon2"><i class="mdi mdi-calendar"></i></span>
                                 </div>
                                 <?php echo form_error('start_date'); ?>
                             </div>
@@ -65,11 +64,9 @@ echo   form_open_multipart(current_url(), $attributes);
                         <div class='row m-2'>
                             <div class="col-md-3" for='end_date'>End Date <span class='required'>*</span></div>
                             <div class="col-md-9">
-                                <div id="datetimepicker1" class="input-group date form_datetime">
-                                    <input value="<?php if ($result->end_date) echo date('d M Y', $result->end_date); ?>" type="text" name="end_date" class="date form-control datepicker col-md-3">
-
-
-                                    <span class="input-group-addon "><i class="mdi mdi-calendar"></i></span>
+                                <div class="input-group">
+                                    <input value="<?php if ($result->end_date) echo date('d M Y', $result->end_date); ?>" type="text" name="end_date" class="date form-control datepicker">
+                                    <span class="input-group-text" id="basic-addon2"><i class="mdi mdi-calendar"></i></span>
                                 </div>
                                 <?php echo form_error('end_date'); ?>
                             </div>
@@ -77,7 +74,7 @@ echo   form_open_multipart(current_url(), $attributes);
                         <div class='row m-2'>
                             <div class="col-md-3" for='document'>Upload Document </div>
                             <div class="col-md-9">
-                                <input id='document' type='file' name='document' />
+                                <input id='document' type='file' name='document' class="form-control" />
                                 <br /><?php echo form_error('document'); ?>
                                 <?php echo isset($type) ? 'File: ' . $result->document : ' ' ?>
                                 <?php echo (isset($upload_error['document'])) ? $upload_error['document'] : ""; ?>
@@ -87,27 +84,27 @@ echo   form_open_multipart(current_url(), $attributes);
                         <div class='widget'>
                             <div class='head dark'>
                                 <div class='icon'><i class='icos-pencil'></i></div>
-                                <h4>Assignment - Type or past the assignment here </h4>
+                                <h6>Assignment - Type or past the assignment here </h6>
                             </div>
-                            <div class="block-fluid editor">
-                                <textarea id="assignment" class="summernote ckeditor form-control" name="assignment" /><?php echo set_value('assignment', (isset($result->assignment)) ? htmlspecialchars_decode($result->assignment) : ''); ?></textarea>
+                            <!-- <div class="block-fluid"> -->
+                                <textarea style="min-height: 150px;" id="" class="form-control" name="assignment" /><?php echo set_value('assignment', (isset($result->assignment)) ? htmlspecialchars_decode($result->assignment) : ''); ?></textarea>
                                 <?php echo form_error('assignment'); ?>
-                            </div>
+                            <!-- </div> -->
                         </div>
 
                         <div class='widget'>
                             <div class='head dark'>
                                 <div class='icon'><i class='icos-pencil'></i></div>
-                                <h4>Comment </h4>
+                                <h6>Comment </h6>
                             </div>
-                            <div class="block-fluid editor">
-                                <textarea id="comment" class="summernote ckeditor form-control" name="comment" /><?php echo set_value('comment', (isset($result->comment)) ? htmlspecialchars_decode($result->comment) : ''); ?></textarea>
+                            <!-- <div class="block-fluid"> -->
+                                <textarea style="min-height: 150px;" id="" class="form-control" name="comment" /><?php echo set_value('comment', (isset($result->comment)) ? htmlspecialchars_decode($result->comment) : ''); ?></textarea>
                                 <?php echo form_error('comment'); ?>
                                 <?php
                                 $ext = isset($ex) ? $ex : 0;
                                 echo form_hidden('extras', set_value('extras', $ext));
                                 ?>
-                            </div>
+                            <!-- </div> -->
                         </div>
                     </div>
                 </div>
@@ -123,7 +120,7 @@ echo   form_open_multipart(current_url(), $attributes);
                     <?php echo form_submit('submit', ($updType == 'edit') ? 'Update' : 'Save', (($updType == 'create') ? "id='submit' class='btn btn-primary''" : "id='submit' class='btn btn-primary'")); ?>
                     <!-- <button type="submit" class="btn btn-primary" id="submitButton"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button> -->
                     <!-- <a class="btn btn-secondary" id="cancelButton"><i class="fe fe-arrow-left-circle me-1 lh-base"></i>Cancel</a> -->
-                    <?php echo anchor('admin/students_projects', 'Cancel', 'class="btn  btn-secondary"'); ?>
+                    <?php echo anchor('assignments/trs', 'Cancel', 'class="btn  btn-secondary"'); ?>
                 </div>
             </div>
         </div>
