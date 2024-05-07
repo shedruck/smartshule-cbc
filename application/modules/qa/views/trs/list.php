@@ -12,7 +12,7 @@
 			<div class="card-body p-2">
 				<?php if ($qa) : ?>
 					<div class="table-responsive">
-						<table id="responsiveDataTable" class="table table-bordered">
+						<table id="" class="table table-bordered">
 							<thead>
 								<th>#</th>
 								<th>Title</th>

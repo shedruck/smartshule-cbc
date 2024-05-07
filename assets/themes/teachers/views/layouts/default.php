@@ -665,7 +665,7 @@
      <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="<?php echo base_url('assets/themes/teachers') ?>/js/table-data.js"></script>
-    <?php echo theme_js('sweet-alert.min.js') ?>
+    <script src="<?php echo base_url('assets/themes/trs/js/sweet-alert/sweetalert.min.js'); ?>"></script>
 
 </body>
 

@@ -76,7 +76,7 @@ $maclasess = $classes;
 							<div class="card-body">
 								<?php $i = 0;
 								if ($given) { ?>
-
+										<div class="table-responsive">
 									<table id="datatable-buttons" class="table table-striped table-bordered">
 										<thead>
 											<th>#</th>
@@ -128,6 +128,7 @@ $maclasess = $classes;
 											</tbody>
 										<?php  } ?>
 									</table>
+									</div>
 								<?php } else { ?>
 									No question has been added
 								<?php } ?>
