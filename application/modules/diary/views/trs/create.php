@@ -20,7 +20,7 @@ echo   form_open_multipart(current_url(), $attributes);
         <div class="row justify-content-center">
           <div class="col-dm-8 col-xl-8 col-lg-8 col-sm-12 mt-3 mb-3">
             <div class="row m-2">
-              <label for="student" class="col-md-3 form-label">Student <span class="text-red">*</span></label>
+              <label for="student" class="col-md-3 form-label">Student <span class='required'>*</span></label>
               <div class="col-md-9">
                 <?php
                 echo form_dropdown('student', ['' => ''] + (array) $students, $result->student, 'class="form-control select" data-placeholder="Select Student..."');
@@ -30,7 +30,7 @@ echo   form_open_multipart(current_url(), $attributes);
             </div>
 
             <div class="row m-2">
-              <label for="activity" class="col-md-3 form-label">Activity <span class="text-red required">*</span></label>
+              <label for="activity" class="col-md-3 form-label">Activity <span class='required'>*</span></label>
               <div class="col-md-9">
                 <?php echo form_input('activity', $result->activity, 'id="activity_" autocomplete="off" class="form-control" '); ?>
                 <?php echo form_error('activity'); ?>
@@ -38,19 +38,23 @@ echo   form_open_multipart(current_url(), $attributes);
             </div>
 
             <div class="row m-2">
-              <label for="date_" class="col-md-3 form-label">Date <span class="text-red required">*</span></label>
+              <label for="date_" class="col-md-3 form-label">Date <span class='required'>*</span></label>
               <div class="col-md-9">
-                <?php
-                $date = '';
-                if (!empty($result->date_) && $result->date_ > 10000) {
-                  $date = date('d M Y', $result->date_);
-                } else {
-                  $date = set_value('date_', (isset($result->date_)) ? $result->date_ : '');
-                }
-                echo form_input('date_', $date, 'class="form-control datepicker" autocomplete="off"');
-                echo form_error('date_');
-                ?>
-
+                <div class="input-group">
+                  <div class="input-group-text">
+                    <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+                  </div>
+                  <?php
+                  $date = '';
+                  if (!empty($result->date_) && $result->date_ > 10000) {
+                    $date = date('d M Y', $result->date_);
+                  } else {
+                    $date = set_value('date_', (isset($result->date_)) ? $result->date_ : '');
+                  }
+                  echo form_input('date_', $date, 'class="form-control datepicker" placeholder="Choose date" autocomplete="off"');
+                  echo form_error('date_');
+                  ?>
+                </div>
               </div>
             </div>
 
@@ -67,7 +71,6 @@ echo   form_open_multipart(current_url(), $attributes);
               <div class="col-sm-9">
                 <div class="input-group mb-3">
                   <input type="file" class="form-control" id="inputGroupFile02" name="file[]" accept="image/*" multiple>
-                  <label class="input-group-text" for="inputGroupFile02">Upload</label>
                 </div>
                 <div id="container">
                   <!-- <a id="pickfiles" href="javascript:;" class="btn btn-custom btn-rounded">Select files</a> -->
@@ -95,7 +98,3 @@ echo   form_open_multipart(current_url(), $attributes);
   </div>
 </div>
 <?php echo form_close(); ?>
-
-
-
-

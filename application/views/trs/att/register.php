@@ -20,7 +20,7 @@
             </div><?php echo form_error('attendance_date'); ?>
         </div>
     </div>
-    <div class='form-group'>
+       <div class='form-group'>
         <div class="col-md-2" for='title'>Attendance For </div>
         <div class="col-md-4">
             <?php
