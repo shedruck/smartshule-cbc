@@ -13,7 +13,7 @@
                                                                                   echo $cc;
                                                                                   ?></span></b></h5>
          <div class="float-end">
-           <?php echo anchor('class_attendance/attendance/list', '<i class="mdi mdi-reply"></i> List All', 'class="btn btn-secondary"'); ?>
+           <?php echo anchor('class_attendance/trs/list', '<i class="mdi mdi-reply"></i> List All', 'class="btn btn-secondary"'); ?>
          </div>
        </div>
 
@@ -121,7 +121,7 @@
          <div class="card-footer">
            <div class='form-group'>
              <div class="col-md-12 text-md-end">
-               <?php echo anchor('class_attendance/attendance/list', '<i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel', 'class="btn btn-secondary mb-1 d-inline-flex go_back"'); ?>
+               <?php echo anchor('class_attendance/trs/list', '<i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel', 'class="btn btn-secondary mb-1 d-inline-flex go_back"'); ?>
                <span></span>
                <?php
                 $button_text = ($updType == 'edit') ? 'Update' : '<i class="fe fe-check-square me-1 lh-base"></i> Save';

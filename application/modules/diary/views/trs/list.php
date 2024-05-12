@@ -4,7 +4,7 @@
       <div class="card-header">
         <h6 class="mb-0"><b>ALL STUDENT DIARY</b></h6>
         <div class="float-end">
-          <?php echo anchor('trs/diary/create', '<i class="mdi mdi-plus"></i>  Add Entry Per Student', 'class="btn btn-primary"'); ?>
+          <?php echo anchor('diary/trs/create', '<i class="mdi mdi-plus"></i>  Add Entry Per Student', 'class="btn btn-primary"'); ?>
           <div class="btn-group mt-2 mb-2">
             <!-- <button type="button" class="btn btn-success btn-pill dropdown-toggle" data-bs-toggle="dropdown"> -->
             <!-- Action <span class="caret"></span> -->
@@ -16,7 +16,7 @@
               </li>
               <?php foreach ($classes as $cl) { ?>
                 <li>
-                  <a class="dropdown-item" href="<?php echo base_url('trs/diary/per_level/' . $cl->id . '/' . $this->session->userdata['session_id']) ?>">
+                  <a class="dropdown-item" href="<?php echo base_url('diary/trs/per_level/' . $cl->id . '/' . $this->session->userdata['session_id']) ?>">
                     <?php echo strtoupper($cl->name); ?>
                   </a>
                 </li>
@@ -91,8 +91,8 @@
                           Action
                         </button>
                         <ul class="dropdown-menu" style="width: 50px; ">
-                          <li><a class="dropdown-item text-primary" href='<?php echo site_url('trs/diary/edit/' . $p->id . '/' . $page); ?>'><i class='fa fa-edit'></i> Edit</a></li>
-                          <li><a class="dropdown-item text-danger" onClick="return confirm('<?php echo lang('web_confirm_delete') ?>')" href='<?php echo site_url('trs/diary/delete/' . $p->id . '/' . $page); ?>'><i class='fa fa-trash'></i> Trash</a></li>
+                          <li><a class="dropdown-item text-primary" href='<?php echo site_url('diary/trs/edit/' . $p->id . '/' . $page); ?>'><i class='fa fa-edit'></i> Edit</a></li>
+                          <li><a class="dropdown-item text-danger" onClick="return confirm('<?php echo lang('web_confirm_delete') ?>')" href='<?php echo site_url('diary/trs/delete/' . $p->id . '/' . $page); ?>'><i class='fa fa-trash'></i> Trash</a></li>
                         </ul>
 
                       </div>

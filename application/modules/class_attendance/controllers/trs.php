@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Attendance extends Trs_Controller
+class Trs extends Trs_Controller
 {
 
   function __construct()
@@ -21,7 +21,7 @@ class Attendance extends Trs_Controller
     $data['classes'] = $this->trs_m->list_my_classes();
     // echo "hellos";
 
-    $this->template->title('Attendance')->build('class_attendance/trs/list', $data);
+    $this->template->title('Attendance')->build('trs/attendance', $data);
   }
 
   function register($class = 0)
@@ -85,7 +85,7 @@ class Attendance extends Trs_Controller
   {
     if (!$id) {
       $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
-      redirect('class_attendance/trs/list/');
+      redirect('class_attendance/attendance/list/');
     }
 
     $data['class_attendance'] = $this->class_attendance_m->get($id, 1);
@@ -98,11 +98,11 @@ class Attendance extends Trs_Controller
   {
     if (!$id) {
       $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
-      redirect('class_attendance/trs/list/');
+      redirect('class_attendance/attendance/list/');
     }
     if (!$this->class_attendance_m->exists($id)) {
       $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
-      redirect('class_attendance/trs/list/');
+      redirect('class_attendance/attendance/list/');
     }
     //search the item to show in edit form
     $data['post'] = $this->class_attendance_m->get_register($id);
@@ -117,11 +117,11 @@ class Attendance extends Trs_Controller
   {
     if (!$id) {
       $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
-      redirect('class_attendance/trs/list/');
+      redirect('trs/attendance/');
     }
     if (!$this->class_attendance_m->exists($id)) {
       $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
-      redirect('class_attendance/trs/list/');
+      redirect('trs/attendance/');
     }
     $post = $this->class_attendance_m->get_register($id);
     $dat = $this->class_attendance_m->find($id);
@@ -154,7 +154,7 @@ class Attendance extends Trs_Controller
             $this->class_attendance_m->update_list($id, $st, $form);
           }
           $this->session->set_flashdata('message', array('type' => 'success', 'text' => 'Updated Successfully'));
-          redirect('class_attendance/trs/view_register/' . $id);
+          redirect('class_attendance/attendance/view_register/' . $id);
         }
       }
     }

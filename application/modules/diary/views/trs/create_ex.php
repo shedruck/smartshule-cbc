@@ -12,7 +12,7 @@ echo form_open_multipart(current_url(), $attributes);
       <div class="card-header d-flex justify-content-between align-items-center">
         <h6 class="float-start m-0">Extra-Curricular Diary</h6>
         <div class="float-end">
-          <?php echo anchor('trs/diary', '<i class="mdi mdi-reply"></i> Back', 'class="btn btn-secondary"'); ?>
+          <?php echo anchor('diary/trs/extra', '<i class="mdi mdi-reply"></i> Back', 'class="btn btn-secondary"'); ?>
         </div>
       </div>
 
@@ -83,7 +83,6 @@ echo form_open_multipart(current_url(), $attributes);
               </div>
             </div>
 
-
           </div>
         </div>
       </div>
@@ -100,4 +99,3 @@ echo form_open_multipart(current_url(), $attributes);
     </div>
   </div>
 </div>
-<?php echo form_close(); ?>

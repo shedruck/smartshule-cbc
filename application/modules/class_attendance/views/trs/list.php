@@ -5,7 +5,7 @@
         <h5 class="mb-0"><b>Class Attendance</b></h5>
 
         <div class="pull-right">
-          <?php echo anchor('class_attendance/attendance/list', '<i class="mdi mdi-reply"></i>Back', 'class="btn btn-secondary"'); ?>
+          <?php echo anchor('class_attendance/trs/list', '<i class="mdi mdi-reply"></i>Back', 'class="btn btn-secondary"'); ?>
         </div>
 
       </div>
@@ -35,9 +35,9 @@
                   <td><?php echo date('d M Y', $p->created_on); ?></td>
                   <td width="34%">
                     <div class='btn-d'>
-                      <a href="<?php echo site_url('class_attendance/attendance/view_register/' . $p->id); ?>" class="btn btn-primary-light rounded-pill"><i class="mdi mdi-account-search"></i> View</a>
+                      <a href="<?php echo site_url('class_attendance/trs/view_register/' . $p->id); ?>" class="btn btn-primary-light rounded-pill"><i class="mdi mdi-account-search"></i> View</a>
 
-                      <button class="btn btn-sm btn-icon btn-danger-light rounded-circle" data-target="#user-form-modal" data-bs-toggle="modal" type="button" onclick="location.href='<?php echo site_url('class_attendance/attendance/edit_register/' . $p->id); ?>'"><i class="bi bi-pencil-square"></i></button>
+                      <button class="btn btn-sm btn-icon btn-danger-light rounded-circle" data-target="#user-form-modal" data-bs-toggle="modal" type="button" onclick="location.href='<?php echo site_url('class_attendance/trs/edit_register/' . $p->id); ?>'"><i class="bi bi-pencil-square"></i></button>
 
                     </div>
                   </td>

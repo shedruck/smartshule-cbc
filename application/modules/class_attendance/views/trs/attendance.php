@@ -33,8 +33,8 @@
                   <td><?php echo $p->name; ?> </td>
                   <td><?php echo $ppt . ' ' . $studis; ?> </td>
                   <td class="text-center">
-                    <a href="<?php echo base_url('class_attendance/attendance/register/' . $p->id); ?>" class="btn btn-primary rounded-pill waves-effect"><i class="fa fa-plus-square me-2"></i> Add New </a>
-                    <a href="<?php echo base_url('class_attendance/attendance/list_register/' . $p->id); ?>" class="btn btn-warning rounded-pill waves-effect"><i class="mdi mdi-account-search"></i> View </a>
+                    <a href="<?php echo base_url('class_attendance/trs/register/' . $p->id); ?>" class="btn btn-primary rounded-pill waves-effect"><i class="fa fa-plus-square me-2"></i> Add New </a>
+                    <a href="<?php echo base_url('class_attendance/trs/list_register/' . $p->id); ?>" class="btn btn-warning rounded-pill waves-effect"><i class="mdi mdi-account-search"></i> View </a>
                   </td>
                 </tr>
               <?php endforeach ?>

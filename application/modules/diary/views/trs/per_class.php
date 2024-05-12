@@ -10,7 +10,7 @@
         <!-- <h6 class="float-start m-0">Academic Diary</h6> -->
         <h5 class="mb-0"><b>Academic Diary</b></h5>
         <div class="float-end">
-          <?php echo anchor('trs/diary', '<i class="mdi mdi-reply"></i> Back', 'class="btn btn-secondary"'); ?>
+          <?php echo anchor('diary/trs', '<i class="mdi mdi-reply"></i> Back', 'class="btn btn-secondary"'); ?>
         </div>
       </div>
 
@@ -51,14 +51,7 @@
                   <div class="row m-2">
                     <label class="col-md-3 form-label">Upload Photos</label>
                     <div class="col-md-9">
-                      <!-- <div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
-                    <div id="container">
-                      <a id="pickfiles" href="javascript:;" class="btn btn-custom btn-rounded">Select files</a>
-                    </div>
-                    <input type="hidden" id="pids" name="fids" value="0" />
-                    <div id="console"></div> -->
-
-                      <div class="input-group mb-3">
+                       <div class="input-group mb-3">
                         <input type="file" class="form-control" id="inputGroupFile02" name="file[]" multiple>
                       </div>
                     </div>

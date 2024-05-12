@@ -4,7 +4,7 @@
       <div class="card-header">
         <h6 class="mb-0"><b>Extra-Curricular Diary</b></h6>
         <div class="float-end">
-          <?php echo anchor('trs/diary/create_ex', '<i class="mdi mdi-plus"></i>  New Entry', 'class="btn btn-primary"'); ?>
+          <?php echo anchor('diary/trs/create_ex', '<i class="mdi mdi-plus"></i>  New Entry', 'class="btn btn-primary"'); ?>
 
         </div>
       </div>
@@ -49,8 +49,8 @@
                             Action
                           </button>
                           <ul class="dropdown-menu" style="width: 50px; ">
-                            <li><a class="dropdown-item text-primary" href='<?php echo site_url('trs/diary/edit_ex/' . $p->id . '/' . $page); ?>'><i class='fa fa-edit'></i> Edit</a></li>
-                            <li><a class="dropdown-item text-danger" onClick="return confirm('<?php echo lang('web_confirm_delete') ?>')" href='<?php echo site_url('trs/diary/delete/' . $p->id . '/2'); ?>'><i class=' fa fa-trash'></i> Trash</a></li>
+                            <li><a class="dropdown-item text-primary" href='<?php echo site_url('diary/trs/edit_ex/' . $p->id . '/' . $page); ?>'><i class='fa fa-edit'></i> Edit</a></li>
+                            <li><a class="dropdown-item text-danger" onClick="return confirm('<?php echo lang('web_confirm_delete') ?>')" href='<?php echo site_url('diary/trs/delete/' . $p->id . '/2'); ?>'><i class=' fa fa-trash'></i> Trash</a></li>
                           </ul>
 
                         </div>

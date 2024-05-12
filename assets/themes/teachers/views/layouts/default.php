@@ -727,7 +727,8 @@
         .app-sidebar {
             display: none;
         }
-        .app-header{
+
+        .app-header {
             display: none;
         }
 
