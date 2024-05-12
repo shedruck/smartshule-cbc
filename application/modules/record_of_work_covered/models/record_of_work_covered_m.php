@@ -79,46 +79,59 @@ function populate($table,$option_val,$option_text)
 	) ENGINE=InnoDB  DEFAULT CHARSET=utf8; ");
       }
       
-    function paginate_all($limit, $page)
+    function paginate_all($limit, $page, $plan = false)
     {
-            $offset = $limit * ( $page - 1) ;
-            
-            $this->db->order_by('id', 'desc');
-            $query = $this->db->get('record_of_work_covered', $limit, $offset);
+        $offset = $limit * ($page - 1);
+        $user = $this->ion_auth->get_user();
 
-            $result = array();
+        if ($plan) {
+            $this->db->where('plan', $plan);
+        }
 
-            foreach ($query->result() as $row)
-            {
-                $result[] = $row;
-            }
+        
 
-            if ($result)
-            {
-                    return $result;
-            }
-            else
-            {
-                    return FALSE;
-            }
+        $this->db->order_by('id', 'desc');
+        $list = $this->db->get('record_of_work_covered', $limit, $offset)->result();
+
+        $result = [];
+        foreach ($list as $p) {
+            $p->plans = $this->get_rec('lesson_plan', $p->plan);
+            $p->schemes = $this->get_rec('schemes_of_work', $p->scheme);
+            $result[] = $p;
+        }
+
+
+        if ($result) {
+            return $result;
+        } else {
+            return FALSE;
+        }
     }
 
-    function paginate_trs($limit, $page)
+    function paginate_trs($limit, $page, $plan = false)
     {
             $offset = $limit * ( $page - 1) ;
 			 $user = $this -> ion_auth -> get_user();
+
+             if($plan)
+             {
+                $this->db->where('plan', $plan);
+             }
+
 			$this->db->where('created_by',$user->id);
             
             $this->db->order_by('id', 'desc');
-            $query = $this->db->get('record_of_work_covered', $limit, $offset);
+            $list = $this->db->get('record_of_work_covered', $limit, $offset)->result();
 
-            $result = array();
-
-            foreach ($query->result() as $row)
+            $result = [];
+            foreach($list as $p)
             {
-                $result[] = $row;
+                $p->plans = $this->get_rec('lesson_plan',$p->plan);
+                $p->schemes = $this->get_rec('schemes_of_work', $p->scheme);
+                $result[] = $p;
             }
 
+        
             if ($result)
             {
                     return $result;
@@ -128,6 +141,79 @@ function populate($table,$option_val,$option_text)
                     return FALSE;
             }
     }
+
+    function find_rec( $plan)
+    {
+
+        // $user = $this->ion_auth->get_user();
+        // $this->db->where('created_by', $user->id);
+        if ($plan) {
+            $this->db->where('plan', $plan);
+        }
+       
+
+        $this->db->order_by('id', 'desc');
+        $list = $this->db->get('record_of_work_covered')->result();
+
+        $result = [];
+        foreach ($list as $p) {
+            $p->plans = $this->get_rec('lesson_plan', $p->plan);
+            $p->schemes = $this->get_rec('schemes_of_work', $p->scheme);
+            $result[] = $p;
+        }
+
+
+        if ($result) {
+            return $result;
+        } else {
+            return FALSE;
+        }
+    }
+
+    function single_row($plan = false)
+    {
+
+        // $user = $this->ion_auth->get_user();
+        // $this->db->where('created_by', $user->id);
+        if ($plan) 
+        {
+            $this->db->where('plan', $plan);
+        }
+
+       
+         
+
+        $this->db->order_by('id', 'desc');
+        $p = $this->db->get('record_of_work_covered')->row();
+
+            $p->plans = $this->get_rec('lesson_plan', $p->plan);
+            $p->schemes = $this->get_rec('schemes_of_work', $p->scheme);
+
+
+        if ($p) {
+            return $p;
+        } else {
+            return FALSE;
+        }
+    }
+
+    function get_trs()
+    {
+        $this->select_all_key('teachers');
+        $list =  $this->db->where($this->dx('status') . '=1', NULL, FALSE)->get('teachers')->result();
+        $teachers = [];
+        foreach ($list as $l) {
+            $teachers[$l->user_id] = $l->first_name . ' ' . $l->middle_name . ' ' . $l->last_name;
+        }
+        return $teachers;
+    }
+
+    function get_rec($table, $id)
+    {
+        return $this->db->where(array('id' => $id))->get($table)->row();
+    }
+
+
 }
 
 

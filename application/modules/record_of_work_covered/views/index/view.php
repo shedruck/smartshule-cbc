@@ -1,105 +1,113 @@
-<div class="portlet mt-2">
-    <div class="portlet-heading portlet-default border-bottom">
-        <h3 class="portlet-title text-dark">
-           <b>  Record Of Work Covered    </b>
-        </h3>
-		<div class="pull-right">
-		 
-		 <button onClick="window.print();
-                          return false" class="btn btn-primary " type="button"><span class="fa fa-print"></span> Print Receipt </button>
-				
-<a class="btn  btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>				
-      </div>
-        <div class="clearfix"></div>
-        <hr>
-    </div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header" id="pagecardheader">
+				<h6 class="float-start">Record Of Work Covered</h6>
+				<div class="btn-group btn-group-sm float-end">
+					<button onClick="window.print();
+                          return false" class="btn btn-primary " type="button"><span class="fa fa-print"></span> Print </button>
 
-         	                    
-               
-				   <div class="block-fluid">
+					<a class="btn  btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
+				</div>
+			</div>
+			<div class="card-body p-3 mb-2">
+				<!-- View Start -->
+				<div class="block-fluid">
 
+					<div class="row">
+						<div class="col-xm-12">
+							<div class="col-xm-4"></div>
+							<div class="col-xm-4">
+								<center>
+									<img src="<?php echo base_url('uploads/files/' . $this->school->document) ?>" style="width:80px">
+									<h4><?php echo $this->school->school ?></h4>
+									<h3>RECORD OF WORK</h3>
+								</center>
+							</div>
+							<div class="col-xm-3"></div>
+						</div>
+					</div>
 
-<div class='row'>
-	<div class="col-md-3  control-label " for='day'>Year   </div><div class="col-md-6">
-	<?php 
+					<div class="row">
+						<table class="table table-bordered">
+							<tr>
+								<th>
+									LEARNING AREA/SUBJECT
+								</th>
+								<td><?php
+									echo isset($subjects[$post->schemes->subject]) ? $subjects[$post->schemes->subject] : ''; ?>
+								</td>
+							</tr>
 
-	 echo $result->year
-	
-	?>
+							<tr>
+								<th>
+									NAME TEACHER
+								</th>
+								<td><?php
+									$tr =  isset($teacher[$post->created_by]) ? strtoupper($teacher[$post->created_by]) : '';
+									echo $tr;
+									?>
+								</td>
+							</tr>
 
-</div>
-</div>
-<hr>
+							<tr>
+								<th>
+									LEVEL
+								</th>
+								<td><?php
+									echo isset($this->classes[$post->schemes->level]) ? strtoupper($this->classes[$post->schemes->level]) : ''; ?>
+								</td>
+							</tr>
+						</table>
+						<hr>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>DATE</th>
+									<th>LESSON</th>
+									<th>WORK DONE</th>
+									<th>REFLECTION</th>
+									<th>SIGN</th>
+								</tr>
+							</thead>
 
+							<tbody>
+								<?php
+								foreach ($result as $p) {
+								?>
+									<tr>
+										<td><?php echo date('dS M Y', $p->date) ?></td>
+										<td><?php echo $p->schemes->lesson ?></td>
+										<td><?php echo $p->work_covered ?></td>
+										<td><?php echo $p->reflection ?></td>
+										<td>_____________</td>
+									</tr>
 
-<div class='row'>
-	<div class="col-md-3  control-label " for='day'>Term   </div><div class="col-md-6">
-	<?php 
-	
-	 echo $result->term
-	
-	?>
- 
-</div>
-</div>
-<hr>
-<div class='row'>
-	<div class="col-md-3  control-label" for='class'>Class/Level </div><div class="col-md-6">
-	<?php 
-	    $classes = $this->portal_m->get_class_options();
-		echo $classes[$result->level];
-		
-		?>
- 	
-</div>
-</div>
-<hr>
-<div class='row'>
-	<div class="col-md-3  control-label" for='week'>Week </div><div class="col-md-6">
-		<?php echo $result->week  ?>
- 	
-</div>
-</div>
-<hr>
-<div class='row'>
-	<div class="col-md-3  control-label" for='subject'>Subject/Learning Area </div><div class="col-md-6">
-	<td><?php $sub = $this->portal_m->get_subject($result->level); echo strtoupper($sub[$result->subject]);?></td>
-</div>
-</div>
-<hr>
-<div class='row'>
-	<div class="col-md-3  control-label" for='date'>Date </div><div class="col-md-6">
-	<?php echo isset($result->date) ? date('d M Y',$result->date) : ''; ?>
-</div>
-</div>
-<hr>
-<div class='row'>
-	<div class="col-md-3  control-label" for='strand'>Strand </div><div class="col-md-6">
-	<?php echo $result->strand ;?>
- 	
-</div>
-</div>
-<hr>
-<div class='row'>
-	<div class="col-md-3  control-label" for='substrand'>Sub-strand </div><div class="col-md-6">
-	<?php echo $result->substrand ; ?>
-</div>
-</div>
-<hr>
-<div class='row'>
-	<div class="col-md-3 control-label" for='topic'>Work Covered</div><div class="col-md-6">
-	<?php echo isset($result->work_covered) ? htmlspecialchars_decode($result->work_covered) : ''; ?>
-	
-</div>
-</div>
-<hr>
-<div class='row'>
-	<div class="col-md-3 control-label" for='topic'>Reflection </div><div class="col-md-6">
-	 <?php echo isset($result->reflection) ? htmlspecialchars_decode($result->reflection) : ''; ?>
-</div>
+								<?php    } ?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- View End -->
+			</div>
+			<div class="card-footer">
+				<div class="form-check d-inline-block">
+					<!-- <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+					<label class="form-check-label" for="flexCheckChecked">
+						Confirm
+					</label> -->
+				</div>
+				<div class="float-end d-inline-block btn-list">
+
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
- </div>
-            </div>
-			
-		
+<style>
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+	}
+</style>

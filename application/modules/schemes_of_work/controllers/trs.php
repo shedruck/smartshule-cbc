@@ -341,4 +341,171 @@ class Trs extends Trs_Controller
 
         return $config;
     }
+
+    function report($teacher = false, $term = false, $year = false, $subject = false, $class = false, $week = false)
+    {
+        $payload = [];
+        $post = [];
+
+        if($teacher || $term || $year)
+        {
+            $payload = $this->schemes_of_work_m->get_report($teacher, $term, $year, $subject, $class, $week);
+            $post = $this->schemes_of_work_m->get_single_row($teacher, $term, $year, $subject, $class, $week);
+        }
+        
+        if ($this->input->post()) {
+            $teacher = $this->user->id;
+            $term = $this->input->post('term');
+            $year = $this->input->post('year');
+            $subject = $this->input->post('subject');
+            $class = $this->input->post('class');
+            $week = $this->input->post('week');
+
+            $payload = $this->schemes_of_work_m->get_report($teacher, $term, $year, $subject, $class, $week);
+            $post = $this->schemes_of_work_m->get_single_row($teacher, $term, $year, $subject, $class, $week);
+        }
+
+        $data['payload'] = $payload;
+        $data['post'] = $post;
+        $data['cbc_subjects'] = $this->schemes_of_work_m->get_subjects_assigned();            //create 
+        $data['teachers'] = $this->schemes_of_work_m->get_trs();
+        $this->template->title('View Schemes of work ')->build('index/report', $data);
+    }
+    
+    function upload_excel()
+    {
+        $data['cbc_subjects'] = $this->schemes_of_work_m->get_subjects_assigned();      //create pagination links
+        $data['links'] = $this->pagination->create_links();
+        $data['teachers'] = $this->schemes_of_work_m->get_trs();
+        $this->template->title(' Schemes Of Work ')->build('index/upload', $data);
+    }
+
+    function put_excel()
+    {
+
+        if (!empty($_FILES['userfile']['name'])) {
+            $dest = FCPATH . "uploads/schemes_of_work/" . date('Y') . '/' . date('m');
+
+            $config['upload_path'] = $dest;
+            $config['allowed_types'] = 'xls|xlsx|';
+            $config['max_size'] = 1024 * 50;
+            $config['encrypt_name'] = FALSE;
+
+            $this->load->library('upload', $config);
+
+            if (!is_dir($dest)) {
+
+                mkdir($dest, 0777, true);
+            }
+            $data = $this->upload->do_upload('userfile');
+
+
+            //upload the file
+            if (!$this->upload->do_upload('userfile')) {
+                $data['upload_error'][$index] = $this->upload->display_errors("<span class='error'>", "</span>");
+
+                redirect('admin/upload_payments');
+
+                return FALSE;
+            }
+
+            $data = $this->upload->data();
+
+            $file_name = $data['file_name'];
+            $file_path = $dest;
+        }
+
+
+
+
+
+        require_once APPPATH . 'libraries/xlsxreader.php';
+
+
+        $reader = new XLSXReader($dest . '/' . $file_name);
+
+
+
+        $reader->decodeUTF8(true);
+        $reader->read();
+        $woksh = array();
+
+        $sheets = $reader->getSheets();
+
+        $i = 0;
+        foreach ($sheets as $sheet) {
+            $i++;
+            $data = $reader->getSheetDatas($sheet["id"]);
+
+            $titles = $data[0];
+            unset($data[0]);
+
+            //print_r( $data );die;
+
+            foreach ($data as $rid => $row) {
+                $nwrow = array();
+                foreach ($row as $cid => $cell) {
+                    if (!isset($titles[$cid])) {
+                        echo '<pre>xx  ';
+                        print_r("[{$cid}] not set");
+                        print_r($titles);
+                        print_r($row);
+                        echo '</pre>';
+                        die;
+                    }
+                    $nwrow[$titles[$cid]] = $cell;
+                }
+                foreach ($titles as $tl) {
+                    if (!isset($nwrow[$tl])) {
+                        $nwrow[$tl] = '';
+                    }
+                }
+                $woksh[] = $nwrow;
+            }
+            break;
+        }
+       
+        $dt = [];
+        $user = $this->ion_auth->get_user();
+        foreach ($woksh as $rid => $row) {
+
+            $item = (object) $row;
+
+            if (!empty($item->substrand) || !empty($item->strand) || !empty($item->key_enquiry_question) || !empty($item->week)) {
+                $form_data = array(
+                    'year' => $this->input->post('year'),
+                    'term' => $this->input->post('term'),
+                    'level' => $this->input->post('class'),
+                    'week' => $item->week,
+                    'lesson' => $item->lesson,
+                    'subject' => $this->input->post('subject'),
+                    'strand' => $item->strand,
+                    'substrand' => $item->substrand,
+                    'specific_learning_outcomes' => $item->specific_learning_outcome,
+                    'key_inquiry_question' => $item->key_enquiry_question,
+                    'learning_experiences' => $item->learning_experience,
+                    'learning_resources' => $item->learning_resources,
+                    'assessment' => $item->assessment,
+                    'assessment_tool' => $this->input->post('assessment_tool'),
+                    'remarks' => $item->remarks,
+                    'created_by' => $user->id,
+                    'created_on' => time()
+                );
+                $ok =  $this->schemes_of_work_m->create($form_data);
+            }
+        }
+
+
+
+        if ($ok) {
+            $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+        } else {
+            $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+        }
+
+        redirect('schemes_of_work/trs');
+
+
+         
+    }
 }

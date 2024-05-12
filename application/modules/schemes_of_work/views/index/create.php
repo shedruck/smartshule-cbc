@@ -11,7 +11,7 @@ krsort($yrs);
 		<div class="card">
 			<div class="card-header">
 				<h6 class="float-start">Schemes of Work</h6>
-				<div class="float-end">
+				<div class="float-end" role="group">
 					<?php echo anchor('schemes_of_work/trs', '<i class="fa fa-list">
                 	</i> ' . lang('web_list_all', array(':name' => 'Schemes of work')), 'class="btn btn-primary"'); ?>
 

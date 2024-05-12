@@ -535,12 +535,12 @@ class Trs_m extends MY_Model
 
             $passport = $this->portal_m->student_passport($iCol->photo);
             $fake = base_url('uploads/files/member.png');
-            $ppst = '<image src="' . $fake . '" width="80" height="80" class="thumb-sm img-circle" >';
+            $ppst = '<image src="' . $fake . '" width="50" height="50" class="thumb-sm img-circle" >';
 
             if ($passport)
             {
                 $path = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
-                $ppst = '<image src="' . $path . '" width="80" height="80" class="thumb-sm img-circle" >';
+                $ppst = '<image src="' . $path . '" width="50" height="50" class="thumb-sm img-circle" >';
             }
 
 
@@ -735,12 +735,12 @@ class Trs_m extends MY_Model
 
             $passport = $this->portal_m->student_passport($iCol->photo);
             $fake = base_url('uploads/files/member.png');
-            $ppst = '<image src="' . $fake . '" width="80" height="80" class="thumb-sm img-circle" >';
+            $ppst = '<image src="' . $fake . '" width="50" height="50" class="thumb-sm img-circle" >';
 
             if ($passport)
             {
                 $path = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
-                $ppst = '<image src="' . $path . '" width="80" height="80" class="thumb-sm img-circle" >';
+                $ppst = '<image src="' . $path . '" width="50" height="50" class="thumb-sm img-circle" >';
             }
 
 

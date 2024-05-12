@@ -27,7 +27,7 @@
             <label class="col-sm-3 control-label">Parent <span class="required">*</span></label>
             <div class="col-sm-9">
                 <?php
-                echo form_dropdown('to[]', $parents, (isset($result->to)) ? $result->to : '', ' class="select" multiple data-placeholder="Select ..." ');
+                echo form_dropdown('to[]', $parents, (isset($result->to)) ? $result->to : '', ' class="form-control" multiple data-placeholder="Select ..." ');
                 echo form_error('to');
                 ?>
             </div>

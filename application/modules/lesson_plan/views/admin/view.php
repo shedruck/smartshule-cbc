@@ -22,6 +22,15 @@
 	<th width="30%" class="bg-black">Year </th>
 	<td><?php echo $result->year ?></td>
 	</tr>
+
+	<tr>
+	<th width="30%" class="bg-black">Year </th>
+	<td>
+	<?php if($result->file_name){?>
+					<a class="btn btn-sm btn-info" target="_blank" href='<?php echo base_url()?><?php echo $result->file_path?>/<?php echo $result->file_name?>' /><i class='fa fa-arrow-down'></i> Download</a>
+					<?php } ?>
+		</td>
+	</tr>
 	
 	<tr>
 	<th width="30%" class="bg-black">Week of the Term </th>
