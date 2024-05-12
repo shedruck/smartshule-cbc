@@ -494,7 +494,7 @@
             <div class="main-content app-content mt-0">
 
                 <!-- PAGE-HEADER -->
-                <div class="page-header d-flex align-items-center justify-content-between border-bottom mb-4">
+                <div id="schoolretmheader" class="page-header d-flex align-items-center justify-content-between border-bottom mb-4">
                     <h1 class="page-title"><?php echo $this->school->school ?></h1>
                     <div>
                         <ol class="breadcrumb">
@@ -720,6 +720,24 @@
 
     .required {
         color: red;
+    }
+</style>
+<style>
+    @media print {
+        .app-sidebar {
+            display: none;
+        }
+        .app-header{
+            display: none;
+        }
+
+        #pagecardheader {
+            display: none;
+        }
+
+        #schoolretmheader {
+            display: none;
+        }
     }
 </style>
 

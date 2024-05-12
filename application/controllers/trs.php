@@ -77,7 +77,7 @@ class Trs extends Trs_Controller
 		
 	function view_past_papers($id=FALSE, $page = NULL)
         {
-            //redirect if no $id
+            //redirect i no $id
             if (!$id){
                     $this->session->set_flashdata('message', array( 'type' => 'warning', 'text' => lang('web_object_not_exist') ) );
                     redirect('trs/past_papers');

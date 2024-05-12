@@ -359,4 +359,67 @@ class Messages_m extends MY_Model
                 }
         }
 
+        function list_class_parents()
+        {
+            $cls = $this->db->where('class_teacher', $this->user->id)->get('classes')->result();
+            $classids = array();
+    
+            foreach ($cls as $c)
+            {
+                $classids[] = $c->id;
+            }
+            if (empty($classids))
+            {
+                return array();
+            }
+    
+            $ls = $this->db->select('id,' . $this->dxa('class'), FALSE)
+                              ->where($this->dx('admission.class') . ' IN  (' . implode(',', $classids) . ')', NULL, FALSE)
+                              ->where($this->dx('admission.status') . '= 1', NULL, FALSE)
+                              ->get('admission')
+                              ->result();
+    
+            $final = array();
+            foreach ($ls as $st)
+            {
+                $student = $this->worker->get_student($st->id);
+                $parents = $this->get_parent($st->id);
+    
+                foreach ($parents as $p)
+                {
+                    if ($p->user)
+                    {
+                        $final[$p->user] = $p->name . ' (' . $student->first_name . ' ' . $student->last_name . ')';
+                    }
+                }
+            }
+            return $final;
+        }
+
+        function get_parent($id)
+        {
+            $list = $this->db->where(array('student_id' => $id))->get('assign_parent')->result();
+            $pids = array();
+            foreach ($list as $p)
+            {
+                $parent = $this->find_parent($p->parent_id);
+    
+                $pids[] = (object) array('id' => $parent->id, 'user' => $parent->user_id, 'name' => $parent->first_name . ' ' . $parent->last_name);
+            }
+            return $pids;
+        }
+    
+        function find_parent($id)
+        {
+            $this->select_all_key('parents');
+            return $this->db->where('id', $id)
+                                                ->get('parents')
+                                                ->row();
+        }
+    
+        function fetch_class($id)
+        {
+            return $this->db->where(array('id' => $id))->get('classes')->row();
+        }
+
 }

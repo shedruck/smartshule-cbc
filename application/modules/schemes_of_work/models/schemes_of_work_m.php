@@ -132,6 +132,96 @@ function populate($table,$option_val,$option_text)
                     return FALSE;
             }
     }
+
+    function get_subjects_assigned()
+    {
+        $out = [];
+        $list =  $this->db->where(['type' => 2, 'teacher' => $this->profile->id])->get('subjects_assign')->result();
+        $subs = $this->populate('cbc_subjects','id','name');
+        foreach($list as $p)
+        {
+            $subject =  isset($subs[$p->subject]) ? $subs[$p->subject] : '';
+            $clas = isset($this->streams[$p->class]) ? $this->streams[$p->class] : '';
+            $out[$p->subject] = $subject.'-'.$clas;
+        }
+
+        return $out;
+    }
+
+    function get_trs()
+    {
+        $this->select_all_key('teachers');
+        $list =  $this->db->where($this->dx('status'). '=1',NULL, FALSE)->get('teachers')->result();
+        $teachers = [];
+        foreach ($list as $l) {
+            $teachers[$l->user_id] = $l->first_name . ' ' . $l->middle_name . ' ' . $l->last_name;
+        }
+        return $teachers;
+    }
+
+    function get_report($teacher, $term,$year,$subject, $class, $week = false)
+    {
+        if($teacher)
+        {
+            $this->db->where('created_by',$teacher);
+        }
+
+        if($week)
+        {
+            $this->db->where('week',$week);
+        }
+
+        if($term)
+        {
+            $this->db->where('term',$term);
+        }
+
+        if($year)
+        {
+            $this->db->where('year',$year);
+        }
+
+        if($subject)
+        {
+            $this->db->where('subject',$subject);
+        }
+
+        if($class)
+        {
+            $this->db->where('level',$class);
+        }
+
+        return $this->db->get('schemes_of_work')->result();
+    }
+
+    function get_single_row($teacher, $term, $year, $subject, $class, $week = false)
+    {
+        if ($teacher) {
+            $this->db->where('created_by', $teacher);
+        }
+
+        if ($week) {
+            $this->db->where('week', $week);
+        }
+
+        if ($term) {
+            $this->db->where('term', $term);
+        }
+
+        if ($year) {
+            $this->db->where('year', $year);
+        }
+
+        if ($subject) {
+            $this->db->where('subject', $subject);
+        }
+
+        if ($class) {
+            $this->db->where('level', $class);
+        }
+
+        return $this->db->order_by('week', 'ASC')->order_by('lesson', 'ASC')->get('schemes_of_work')->row();
+    }
 }
 
 

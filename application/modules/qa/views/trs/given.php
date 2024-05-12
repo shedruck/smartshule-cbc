@@ -31,6 +31,7 @@ $maclasess = $classes;
                                         </div>
                                        
                                     </div>
+									
                                 </div>
 						<hr>
 						<table class="table">
