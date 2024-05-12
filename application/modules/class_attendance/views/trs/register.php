@@ -4,7 +4,7 @@
       <div class="card-header">
         <h5 class="mb-0"><b>Record Attendance</b></h5>
         <div class="float-end">
-          <?php echo anchor('class_attendance/attendance/list', '<i class="mdi mdi-reply"></i> List All', 'class="btn btn-secondary"'); ?>
+          <?php echo anchor('class_attendance/trs/list', '<i class="mdi mdi-reply"></i> List All', 'class="btn btn-secondary"'); ?>
         </div>
       </div>
 

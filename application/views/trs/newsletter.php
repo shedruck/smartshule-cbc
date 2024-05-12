@@ -5,8 +5,7 @@
 				<div class="employee-office-table">
 					<div class="table-responsive1">
 							<div class="card-header d-flex align-items-center justify-content-between">
-							
-							  <div class="col-sm-12">
+							<div class="col-sm-12">
 									<h4 class="card-title mb-0 d-inline-block">Newsletters</h4>
 							  </div>		
 							

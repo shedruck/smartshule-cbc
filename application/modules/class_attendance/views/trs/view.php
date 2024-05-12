@@ -12,7 +12,7 @@
        <div class="card-header">
          <h5 class="mb-0"><b>Class Attendance - <?php echo $cc; ?></b></h5>
          <div class="pull-right">
-           <?php echo anchor('class_attendance/attendance/list_register/' . $dat->class_id, '<i class="mdi mdi-reply"></i> Back', 'class="btn btn-secondary"'); ?>
+           <?php echo anchor('class_attendance/trs/list_register/' . $dat->class_id, '<i class="mdi mdi-reply"></i> Back', 'class="btn btn-secondary"'); ?>
          </div>
        </div>
 

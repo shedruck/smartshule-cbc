@@ -50,6 +50,11 @@
         .mdi {
             font-size: 19px;
         }
+
+        .popover-content.note-children-container {
+            display: none;
+        }
+    
     </style>
     <!-- jQuery  -->
     <?php echo theme_js('jquery.min.js'); ?>
@@ -729,5 +734,6 @@ if ($this->ion_auth->is_in_group($this->user->id, 3)) {
 
 
         </body>
+
 
 </html>

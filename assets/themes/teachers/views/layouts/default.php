@@ -25,6 +25,8 @@
     <!-- BOOTSTRAP CSS -->
     <link id="style" href="<?php echo base_url('assets/themes/teachers') ?>/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <!-- STYLE CSS -->
     <link href="<?php echo base_url('assets/themes/teachers') ?>/css/style.css" rel="stylesheet">
 
@@ -59,7 +61,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+    <!-- Sweetalerts CSS -->
+    <link rel="stylesheet" href="../assets/libs/sweetalert2/sweetalert2.min.css">
 
+    <style>
+        .popover-content.note-children-container {
+            display: none;
+        }
+    </style>
 
 </head>
 
@@ -669,6 +678,12 @@
     <script src="<?php echo base_url('assets/themes/trs/js/sweet-alert/sweetalert.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/themes/trs/js/summernote/summernote.min.js'); ?>"></script>
 
+
+    <!-- Sweetalerts JS -->
+    <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="../assets/js/sweet-alert.js"></script>
+
+
 </body>
 
 <script>
@@ -712,7 +727,8 @@
         .app-sidebar {
             display: none;
         }
-        .app-header{
+
+        .app-header {
             display: none;
         }
 
@@ -768,6 +784,12 @@
         });
 
     });
+</script>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
 </script>
 
 
