@@ -7,7 +7,7 @@
 					<?php $cl = $this->portal_m->get_class_options();
 					echo strtoupper($cl[$post->level]); ?> - Q and A Given Quiz
 				</h6>
-				<div class="float-end">
+				<div class="btn-group btn-group-sm float-end" role="group">
 					<?php echo anchor('qa/trs/', '<i class="fa fa-list"></i> List All', 'class="btn btn-info btn-sm "'); ?>
 					<a class="btn btn-sm btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
 				</div>

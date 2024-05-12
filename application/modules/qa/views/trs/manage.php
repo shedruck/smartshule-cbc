@@ -3,7 +3,7 @@
 		<div class="card">
 			<div class="card-header">
 				<h6 class="float-start"><?php echo $post->title ?> - Question and Answers</h6>
-				<div class="float-end">
+				<div class="btn-group btn-group-sm float-end" role="group">
 					<a class="btn btn-sm btn-danger pull-right" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
 					<?php echo anchor('qa/trs/', '<i class="fa fa-list"></i> List All', 'class="btn btn-primary btn-sm pull-right"'); ?>
 					<a class="btn btn-success btn-sm pull-right" href='<?php echo site_url('qa/trs/view_qa/' . $post->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-share'></i> View Details</a>

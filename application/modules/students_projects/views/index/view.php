@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h6 class="float-start">Student Projects</h6>
-                <div class="float-end">
+                <div class="btn-group btn-group-sm float-end" role="group">
                     <?php echo anchor('students_projects/trs', '<i class="fa fa-list">
                 </i> ' . lang('web_list_all', array(':name' => 'Students Projects')), 'class="btn btn-primary"'); ?>
 

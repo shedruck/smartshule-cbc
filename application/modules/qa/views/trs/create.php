@@ -7,7 +7,7 @@ echo   form_open_multipart(current_url(), $attributes);
 		<div class="card">
 			<div class="card-header">
 				<h6 class="float-start">Question and Answers</h6>
-				<div class="float-end">
+				<div class="btn-group btn-group-sm float-end" role="group">
 					<a class="btn btn-sm btn-danger pull-right" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
 					<?php echo anchor('qa/trs/', '<i class="fa fa-list"></i> List All', 'class="btn btn-primary btn-sm pull-right"'); ?>
 				</div>

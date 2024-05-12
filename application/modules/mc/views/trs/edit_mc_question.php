@@ -3,7 +3,7 @@
 		<div class="card">
 			<div class="card-header">
 				<h6 class="float-start">Multiple Choices </h6>
-				<div class="float-end">
+				<div class="btn-group btn-group-sm float-end" role="group">
 					<?php echo anchor('mc/trs/', '<i class="fa fa-list"></i> List All', 'class="btn btn-primary btn-sm "'); ?>
 					<a class="btn btn-sm btn-danger" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
 					<?php echo anchor('mc/trs/', '<i class="fa fa-home"> </i> Exit', 'class="btn btn-sm btn-warning"'); ?>

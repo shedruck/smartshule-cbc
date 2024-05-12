@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h6 class="float-start"><?php echo $post->title ?> - Question and Answers</h6>
-                <div class="float-end">
+                <div class="btn-group btn-group-sm float-end" role="group">
                     <!-- <button class="btn btn-primary off-canvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
                     <button class="btn btn-success btn-sm off-canvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fa fa-folder"></i> Post Quiz to Students <span class="caret"></span> </button>
 

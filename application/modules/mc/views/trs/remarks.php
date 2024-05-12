@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<div class="card">
 			<div class="card-header">
-				<h6 class="float-start">
+				<h6 class="btn-group btn-group-sm float-start" role="group">
 					<?php $cl = $this->portal_m->get_class_options();
 					echo strtoupper($cl[$post->level]); ?> - Multiple Choices Given Quiz
 				</h6>

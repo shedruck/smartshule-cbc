@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h6 class="float-start">Student Projects</h6>
-                <div class="float-end">
+                <div class="btn-group btn-group-sm float-end" role="group">
                     <?php echo anchor('students_projects/trs/create/' . $page, '<i class="glyphicon glyphicon-plus"></i> ' . lang('web_add_t', array(':name' => 'Student Projects')), 'class="btn btn-primary"'); ?>
 
                     <a class="btn btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
@@ -44,11 +44,24 @@
                                         <td><?php echo $p->strand; ?></td>
 
                                         <td><?php echo $p->remarks; ?></td>
-                                        <td width='220'>
-                                            <div class='btn-group center text-center'>
+                                        <td width=''>
+                                            <!-- <div class='btn-group center text-center'>
                                                 <a class="btn btn-sm btn-success" href='<?php echo site_url('students_projects/trs/view/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-share'></i> View</a>
                                                 <a class="btn btn-sm btn-primary" href='<?php echo site_url('students_projects/trs/edit/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-edit'></i> Edit</a>
                                                 <a class="btn btn-sm btn-danger" onClick="return confirm('<?php echo lang('web_confirm_delete') ?>')" href='<?php echo site_url('students_projects/trs/delete/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-trash'></i> Trash</a>
+                                            </div> -->
+
+                                            <div class="btn-group my-2">
+                                                    <button type="button" class="btn btn-success-light dropdown-toggle rounded-pill" data-bs-toggle="dropdown" aria-expanded="false">
+                                                      Action
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item text-success" href='<?php echo site_url('students_projects/trs/view/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-share'></i> View</a></li>
+                                                        <li><a class="dropdown-item text-primary" href='<?php echo site_url('students_projects/trs/edit/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-edit'></i> Edit</a></li>			
+														<li><a class="dropdown-item text-danger" onClick="return confirm('<?php echo lang('web_confirm_delete') ?>')" href='<?php echo site_url('students_projects/trs/delete/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-trash'></i> Trash</a></li>
+														
+                                                        
+                                                    </ul>
                                             </div>
                                         </td>
 
