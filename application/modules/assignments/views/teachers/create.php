@@ -87,7 +87,7 @@ echo   form_open_multipart(current_url(), $attributes);
                                 <h6>Assignment - Type or past the assignment here </h6>
                             </div>
                             <!-- <div class="block-fluid"> -->
-                                <textarea style="min-height: 150px;" id="" class="form-control" name="assignment" /><?php echo set_value('assignment', (isset($result->assignment)) ? htmlspecialchars_decode($result->assignment) : ''); ?></textarea>
+                                <textarea style="min-height: 150px;" id="" class="form-control editor" name="assignment" /><?php echo set_value('assignment', (isset($result->assignment)) ? htmlspecialchars_decode($result->assignment) : ''); ?></textarea>
                                 <?php echo form_error('assignment'); ?>
                             <!-- </div> -->
                         </div>
@@ -98,7 +98,7 @@ echo   form_open_multipart(current_url(), $attributes);
                                 <h6>Comment </h6>
                             </div>
                             <!-- <div class="block-fluid"> -->
-                                <textarea style="min-height: 150px;" id="" class="form-control" name="comment" /><?php echo set_value('comment', (isset($result->comment)) ? htmlspecialchars_decode($result->comment) : ''); ?></textarea>
+                                <textarea style="min-height: 150px;" id="" class="form-control editor" name="comment" /><?php echo set_value('comment', (isset($result->comment)) ? htmlspecialchars_decode($result->comment) : ''); ?></textarea>
                                 <?php echo form_error('comment'); ?>
                                 <?php
                                 $ext = isset($ex) ? $ex : 0;

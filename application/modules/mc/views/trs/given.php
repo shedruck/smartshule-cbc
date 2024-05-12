@@ -6,7 +6,7 @@ $maclasess = $classes;
 		<div class="card">
 			<div class="card-header">
 				<h6 class="float-start">Given Quiz</h6>
-				<div class="float-end">
+				<div class="btn-group btn-group-sm float-end" role="group">
 					<button class="btn btn-success btn-sm off-canvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="fa fa-folder"></i> Post Quiz to Students <span class="caret"></span> </button>
 					<?php echo anchor('mc/trs/', '<i class="fa fa-list"></i> List All', 'class="btn btn-info btn-sm "'); ?>
 					<a class="btn btn-sm btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>

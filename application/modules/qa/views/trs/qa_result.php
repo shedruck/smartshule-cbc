@@ -6,7 +6,7 @@
 					<?php $st = $this->portal_m->find($student);
 					echo $p->title; ?> Result for : <?php echo $st->first_name; ?> <?php echo $st->middle_name; ?> <?php echo $st->last_name; ?>
 				</h6>
-				<div class="float-end">
+				<div class="btn-group btn-group-sm float-end" role="group">
 					<?php echo anchor('qa/trs/', '<i class="fa fa-list"></i> List All', 'class="btn btn-info btn-sm "'); ?>
 					<a class="btn btn-sm btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
 				</div>
