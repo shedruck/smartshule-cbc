@@ -149,7 +149,7 @@
 
                                     </div> <!-- end p-20 -->
                                 </div> <!-- end col -->
-								     <div class="col-sm-4">
+								<div class="col-sm-4">
                                     <div class="p-20">
 
                                         <div class="">
@@ -187,9 +187,6 @@
                                            
 
                                         </div>
-
-
-
                                     </div>
                                 </div> <!-- end col -->
                             

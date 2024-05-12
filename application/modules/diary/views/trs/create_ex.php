@@ -1,155 +1,103 @@
-<div class="portlet mt-2">
-    <div class="portlet-heading portlet-default border-bottom">
-        <h3 class="portlet-title text-dark">
-            Extra-Curricular Diary
-        </h3>
-        <div class="portlet-widgets">
-            <?php echo anchor('trs/diary/extra', '<i class="mdi mdi-reply"></i> Back', 'class="btn btn-primary"'); ?>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<?php
+$attributes = array('class' => 'form-horizontal', 'id' => 'dirr');
+echo form_open_multipart(current_url(), $attributes);
+?>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="float-start m-0">Extra-Curricular Diary</h6>
+        <div class="float-end">
+          <?php echo anchor('trs/diary', '<i class="mdi mdi-reply"></i> Back', 'class="btn btn-secondary"'); ?>
         </div>
-        <div class="clearfix"></div>
-        <hr>
-    </div>
-    <div id="bg-default" class="panel-collapse collapse in">
-        <div class="portlet-body">
-            <?php
-            $attributes = array('class' => 'form-horizontal', 'id' => 'dirr');
-            echo form_open_multipart(current_url(), $attributes);
-            ?>
-            <div class='form-group'>
-                <label class="col-md-3 control-label" for='student'>Student <span class='required'>*</span></label>
-                <div class="col-md-6">
-                    <?php
-                    echo form_dropdown('student', ['' => ''] + (array) $students, $result->student, ' class="select" data-placeholder="Select Student..." ');
-                    echo form_error('student');
-                    ?> 
-                </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="row justify-content-center">
+          <div class="col-dm-8 col-xl-8 col-lg-8 col-sm-12 mt-3 mb-3">
+            <div class="row m-2">
+              <label for="student" class="col-md-3 form-label">Student <span class='required'>*</span></label>
+              <div class="col-md-9">
+                <?php
+                echo form_dropdown('student', ['' => ''] + (array) $students, $result->student, ' class="form-control select" data-placeholder="Select Student..." ');
+                echo form_error('student');
+                ?>
+              </div>
             </div>
 
-            <div class='form-group'>
-                <label class="col-md-3 control-label" for='activity'>Activity <span class='required'>*</span></label>
-                <div class="col-md-6">
-                    <?php
-                    echo form_dropdown('activity', ['' => ''] + $activities, $result->activity, ' class="select" data-placeholder="Select Activity..." ');
-                    echo form_error('activity');
-                    ?> 
-                </div>
+            <div class="row m-2">
+              <label for="activity" class="col-md-3 form-label">Activity <span class='required'>*</span></label>
+              <div class="col-md-9">
+                <?php
+                echo form_dropdown('activity', ['' => ''] + $activities, $result->activity, ' class="form-control select" data-placeholder="Select Activity..." ');
+                echo form_error('activity');
+                ?>
+              </div>
             </div>
 
-            <div class='form-group'>
-                <label class="col-md-3 control-label" for='date_'>Date  <span class='required'>*</span></label>
-                <div class="col-md-6">
-                    <?php
-                    $date = '';
-                    if (!empty($result->date_) && $result->date_ > 10000)
-                    {
-                        $date = date('d M Y', $result->date_);
-                    }
-                    else
-                    {
-                        $date = set_value('date_reported', (isset($result->date_)) ? $result->date_ : '');
-                    }
-                    echo form_input('date_', $date, 'id="date__"  class="form-control datepicker" autocomplete="off" ');
-                    echo form_error('date_');
-                    ?>
+            <div class="row m-2">
+              <label for="date_" class="col-md-3 form-label">Date <span class='required'>*</span></label>
+              <div class="col-md-9">
+                <div class="input-group">
+                  <div class="input-group-text">
+                    <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+                  </div>
+
+                  <?php
+                  $date = '';
+                  if (!empty($result->date_) && $result->date_ > 10000) {
+                    $date = date('d M Y', $result->date_);
+                  } else {
+                    $date = set_value('date_reported', (isset($result->date_)) ? $result->date_ : '');
+                  }
+                  echo form_input('date_', $date, 'id="date__"  class="form-control datepicker" autocomplete="off" ');
+                  echo form_error('date_');
+                  ?>
                 </div>
-            </div>
-            <div class='form-group'>
-                <label class="col-md-3 control-label">Teacher's  Comment  </label><div class="col-md-6">
-                    <textarea id="teacher_comment"  rows="5" class=" form-control "  name="teacher_comment"  /><?php echo set_value('teacher_comment', (isset($result->teacher_comment)) ? htmlspecialchars_decode($result->teacher_comment) : ''); ?></textarea>
-                    <?php echo form_error('teacher_comment'); ?>
-                </div>
-            </div>
-            <div class="form-group">
-                <label  class="col-sm-3 control-label">Upload Photos </label>
-                <div class="col-sm-9">
-                    <div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
-                    <div id="container">
-                        <a id="pickfiles" href="javascript:;" class="btn btn-custom btn-rounded">Select files</a>
-                    </div>
-                    <input type="hidden" id="pids" name="fids" value="0"/>
-                    <div id="console"></div>
-                </div>
+              </div>
             </div>
 
-            <hr>
-            <div class='form-group'>
-                <div class="col-md-3 control-label"></div>
-                <div class="col-md-6">
-                    <a href="<?php echo base_url('trs/diary/extra'); ?>" class="btn btn-default">  <i class="mdi mdi-close"></i> <span>Cancel</span></a>
-                    <button  type="button" id="process" class="btn btn-pink"> <i class="mdi mdi-send"></i> <span> Submit &nbsp; </span> </button>
-                </div>
+            <div class="row m-2">
+              <label class="col-md-3 form-label">Teacher's Comment</label>
+              <div class="col-md-9">
+                <textarea id="teacher_comment" rows="5" class=" form-control " name="teacher_comment" /><?php echo set_value('teacher_comment', (isset($result->teacher_comment)) ? htmlspecialchars_decode($result->teacher_comment) : ''); ?></textarea>
+                <?php echo form_error('teacher_comment'); ?>
+              </div>
             </div>
 
-            <?php echo form_close(); ?>
-            <div class="clearfix mb-5"></div>
+            <div class="row m-2">
+              <label for="photos" class="col-sm-3 form-label">Upload Photos</label>
+              <div class="col-sm-9">
+                <div class="input-group mb-3">
+                  <input type="file" class="form-control" id="inputGroupFile02" name="file[]" accept="image/*" multiple>
+                </div>
+                <div id="container">
+                  <!-- <a id="pickfiles" href="javascript:;" class="btn btn-custom btn-rounded">Select files</a> -->
+                </div>
+                <input type="hidden" id="pids" name="fids" value="0" />
+                <div id="console"></div>
+              </div>
+            </div>
+
+
+          </div>
         </div>
+      </div>
+      <div class="card-footer">
+        <div class="form-check d-inline-block">
+
+        </div>
+        <div class="float-end d-inline-block btn-list">
+          <button type="submit" class="btn btn-primary" id="process"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button>
+          <a class="btn btn-secondary" id="cancelButton"><i class="fe fe-arrow-left-circle me-1 lh-base"></i>Cancel</a>
+        </div>
+      </div>
+      <?php echo form_close(); ?>
     </div>
+  </div>
 </div>
-
-<script type="text/javascript">
-    var str = '';
-    var uploader = new plupload.Uploader({
-        runtimes: 'html5,html4',
-        browse_button: 'pickfiles',
-        container: document.getElementById('container'),
-        url: '<?php echo base_url('trs/diary/upload/2'); ?>',
-        filters: {
-            max_file_size: '20mb',
-            mime_types: [
-                {title: "Image files", extensions: "jpg,gif,png,jpeg,webp"}
-            ]
-        },
-        init: {
-            PostInit: function () {
-                document.getElementById('filelist').innerHTML = '';
-            },
-            FilesAdded: function (up, files)
-            {
-                plupload.each(files, function (file)
-                {
-                    document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
-                });
-            },
-            UploadProgress: function (up, file)
-            {
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
-            },
-            Error: function (up, err)
-            {
-                document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
-            },
-            FileUploaded: function (resp, status, headers)
-            {
-                if (headers.response == 'login')
-                {
-                    console.log('You are not Logged In..');
-                    window.location.reload();
-                }
-                else
-                {
-                    var resp = $.parseJSON(headers.response);
-                    str = str + resp.fid + '|';
-                    $("#pids").val(str);
-                }
-            },
-            UploadComplete: function (up, err)
-            {
-                $('#dirr').submit();
-            }
-        }
-    });
-
-    uploader.init();
-
-    $('#process').on('click', function (e)
-    {
-        if (document.getElementById('filelist').innerHTML != '')
-        {
-            uploader.start();
-        }
-        else
-        {
-            $('#dirr').submit();
-        }
-    });
-</script>
+<?php echo form_close(); ?>

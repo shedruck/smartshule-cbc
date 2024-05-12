@@ -352,13 +352,11 @@ class Diary extends Trs_Controller
         //validate the fields of form
         if ($this->form_validation->run())
         {
-            $fids = [];
-            $filestr = $this->input->post('fids');
-            if (!empty($filestr))
-            {
-                $filestr = rtrim($filestr, '|');
-                $fids = explode('|', $filestr);
-            }
+            $uploadDir = FCPATH . 'assets/uploads/';
+
+            $uploadedFiles = $_FILES['file'];
+
+            $fileCount = count($uploadedFiles['name']);
 
             $form = [
                 'student' => $this->input->post('student'),
@@ -375,15 +373,27 @@ class Diary extends Trs_Controller
 
             if ($id)
             {
-                foreach ($fids as $fid)
-                {
-                    $upform = [
-                        'diary_id' => $id,
-                        'modified_by' => $this->user->id,
-                        'modified_on' => time()
-                    ];
+                if ($fileCount > 0) {
+                    for ($i = 0; $i < $fileCount; $i++) {
+                        $fileName = $_FILES['file']['name'][$i];
+                        $fileTmpName = $_FILES['file']['tmp_name'][$i];
+                        $fileSize = $_FILES['file']['size'][$i];
+                        $fileError = $_FILES['file']['error'][$i];
 
-                    $this->diary_m->update_files($fid, $upform);
+                        $destination = $uploadDir . $fileName;
+
+                        if (move_uploaded_file($fileTmpName, $destination)) {
+                            $upform = [
+                                'student' => $this->input->post('student'),
+                                'diary_id' => $id,
+                                'filename' => $fileName,
+                                'created_by' => $this->user->id,
+                                'modified_on' => time()
+                            ];
+
+                            $this->diary_m->insert_dairy_filenames($upform);
+                        }
+                    }
                 }
 
                 $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));

@@ -27,7 +27,8 @@
 					}
 			?>
         
-                 <a href='<?php echo $url;?>'>
+          <a href='<?php echo $url;?>'>
+					
 					 <div class="col-sm-3" style="text-align:center"> 
 					 
 					   <?php 
