@@ -47,125 +47,127 @@
 
         <?php if ($students) : ?>
           <!-- <table id="datatable-buttons" class="table table-striped table-bordered"> -->
-          <table id="grid-example1" class="table table-bordered">
-            <thead>
-              <tr class="table-primary bg-primary">
-                <th class="tx-fixed-white" width="3">#</th>
-                <th class="tx-fixed-white">Student</th>
-                <th class="tx-fixed-white">
-                  <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top secondary">
-                    <input class="custom-control-input checks" id="user1" type="checkbox" name="present">
-                    <label class="custom-control-label" for="user1">Present</label>
-                  </div>
+          <div class="table-responsive">
+            <table id="grid-example1" class="table table-bordered">
+              <thead>
+                <tr class="table-primary bg-primary">
+                  <th class="tx-fixed-white" width="3">#</th>
+                  <th class="tx-fixed-white">Student</th>
+                  <th class="tx-fixed-white">
+                    <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top secondary">
+                      <input class="custom-control-input checks" id="user1" type="checkbox" name="present">
+                      <label class="custom-control-label" for="user1">Present</label>
+                    </div>
 
 
-                </th>
-                <th class="tx-fixed-white">
-                  <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top secondary">
-                    <input class="custom-control-input checkall" id="user2" type="checkbox" name="absent">
-                    <label class="custom-control-label" for="user2">Absent</label>
-                  </div>
-                </th>
-                <th class="tx-fixed-white">Temperature</th>
-                <th class="tx-fixed-white">Remarks</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-              $i = 1;
-              foreach ($students as $post => $val) :
-              ?>
-                <tr>
-                  <td>
-                    <span id="reference" name="reference" class="heading-reference"><?php echo $i; ?></span>
-                  </td>
-                  <td>
-                    <?php echo $val; ?>
-                  </td>
-                  <td>
-                    <div class="form-check form-check-md">
-                      <?php echo form_radio('status[' . $post . ']', 'Present', $result->status, 'class="switchx check-le form-check-input" id="Radio-md" style="margin: 0 auto;display: inline-block;"') ?>
+                  </th>
+                  <th class="tx-fixed-white">
+                    <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top secondary">
+                      <input class="custom-control-input checkall" id="user2" type="checkbox" name="absent">
+                      <label class="custom-control-label" for="user2">Absent</label>
                     </div>
-                  </td>
-                  <td style="text-align:center;">
-                    <div class="form-check form-check-md">
-                      <?php echo form_radio('status[' . $post . ']', 'Absent', $result->status, 'class="switchx check form-check-input" id="Radio-md" style="margin: 0 auto;display: inline-block;"') ?>
-                      <?php echo form_error('status'); ?>
-                    </div>
-                  </td>
-                  <td>
-                    <input type="number" name="temperature[<?php echo $post ?>]" class="col-md-12 form-control" placeholder="Daily Temperature">
-                  </td>
-                  <td>
-                    <textarea name="remarks[<?php echo $post; ?>]" cols="25" rows="1" class="col-md-12 form-control remarks  validate[required]" style="resize:vertical;" id="remarks"><?php echo set_value('remarks', (isset($result->remarks)) ? htmlspecialchars_decode($result->remarks) : ''); ?></textarea>
-                  </td>
+                  </th>
+                  <th class="tx-fixed-white">Temperature</th>
+                  <th class="tx-fixed-white">Remarks</th>
                 </tr>
-              <?php
-                $i++;
-              endforeach;
-              ?>
-            </tbody>
+              </thead>
+              <tbody>
+                <?php
+                $i = 1;
+                foreach ($students as $post => $val) :
+                ?>
+                  <tr>
+                    <td>
+                      <span id="reference" name="reference" class="heading-reference"><?php echo $i; ?></span>
+                    </td>
+                    <td>
+                      <?php echo $val; ?>
+                    </td>
+                    <td>
+                      <div class="form-check form-check-md">
+                        <?php echo form_radio('status[' . $post . ']', 'Present', $result->status, 'class="switchx check-le form-check-input" id="Radio-md" style="margin: 0 auto;display: inline-block;"') ?>
+                      </div>
+                    </td>
+                    <td style="text-align:center;">
+                      <div class="form-check form-check-md">
+                        <?php echo form_radio('status[' . $post . ']', 'Absent', $result->status, 'class="switchx check form-check-input" id="Radio-md" style="margin: 0 auto;display: inline-block;"') ?>
+                        <?php echo form_error('status'); ?>
+                      </div>
+                    </td>
+                    <td>
+                      <input type="number" name="temperature[<?php echo $post ?>]" class="col-md-12 form-control" placeholder="Daily Temperature">
+                    </td>
+                    <td>
+                      <textarea name="remarks[<?php echo $post; ?>]" cols="25" rows="1" class="col-md-12 form-control remarks  validate[required]" style="resize:vertical;" id="remarks"><?php echo set_value('remarks', (isset($result->remarks)) ? htmlspecialchars_decode($result->remarks) : ''); ?></textarea>
+                    </td>
+                  </tr>
+                <?php
+                  $i++;
+                endforeach;
+                ?>
+              </tbody>
 
-          </table>
+            </table>
+          </div>
 
-
-      </div>
-      <div class="card-footer">
-        <div class='form-group'>
-          <div class="col-md-12 text-md-end">
-            <?php echo anchor('class_attendance/attendance/list', '<i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel', 'class="btn btn-secondary mb-1 d-inline-flex go_back"'); ?>
-            <span></span>
-            <?php
-            $button_text = ($updType == 'edit') ? 'Update' : '<i class="fe fe-check-square me-1 lh-base"></i> Save';
-            $button_attributes = ($updType == 'create') ? "id='submit' class='btn btn-info mb-1 d-inline-flex' onclick='return confirm(\"Are you sure?\")'" : "id='submit' class='btn btn-info mb-1 d-inline-flex' onclick='return confirm(\"Are you sure?\")'";
-            ?>
-
-            <button type="submit" <?php echo $button_attributes ?>><?php echo $button_text ?></button>
 
           </div>
-        </div>
-        <?php echo form_close(); ?>
+          <div class="card-footer">
+            <div class='form-group'>
+              <div class="col-md-12 text-md-end">
+                <?php echo anchor('class_attendance/attendance/list', '<i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel', 'class="btn btn-secondary mb-1 d-inline-flex go_back"'); ?>
+                <span></span>
+                <?php
+                $button_text = ($updType == 'edit') ? 'Update' : '<i class="fe fe-check-square me-1 lh-base"></i> Save';
+                $button_attributes = ($updType == 'create') ? "id='submit' class='btn btn-info mb-1 d-inline-flex' onclick='return confirm(\"Are you sure?\")'" : "id='submit' class='btn btn-info mb-1 d-inline-flex' onclick='return confirm(\"Are you sure?\")'";
+                ?>
+
+                <button type="submit" <?php echo $button_attributes ?>><?php echo $button_text ?></button>
+
+              </div>
+            </div>
+            <?php echo form_close(); ?>
+          </div>
+        <?php else : ?>
+          <p class='text'><?php echo lang('web_no_elements'); ?></p>
+        <?php endif ?>
       </div>
-    <?php else : ?>
-      <p class='text'><?php echo lang('web_no_elements'); ?></p>
-    <?php endif ?>
     </div>
   </div>
-</div>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("user1").addEventListener("change", function() {
-      updatePresentRadioButtons(this.checked);
-    });
-
-    document.getElementById("user2").addEventListener("change", function() {
-      updateAbsentRadioButtons(this.checked);
-    });
-
-    function updatePresentRadioButtons(isChecked) {
-      var presentRadioButtons = document.querySelectorAll('.switchx.check-le[value="Present"]');
-      presentRadioButtons.forEach(function(radioButton) {
-        radioButton.checked = isChecked;
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("user1").addEventListener("change", function() {
+        updatePresentRadioButtons(this.checked);
       });
+
+      document.getElementById("user2").addEventListener("change", function() {
+        updateAbsentRadioButtons(this.checked);
+      });
+
+      function updatePresentRadioButtons(isChecked) {
+        var presentRadioButtons = document.querySelectorAll('.switchx.check-le[value="Present"]');
+        presentRadioButtons.forEach(function(radioButton) {
+          radioButton.checked = isChecked;
+        });
+      }
+
+      function updateAbsentRadioButtons(isChecked) {
+        var absentRadioButtons = document.querySelectorAll('.switchx.check[value="Absent"]');
+        absentRadioButtons.forEach(function(radioButton) {
+          radioButton.checked = isChecked;
+        });
+      }
+    });
+  </script>
+  <style>
+    .card-header {
+      display: flex;
+      justify-content: space-between;
     }
 
-    function updateAbsentRadioButtons(isChecked) {
-      var absentRadioButtons = document.querySelectorAll('.switchx.check[value="Absent"]');
-      absentRadioButtons.forEach(function(radioButton) {
-        radioButton.checked = isChecked;
-      });
+    /* style radio button */
+    .custom-control-input:checked+.custom-control-label::before {
+      border-color: #000000 !important;
+      background-color: #000000 !important;
     }
-  });
-</script>
-<style>
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  /* style radio button */
-  .custom-control-input:checked+.custom-control-label::before {
-    border-color: #000000 !important;
-    background-color: #000000 !important;
-  }
-</style>
+  </style>
