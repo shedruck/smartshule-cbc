@@ -5,7 +5,7 @@ ADD COLUMN status INT(11) NULL DEFAULT NULL AFTER task,
 ADD COLUMN session TEXT NULL AFTER status,
 ADD COLUMN remarks TEXT NULL AFTER session;
 
-DROP TABLE IF EXISTS `cbc_marks`;
+-- DROP TABLE IF EXISTS `cbc_marks`;
 CREATE TABLE IF NOT EXISTS `cbc_marks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sub` int(11) DEFAULT NULL,
@@ -28,3 +28,15 @@ CREATE TABLE IF NOT EXISTS `cbc_marks` (
 ALTER TABLE `diary_uploads`
 	CHANGE COLUMN `id` `id` INT(11) UNSIGNED NOT NULL FIRST,
 	ADD COLUMN `student` BLOB NULL AFTER `id`;
+	
+ALTER TABLE `lesson_developments`
+	ADD COLUMN `step` TEXT NULL AFTER `lesson_plan`;
+	
+ALTER TABLE `lesson_developments`
+	ADD COLUMN `description` TEXT NULL DEFAULT NULL AFTER `evaluate_student`;
+
+ALTER TABLE `past_papers`
+	CHANGE COLUMN `file` `file` VARCHAR(256) NULL COLLATE 'utf8_general_ci' AFTER `class`;
+ALTER TABLE `past_papers`
+	CHANGE COLUMN `file_size` `file_size` VARCHAR(256) NULL COLLATE 'utf8_general_ci' AFTER `file`,
+	CHANGE COLUMN `file_path` `file_path` VARCHAR(256) NULL COLLATE 'utf8_general_ci' AFTER `file_size`;
