@@ -78,15 +78,15 @@
                   if (!empty($slips)) {
                   ?>
                     <table id="grid-pagination" class="table table-bordered">
-                      <thead class="bg-primary">
-                        <th class="tx-fixed-white"> #</th>
-                        <th class="tx-fixed-white">Month</th>
-                        <th class="tx-fixed-white">Year</th>
-                        <th class="tx-fixed-white">Bank</th>
-                        <th class="tx-fixed-white">
+                      <thead class="table-success">
+                        <th> #</th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Bank</th>
+                        <th>
                           Date Processed
                         </th>
-                        <th class="text-center tx-fixed-white" width="20%"> Option </th>
+                        <th class="text-center" width="20%"> Option </th>
                       </thead>
 
                       <?php

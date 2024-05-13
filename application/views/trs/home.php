@@ -46,9 +46,9 @@
     </div>
     <div class="col-xxl-10 col-xl-9 col-sm-8">
       <div class="row">
-        <h5 class="fw-semibold mb-3">Dashboard</h5>
+        <h5 class="fw-semibold mb-3 ml-1"><img src="assets/themes/default/img/grid.svg" alt="Icon description"> Dashboard</h5>
         <div class="col-xl-3 col-sm-6">
-          <a href="<?php echo base_url('class_groups/trs/myclasses'); ?>" class="card-link">
+          <a href="<?php echo base_url('class_groups/trs/myclasses'); ?>" class="card-link d-block">
             <div class="card">
               <div class="card-body">
                 <div class="card-body d-flex flex-column align-items-center justify-content-center">
