@@ -86,7 +86,7 @@
               <div class="card-body">
                 <div class="card-body d-flex flex-column align-items-center justify-content-center">
                   <div class="icon-container" style="background: linear-gradient(135deg, #800080, #D8BFD8);">
-                    <img src="assets/themes/default/img/calender.svg" alt="Icon description">
+                    <img src="assets/themes/default/img/today.svg" alt="Icon description">
                   </div>
                   <div class="mt-2">
                     <h6>Rollcall</h6>
@@ -163,15 +163,15 @@
           </a>
         </div>
         <div class="col-xl-3 col-sm-6">
-          <a href="<?php echo base_url('schemes_of_work/trs'); ?>" class="card-link d-block">
+          <a href="<?php echo base_url('school_events/trs/events'); ?>" class="card-link d-block">
             <div class="card">
               <div class="card-body">
                 <div class="card-body d-flex flex-column align-items-center justify-content-center">
                   <div class="icon-container" style="background: linear-gradient(135deg, #00008B, #ADD8E6);">
-                    <img src="assets/themes/default/img/book.svg" alt="Icon description">
+                    <img src="assets/themes/default/img/calender.svg" alt="Icon description">
                   </div>
                   <div class="mt-2">
-                    <h6>Schemes</h6>
+                    <h6>Calender</h6>
                   </div>
                 </div>
               </div>

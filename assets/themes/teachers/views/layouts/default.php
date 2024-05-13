@@ -40,6 +40,9 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/flatpickr/flatpickr.min.css">
     <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/@simonwep/pickr/themes/nano.min.css">
 
+    <!-- Full Calendar CSS -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/fullcalendar/main.min.css">
+
     <!-- Choices Css -->
     <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/choices.js/public/assets/styles/choices.min.css">
 
@@ -664,6 +667,10 @@
     <!-- Internal Quill JS -->
     <!-- <script src="<?php echo base_url('assets/themes/teachers') ?>/js/quill-editor.js"></script> -->
 
+
+    <!-- Moment JS -->
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/moment/moment.js"></script>
+
     <!-- Datatables Cdn -->
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
@@ -679,9 +686,10 @@
     <script src="<?php echo base_url('assets/themes/trs/js/summernote/summernote.min.js'); ?>"></script>
 
 
-    <!-- Sweetalerts JS -->
-    <script src="../assets/libs/sweetalert2/sweetalert2.min.js"></script>
-    <script src="../assets/js/sweet-alert.js"></script>
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/fullcalendar/main.min.js"></script>
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/fullcalendar.js"></script>
+
+
 
 
 </body>
