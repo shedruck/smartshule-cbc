@@ -64,7 +64,7 @@ class Trs extends Trs_Controller
                 }
             }
             $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
-            redirect('trs/messages');
+            redirect('messages/trs');
         }
         else
         {
