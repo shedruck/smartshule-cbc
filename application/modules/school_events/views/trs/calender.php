@@ -1,201 +1,9 @@
 <?php
 // echo "<pre>";
 // print_r($events);
-// echo "<pre>";
-
+// echo "<pre>"; 
 ?>
 
-<script>
-
-(function () {
-    "use strict";
-    //_____Calendar Events Intialization
-  
-    // sample calendar events data
-    var curYear = moment().format('YYYY');
-    var curMonth = moment().format('MM');
-    // Calendar Event Source
-    var sptCalendarEvents = {
-      id: 1,
-      events: [{
-        id: '1',
-        start: curYear + '-' + curMonth + '-02',
-        end: curYear + '-' + curMonth + '-03',
-        title: 'Spruko Meetup',
-        backgroundColor: '#845adf',
-        borderColor: '#845adf',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }, {
-        id: '2',
-        start: curYear + '-' + curMonth + '-17',
-        end: curYear + '-' + curMonth + '-17',
-        title: 'Design Review',
-        backgroundColor: '#23b7e5',
-        borderColor: '#23b7e5',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }, {
-        id: '3',
-        start: curYear + '-' + curMonth + '-13',
-        end: curYear + '-' + curMonth + '-13',
-        title: 'Lifestyle Conference',
-        backgroundColor: '#845adf',
-        borderColor: '#845adf',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }, {
-        id: '4',
-        start: curYear + '-' + curMonth + '-21',
-        end: curYear + '-' + curMonth + '-21',
-        title: 'Team Weekly Brownbag',
-        backgroundColor: '#f5b849',
-        borderColor: '#f5b849',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }, {
-        id: '5',
-        start: curYear + '-' + curMonth + '-04T10:00:00',
-        end: curYear + '-' + curMonth + '-06T15:00:00',
-        title: 'Music Festival',
-        backgroundColor: '#26bf94',
-        borderColor: '#26bf94',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }, {
-        id: '6',
-        start: curYear + '-' + curMonth + '-23T13:00:00',
-        end: curYear + '-' + curMonth + '-25T18:30:00',
-        title: 'Attend Lea\'s Wedding',
-        backgroundColor: '#26bf94',
-        borderColor: '#26bf94',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }]
-    };
-    // Birthday Events Source
-    var sptBirthdayEvents = {
-      id: 2,
-      backgroundColor: '#49b6f5',
-      borderColor: '#49b6f5',
-      textColor: '#fff',
-      events: [{
-        id: '7',
-        start: curYear + '-' + curMonth + '-04',
-        end: curYear + '-' + curMonth + '-04',
-        title: 'Harcates Birthday',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }, {
-        id: '8',
-        start: curYear + '-' + curMonth + '-28',
-        end: curYear + '-' + curMonth + '-28',
-        title: 'Bunnysin\'s Birthday',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }, {
-        id: '9',
-        start: curYear + '-' + curMonth + '-31',
-        end: curYear + '-' + curMonth + '-31',
-        title: 'Lee shin\'s Birthday',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      }, {
-        id: '10',
-        start: curYear + '-' + 11 + '-11',
-        end: curYear + '-' + 11 + '-11',
-        title: 'Shinchan\'s Birthday',
-        description: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary'
-      },]
-    };
-    var sptHolidayEvents = {
-      id: 3,
-      backgroundColor: '#e6533c',
-      borderColor: '#e6533c',
-      textColor: '#fff',
-      events: [{
-        id: '10',
-        start: curYear + '-' + curMonth + '-05',
-        end: curYear + '-' + curMonth + '-08',
-        title: 'Festival Day'
-      }, {
-        id: '11',
-        start: curYear + '-' + curMonth + '-18',
-        end: curYear + '-' + curMonth + '-19',
-        title: 'Memorial Day'
-      }, {
-        id: '12',
-        start: curYear + '-' + curMonth + '-25',
-        end: curYear + '-' + curMonth + '-26',
-        title: 'Diwali'
-      }]
-    };
-    var sptOtherEvents = {
-      id: 4,
-      backgroundColor: '#23b7e5',
-      borderColor: '#23b7e5',
-      textColor: '#fff',
-      events: [{
-        id: '13',
-        start: curYear + '-' + curMonth + '-07',
-        end: curYear + '-' + curMonth + '-09',
-        title: 'My Rest Day'
-      }, {
-        id: '13',
-        start: curYear + '-' + curMonth + '-29',
-        end: curYear + '-' + curMonth + '-31',
-        title: 'My Rest Day'
-      }]
-    };
-  
-  
-    //________ FullCalendar
-    var containerEl = document.getElementById('external-events');
-    new FullCalendar.Draggable(containerEl, {
-      itemSelector: '.fc-event',
-      eventData: function (eventEl) {
-        return {
-          title: eventEl.innerText.trim(),
-          title: eventEl.innerText,
-          className: eventEl.className + ' overflow-hidden '
-        }
-      }
-    });
-    var calendarEl = document.getElementById('calendar2');
-  
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-      },
-      defaultView: 'month',
-      navLinks: true, // can click day/week names to navigate views
-      businessHours: true, // display business hours
-      editable: true,
-      selectable: true,
-      selectMirror: true,
-      droppable: true, // this allows things to be dropped onto the calendar
-  
-      select: function (arg) {
-        var title = prompt('Event Title:');
-        if (title) {
-          calendar.addEvent({
-            title: title,
-            start: arg.start,
-            end: arg.end,
-            allDay: arg.allDay
-          })
-        }
-        calendar.unselect()
-      },
-      eventClick: function (arg) {
-        if (confirm('Are you sure you want to delete this event?')) {
-          arg.event.remove()
-        }
-      },
-  
-      editable: true,
-      dayMaxEvents: true, // allow "more" link when too many events
-      eventSources: [sptCalendarEvents, sptBirthdayEvents, sptHolidayEvents, sptOtherEvents,],
-  
-    });
-    calendar.render();
-  
-  })();
-  
-</script>
 
 <div class="row">
   <div class="col-md-12">
@@ -209,6 +17,59 @@
 
       </div>
 
+      <?php
+      $out = [];
+
+      foreach ($events as $keey => $eve) {
+        $event = (object) $eve;
+        $user = $this->ion_auth->get_user($event->created_by);
+        $start = date('Y-m-d', $event->date) . 'T' . date('H:i:s', strtotime($event->start));
+        $end = date('Y-m-d', $event->date) . 'T' . date('H:i:s', strtotime($event->end));
+
+        $out[] = array(
+          'title' => $event->title,
+          'st' => date('H:i A', strtotime($event->start)),
+          'en' => date('H:i A', strtotime($event->end)),
+          'type' => 'event',
+          'date' => date('d M Y', $event->date),
+          'start' => $start,
+          'end' => $end,
+          'venue' => $event->venue,
+          'event_title' => $event->title,
+          'cache' => 1,
+          'color' => $event->date < time() ? '#23b7e5' : 'green',
+          'bg' => '#845adf',
+          'description' => $event->description,
+          'user' => $user->first_name . ' ' . $user->last_name
+        );
+      }
+
+      foreach ($school_events as $ky => $seve) {
+        $sevent = (object) $seve;
+        $user = $this->ion_auth->get_user($sevent->created_by);
+        $start = date('Y-m-d', $sevent->start_date) . 'T' . date('H:i:s', $sevent->start_date);
+        $end = date('Y-m-d', $sevent->end_date) . 'T' . date('H:i:s', $sevent->end_date);
+
+        $out[] = array(
+          'title' => $sevent->title,
+          'st' => date('d M Y', $sevent->start_date),
+          'en' => date('d M Y', $sevent->end_date),
+          'type' => 'sevent',
+          'date' => '',
+          'start' => $start,
+          'end' => $end,
+          'venue' => $sevent->venue,
+          'event_title' => $sevent->title,
+          'cache' => 1,
+          'color' => $sevent->end_date < time() ? '#23b7e5' : 'green',
+          'bg' => '#845adf',
+          'description' => $sevent->description,
+          'user' => $user->first_name . ' ' . $user->last_name
+        );
+      }
+
+      ?>
+
       <div class="card-body p-2">
         <div class="row">
           <div class="col-xl-3">
@@ -216,68 +77,49 @@
 
             </div>
             <div class="mt-2">
-              <h4 class="card-title mb-4"><b>My Schedules</b></h4>
+              <h4 class="card-title mb-4" style="margin-left:20px"><b>My Schedules</b></h4>
               <div class="card overflow-hidden">
                 <div class="py-2">
                   <div class="list-group">
-                    <div class="list-group-item d-flex pt-3 pb-3 border-0">
-                      <div class="me-3 me-xs-0">
-                        <div class="calendar-icon icons">
-                          <div class="date_time bg-primary-transparent">
-                            <span class="date">18</span> <span class="month">FEB</span>
+
+                    <?php
+
+                    foreach ($out as $eve) {
+                      $e = (object) $eve;
+                      if ($e->type === 'event') {
+
+
+                        $date = date('d M', strtotime($e->date));
+                        list($day, $month) = explode(' ', $date);
+                    ?>
+
+                        <div class="list-group-item d-flex pt-3 pb-3 border-0">
+                          <div class="me-3 me-xs-0">
+                            <div class="calendar-icon icons">
+                              <div class="date_time bg-secondary-transparent ">
+                                <span class="date"><?php echo $day; ?></span> <span class="month"><?php echo $month; ?></span></span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="ms-1">
+                            <div class="h5 fs-14 mb-1"><?php echo $e->title; ?></div>
+                            <small class="text-muted"><b>Time: <?php echo $e->st; ?> <?php echo empty($e->en) ? '' : '-' . $e->en; ?>
+                              </b></small><br>
+                            <?php
+                            if (!empty($e->venue)) {
+                            ?>
+                              <small class="text-muted"><b>Venue: <?php echo ucwords($e->venue); ?>
+                                </b></small><br>
+                            <?php } ?>
+                            <small class="text-muted"><?php echo ucwords($e->description); ?>
+                            </small>
                           </div>
                         </div>
-                      </div>
-                      <div class="ms-1">
-                        <div class="h5 fs-14 mb-1">Board meeting
-                          Completed</div> <small class="text-muted">attend the company
-                          mangers...</small>
-                      </div>
-                    </div>
-                    <div class="list-group-item d-flex pt-3 pb-3 border-0">
-                      <div class="me-3 me-xs-0">
-                        <div class="calendar-icon icons">
-                          <div class="date_time bg-secondary-transparent ">
-                            <span class="date">16</span> <span class="month">FEB</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-1">
-                        <div class="h5 fs-14 mb-1">Updated the Company
-                          Policy</div> <small class="text-muted">some
-                          changes &amp; add the terms &amp; conditions
-                        </small>
-                      </div>
-                    </div>
-                    <div class="list-group-item d-flex pt-3 pb-3 border-0">
-                      <div class="me-3 me-xs-0">
-                        <div class="calendar-icon icons">
-                          <div class="date_time bg-success-transparent ">
-                            <span class="date">17</span> <span class="month">FEB</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-1">
-                        <div class="h5 fs-14 mb-1">Office Timings
-                          Changed</div> <small class="text-muted">
-                          this effetct after March 01st 9:00 Am To
-                          5:00 Pm</small>
-                      </div>
-                    </div>
-                    <div class="list-group-item d-flex pt-3 pb-3 border-0">
-                      <div class="me-3 me-xs-0">
-                        <div class="calendar-icon icons">
-                          <div class="date_time bg-info-transparent ">
-                            <span class="date">26</span> <span class="month">JAN</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-1">
-                        <div class="h5 fs-15 mb-1"> Republic Day
-                          Celebrated </div> <small class="text-muted">participate the all
-                          employess </small>
-                      </div>
-                    </div>
+                    <?php
+                      }
+                    }
+                    ?>
+
                   </div>
                 </div>
               </div>
@@ -285,7 +127,53 @@
           </div>
           <div class="col-xl-9">
             <div class="card p-2 mt-5">
-              <div id='calendar2'></div>
+              <div class="col-md-12 bg-white" id="calendarrow">
+                <div class="col-md-12 col-lg-12 col-sm-12">
+                  <div id="calendar">
+
+                  </div>
+                </div>
+              </div>
+
+
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  var calendarEl = document.getElementById('calendar');
+
+                  //Monthly Calendar
+                  var calendar = new FullCalendar.Calendar(calendarEl, {
+                    headerToolbar: {
+                      left: 'prev,next today',
+                      center: 'title',
+                      right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                    },
+                    initialDate: '<?php echo date('Y-m-d') ?>',
+                    navLinks: true, // can click day/week names to navigate views
+                    businessHours: true, // display business hours
+                    editable: true,
+                    selectable: true,
+                    events: [
+                      <?php foreach ($out as $key => $t) {
+                        $eve = (object) $t;
+                        if ($eve->type === 'event') {
+                      ?> {
+                            title: '<?php echo $eve->title . ' - Venue (' . $eve->venue . ')' ?>',
+                            start: '<?php echo $eve->start ?>',
+                            end: '<?php echo $eve->end ?>',
+                            constraint: 'businessHours',
+                            color: '<?php echo $eve->color ?>',
+                            backgroundColor: '<?php echo $eve->bg ?>',
+                          },
+                      <?php }
+                      } ?>
+
+                    ]
+                  });
+
+                  calendar.render();
+                });
+              </script>
+
             </div>
           </div>
         </div>

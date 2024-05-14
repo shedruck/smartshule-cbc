@@ -105,4 +105,42 @@ class School_events_m extends MY_Model
         }
     }
 
+    function get_school_events()
+    {
+        $list = $this->db
+            ->where('visibility', 'All')
+            ->or_where('visibility', 6)
+            ->order_by('id', 'DESC')
+            ->limit(30)
+            ->get('school_events')
+            ->result();
+
+        return $list;
+    }
+
+    function school_events()
+    {
+        $this->db->order_by('start_date', 'DESC');
+        $all = $this->db->where('visibility', 'All')->get('school_events')->result();
+        $paro = $this->db->where('visibility', '6')->get('school_events')->result();
+
+        return $all + $paro;
+    }
+    function get_events($type = 0)
+    {
+        if ($type) {
+            $this->db->where('cat', 1);
+        }
+        $list = $this->db->order_by('id', 'DESC')->limit(50)->get('events')->result();
+        $fn = array();
+        foreach ($list as $ll) {
+            if (empty($ll->date)) {
+                $ll->date = $ll->created_on;
+            }
+            $fn[] = (array) $ll;
+        }
+
+        return aasort($fn, 'date', true);
+    }
+
 }

@@ -17,8 +17,13 @@ class Trs extends Trs_Controller
 
   public function events()
   {
-    $events = $this->school_events_m->get_all();
-    $data['events'] = $events;
+    $data['events'] = $this->school_events_m->get_events();
+    $data['school_events'] = $this->school_events_m->get_school_events();
+
+    $this->load->library('calendar');
+
+    $data['calendar'] = $this->calendar->generate(date('Y'), date('m'), $events);
+  
     //load view
     $this->template->title(' Events Calender ')->build('trs/calender',$data);
   }

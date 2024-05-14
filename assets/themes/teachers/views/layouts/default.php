@@ -686,10 +686,11 @@
     <script src="<?php echo base_url('assets/themes/trs/js/summernote/summernote.min.js'); ?>"></script>
 
 
-    <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/fullcalendar/main.min.js"></script>
-    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/fullcalendar.js"></script>
+    <!-- <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/fullcalendar/main.min.js"></script>
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/fullcalendar.js"></script> -->
 
 
+    <script src="<?php echo base_url() ?>assets/themes/teachers/fullcalendar/fullcalendar/dist/index.global.js"></script>
 
 
 </body>
