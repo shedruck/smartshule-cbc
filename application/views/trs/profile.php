@@ -21,7 +21,14 @@
               <div class="card-body">
                 <div class="profile-img-1">
 
-                  <img src="<?php echo base_url('assets/themes/default/img/member.png'); ?>" alt="user-img" width="150" class="img-circle">
+                  <?php
+                  if (isset($pass->passport) && $pass->passport !== null) { ?>
+                    <img src="<?php echo base_url('uploads/files/' . $pass->passport); ?>" alt="user-img" width="150" height="150" class="img-circle">
+                  <?php } else { ?>
+                    <img src="<?php echo base_url('assets/themes/default/img/member.png'); ?>" alt="user-img" width="150" class="img-circle">
+                    <?php }
+                    ?>
+
                 </div>
                 <div>
                   <div class="text-warning mb-0 mt-2">

@@ -25,6 +25,7 @@ class Trs extends Trs_Controller
         }
         $this->load->model('trs_m');
         $this->load->model('exams/exams_m');
+        $this->load->model('teachers/teachers_m');
         $this->load->model('igcse/igcse_m');
         $this->load->model('evideos/evideos_m');
         $this->load->model('messages/messages_m');
@@ -43,7 +44,10 @@ class Trs extends Trs_Controller
     {
         $assigned = $this->trs_m->all_classes();
         $data['classes'] = array_unique($assigned);
-
+        // image fetch
+        $tr = $this->teachers_m->get_id($this->user->id);
+        $data['pass'] = $this->teachers_m->get_passport($tr->id);
+        
         $data['students'] = $this->admission_m->count_my_students();
         $data['events'] = $this->portal_m->get_events();
 
@@ -1077,6 +1081,10 @@ class Trs extends Trs_Controller
         $this->load->model('record_salaries/record_salaries_m');
         $data['students'] = $this->admission_m->count_my_students();
         $data['slips'] = $this->record_salaries_m->get_my_slip();
+
+        $tr = $this->teachers_m->get_id($this->user->id);
+        $data['pass'] = $this->teachers_m->get_passport($tr->id);
+
         $this->template->title('My Account')->build('trs/profile', $data);
     }
 

@@ -45,6 +45,21 @@ class Teachers_m extends MY_Model
         return $this->db->where(array('id' => $id))->count_all_results('teachers') > 0;
     }
 
+
+    function get_id($id)
+    {
+        $this->select_all_key('teachers');
+        $this->db->where($this->dx('user_id') . " ='" . $id . "'", NULL, FALSE);
+        return $this->db->get('teachers')->row();
+    }
+
+    function get_passport($id)
+    {
+        $this->select_all_key('teachers');
+        $this->db->where('id', $id);
+        return $this->db->get('teachers')->row();
+    }
+    
     function exists_teacher($id)
     {
         return $this->db->where($this->dx('user_id') . ' = ' . $id, NULL, FALSE)->count_all_results('teachers') > 0;

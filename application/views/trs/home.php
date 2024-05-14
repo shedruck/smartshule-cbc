@@ -4,13 +4,18 @@
   <!-- ROW-1 -->
   <div class="row">
     <div class="col-xxl-2 col-xl-3 col-sm-4">
-      <div class="card">
+      <div class="card mt-1">
         <span class="ribbone-info-left">
           <span><i class="fe fe-zap"></i></span>
         </span>
         <div class="card-body py-2 filemanager-list text-center mt-3">
           <div class="profile-img-1">
-            <img src="<?php echo base_url('assets/themes/default/img/member.png'); ?>" alt="user-img" width="120" class="img-circle">
+            <?php if (isset($pass->passport) && $pass->passport !== null) { ?>
+              <img src="<?php echo base_url('uploads/files/' . $pass->passport); ?>" alt="user-img" width="115" height="115" class="rounded-circle border border-primary border-3" style="border-width: 20px;">
+            <?php } else { ?>
+              <img src="<?php echo base_url('assets/themes/default/img/member.png'); ?>" alt="user-img" width="115" class="rounded-circle">
+            <?php } ?>
+
           </div>
           <div class="text-center m-1">
             <div class="text-warning mb-0 mt-2">
@@ -214,5 +219,9 @@
   .card-body {
     min-height: 140px;
     width: 100%;
+  }
+
+  .rounded-circle {
+    border-radius: 50%;
   }
 </style>
