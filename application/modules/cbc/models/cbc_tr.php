@@ -15,6 +15,17 @@ class Cbc_tr extends MY_Model
         return $this->db->insert_id();
     }
 
+    function exam_setting($data, $table) {
+        $this->db->insert($table, $data);
+        return $this->db->insert_id();
+    }
+
+    function add_social($data, $table)
+    {
+        $this->db->insert($table, $data);
+        return $this->db->insert_id();
+    }
+
 
     function my_classes()
     {
@@ -96,6 +107,30 @@ class Cbc_tr extends MY_Model
     function fetch_strands($subject)
     {
         return $this->db->where('subject', $subject)->where('status', 1)->order_by('id', 'ASC')->get('cbc_la')->result();
+    }
+
+    function fetch_strands_by_sub($subject)
+    {
+        $list = $this->db->where('subject', $subject)->where('status', 1)->order_by('id', 'ASC')->get('cbc_la')->result();
+
+        $strands = [];
+        foreach ($list as $uy => $d) {
+           $strands[$d->id] = $d->name;
+        }
+        return $strands;
+    }
+
+    function fetch_substrands_by_sub()
+    {
+        $list =  $this->db->where('status', 1)->get('cbc_topics')->result();
+
+        $fn = [];
+
+        foreach ($list as $p) {
+            $fn[$p->id] = $p->name;
+        }
+
+        return $fn;
     }
 
 
@@ -258,6 +293,327 @@ class Cbc_tr extends MY_Model
                     ->where('class',$cls)
                     ->get('cbc_marks')
                     ->row();
+    }
+
+
+    function create_exam($data, $table)
+    {
+        $this->db->insert($table, $data);
+        return $this->db->insert_id();
+    }
+
+
+    function all_exams(){
+        return $this->db->order_by('id', 'DESC')->get('cbc_threads')->result();
+    }
+
+    function exams()
+    {
+        $list = $this->db->order_by('id', 'DESC')->get('cbc_threads')->result();
+        $ex = array(); // Initialize the array
+
+        foreach ($list as $l) {
+            $ex[$l->id] = $l->exam.' Term '.$l->term.' '.$l->year; // Append each element to the array
+        }
+
+        return $ex;
+    }
+
+    
+
+    function get_exam($id)
+    {
+        return $this->db->where('id', $id)->order_by('id', 'DESC')->get('cbc_threads')->row();
+    }
+
+    function check_grading($id)
+    {
+        return $this->db->where('id', $id)->get('cbc_settings')->row();
+    }
+
+    function get_classgrp($id)
+    {
+        return $this->db->where('id', $id)->get('classes')->row();
+    }
+
+    function check_social($st, $t, $y){
+        return $this->db->where('student', $st)->where('term', $t)->where('year', $y)->get('cbc_social')->row();
+    }
+
+    function get_settings($class, $exam)
+    {
+        return $this->db->where('exam', $exam)->where('class', $class)->get('cbc_settings')->row();
+    }
+    function get_settings_by_id($id)
+    {
+        return $this->db->where('id', $id)->get('cbc_settings')->row();
+    }
+    function update_setting($id, $data, $table){
+        return $this->db->where('id', $id)->update($table, $data);
+    }
+
+    function update_exam($id, $data, $table) {
+        return $this->db->where('id', $id)->update($table, $data);
+    }
+
+    function update_social($id, $data, $table)
+    {
+        return $this->db->where('id', $id)->update($table, $data);
+    }
+
+    function exam_update($id, $data, $table)
+    {
+        return $this->db->where('id', $id)->update($table, $data);
+    }
+
+
+    function delete($table, $id)
+    {
+        return $this->db->delete($table, ['id' => $id]);
+    }
+
+    function all_classgroups()
+    {
+        return $this->db->order_by('id', 'DESC')->get('class_groups')->result();
+    }
+     function get_termexams($term, $year){
+        return $this->db->where('term', $term)->where('year', $year)->get('cbc_threads')->result();
+     }
+    function get_teachers($class, $term, $year, $sub)
+    {
+        return $this-> db->where('class', $class)->where('term', $term)->where('year', $year)->where('subject', $sub)->get('subjects_assign')->row();
+    }
+
+
+    public function fetch_marks2($exam, $cls)
+    {
+        if (empty($exam) && empty($cls)) {
+            return [];
+        }
+
+
+        $query = $this->db
+            ->where_in('exam', $exam)
+            ->where('class', $cls)
+            ->get('cbc_marks');
+
+        // Check for results
+        if ($query->num_rows() > 0) {
+            $results = $query->result();
+            $grouped_results = [];
+
+             foreach ($query->result() as $row) {
+                $grouped_results[$row->student][$row->sub][$row->exam][] = (array) $row;
+            }
+            return $grouped_results;
+        } else {
+            // No results found
+            return [];
+        }
+    }
+
+    public function fetch_marks($exam, $cls)
+    {
+        if (empty($exam) && empty($cls)) {
+            return [];
+        }
+
+        $this->db->from('cbc_marks');
+
+        if (!empty($exam)) {
+            $this->db->where_in('exam', $exam);
+        }
+
+        if (!empty($cls)) {
+            $this->db->where('class', $cls);
+        }
+
+        $query = $this->db->get();
+
+        // Check for results
+        if ($query->num_rows() > 0) {
+            $results = $query->result();
+            $grouped_results = [];
+
+            foreach ($query->result() as $row) {
+                $grouped_results[$row->student][$row->sub][$row->exam][] = (array) $row;
+            }
+            return $grouped_results;
+        } else {
+            // No results found
+            return [];
+        }
+    }
+
+
+    public function fetch_marks_by_stud($exam, $st)
+    {
+        if (empty($exam) && empty($st) ) {
+            return [];
+        }
+
+        $query = $this->db
+            ->where_in('exam', $exam)
+            ->where('student', $st)
+            ->get('cbc_marks');
+
+        // Check for results
+        if ($query->num_rows() > 0) {
+            $results = $query->result();
+            $grouped_results = [];
+
+            foreach ($query->result() as $row) {
+                $grouped_results[$row->student][$row->sub][$row->exam][] = (array) $row;
+            }
+            return $grouped_results;
+        } else {
+            // No results found
+            return [];
+        }
+    }
+
+    function find_student()
+    {
+        $this->select_all_key('admission');
+        $list = $this->db->get('admission')->result();
+
+       $myst = [];
+       foreach ($list as $key => $l) {
+       $myst[$l->id] =  $l->first_name.' '.$l->last_name;
+       }
+        
+        return  $myst;
+    }
+
+    function get_assess($cls, $term, $year, $sb)
+    {
+        return $this->db->where('class', $cls)->where('term', $term)->where('year', $year)->where('subject', $sb)->get('cbc_assess')->result();
+    }
+
+    function get_formative($ids) {
+
+        if (empty($ids)) {
+          return [];
+        }
+        
+        $query = $this->db->where_in('assess_id', $ids)->where('status', 1)->get('cbc_assess_tasks');
+
+        if ($query->num_rows() > 0) {
+            $results = $query->result();
+            $grouped_results = [];
+
+            foreach ($query->result() as $row) {
+                $grouped_results[$row->student][$row->strand][$row->sub_strand][] = (array) $row;
+            }
+            return $grouped_results;
+        } else {
+            // No results found
+            return [];
+        }
+    }
+
+
+    function get_class($id)
+    {
+        return $this->db->where(array('class_teacher' => $id))->get('classes')->row();
+    }
+
+    function get_by_class($id)
+    {
+        if (empty($id)) {
+            return [];
+        }
+
+        $this->db->where('class_id', $id)
+            ->where('term', $this->school->term)
+            ->where('year', $this->school->year)
+            ->order_by('attendance_date', 'DESC') // Sort by attendance_date in ascending order
+            ->limit(10); // Limit the result to 10 records
+        $result = $this->db->get('class_attendance')->result();
+        return $result;
+
+
+    }
+
+
+    function get_by_class1($id)
+    {
+        if (empty($id)) {
+            return [];
+        }
+
+        $this->db->where('class_id', $id)
+        ->where('term', $this->school->term)
+            ->where('year', $this->school->year)
+            ->order_by('attendance_date', 'DESC'); // Sort by attendance_date in ascending order
+      $result = $this->db->get('class_attendance')->result();
+        return $result;
+    }
+
+    function get_class_att($id)
+    {
+
+        if (empty($id)) {
+            return [];
+        }
+
+        $data = $this->db->where_in('attendance_id', $id)->get('class_attendance_list')->result();
+
+        $result = [];
+
+        foreach ($data as $entry) {
+            if (!isset($result[$entry->attendance_id])) {
+                $result[$entry->attendance_id] = 0;
+            }
+        }
+
+        // Count the Present statuses
+        foreach ($data as $entry) {
+            if ($entry->status === 'Present') {
+                $result[$entry->attendance_id]++;
+            }
+        }
+
+      
+        return $result;
+    }
+
+    function get_class_at($id)
+    {
+
+        if (empty($id)) {
+          return [];
+        }
+
+        $data = $this->db->where_in('attendance_id', $id)->get('class_attendance_list')->result();
+
+        // Initialize an array to store the count of present days for each student
+        $presentCounts = array();
+
+        // Iterate through the data
+        foreach ($data as $row) {
+            // Extract student and status from the current row
+            $student = $row->student;
+            $status = $row->status;
+
+            // Check if the student already exists in the presentCounts array
+            if (!isset($presentCounts[$student])) {
+                // If not, initialize the count to 0
+                $presentCounts[$student] = 0;
+            }
+
+            // If status is 'present' or 'Present' (case-insensitive), increment the count for the student
+            if (strcasecmp($status, 'present') === 0) {
+                $presentCounts[$student]++;
+            }
+        }
+
+        // Sort the array by present count in descending order
+        arsort($presentCounts);
+
+          $topStudents = array_slice($presentCounts, 0, 5, true);
+
+        return $topStudents;
     }
 
 }

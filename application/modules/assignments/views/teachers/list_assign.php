@@ -5,7 +5,7 @@
                 <h6 class="float-start">Add Assignments</h6>
                 <div class="float-end">
                     <?php echo anchor('assignments/trs', '<i class="mdi mdi-reply">
-                    </i> ' . lang('web_list_all', array(':name' => 'Assignments')), 'class="btn btn-primary"'); ?>
+                    </i> ' . lang('web_list_all', array(':name' => 'Assignments')), 'class="btn btn-secondary"'); ?>
                 </div>
 
             </div>

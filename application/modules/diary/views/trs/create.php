@@ -89,7 +89,7 @@ echo   form_open_multipart(current_url(), $attributes);
 
         </div>
         <div class="float-end d-inline-block btn-list">
-          <button type="submit" class="btn btn-primary" id="submitButton"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button>
+          <button type="submit" class="btn btn-primary" id="auto-disappear-save"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button>
           <a class="btn btn-secondary" id="cancelButton"><i class="fe fe-arrow-left-circle me-1 lh-base"></i>Cancel</a>
         </div>
       </div>

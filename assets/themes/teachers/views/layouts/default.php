@@ -43,6 +43,9 @@
     <!-- Full Calendar CSS -->
     <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/fullcalendar/main.min.css">
 
+    <!-- Sweetalerts CSS -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/sweetalert2/sweetalert2.min.css">
+
     <!-- Choices Css -->
     <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/choices.js/public/assets/styles/choices.min.css">
 
@@ -64,8 +67,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <!-- Sweetalerts CSS -->
-    <link rel="stylesheet" href="../assets/libs/sweetalert2/sweetalert2.min.css">
+
 
     <style>
         .popover-content.note-children-container {
@@ -593,7 +595,7 @@
             <div class="container">
                 <div class="row align-items-center flex-row-reverse">
                     <div class="col-md-12 col-sm-12 text-center">
-                        Copyright © <span id="year"></span> <a href="javascript:void(0);">Vexel</a>. Designed with <span class="fa fa-heart text-danger"></span> by <a href="javascript:void(0);"> Spruko </a> All
+                        Copyright © <span id="year"></span> <a href="javascript:void(0);"> <a href="javascript:void(0);"> Smartshule</a> <span class="fa fa-heart text-danger"></span></a>. All
                         rights reserved.
                     </div>
                 </div>
@@ -682,8 +684,14 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="<?php echo base_url('assets/themes/teachers') ?>/js/table-data.js"></script>
+
     <script src="<?php echo base_url('assets/themes/trs/js/sweet-alert/sweetalert.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/themes/trs/js/summernote/summernote.min.js'); ?>"></script>
+
+    <!-- Sweetalerts JS -->
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/sweet-alert.js"></script>
+
 
 
     <!-- <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/fullcalendar/main.min.js"></script>
@@ -694,6 +702,49 @@
 
 
 </body>
+
+<!-- function for save sweeet alert -->
+
+<script>
+    (function() {
+        'use strict';
+
+        function setOnClick(id, callback) {
+            var element = document.getElementById(id);
+            if (element) {
+                element.onclick = callback;
+            } else {
+                console.warn(`Element with id "${id}" not found.`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setOnClick('auto-disappear-save', function() {
+                let timerInterval;
+                Swal.fire({
+                    title: 'Saved!',
+                    text: 'Your changes have been saved.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        const b = Swal.getHtmlContainer().querySelector('b');
+                        timerInterval = setInterval(() => {
+                            if (b) b.textContent = Swal.getTimerLeft();
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                });
+            });
+
+            // Your existing SweetAlert functions here...
+
+        });
+    })();
+</script>
 
 <script>
     $(function() {

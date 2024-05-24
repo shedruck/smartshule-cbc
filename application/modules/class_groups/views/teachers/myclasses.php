@@ -4,7 +4,7 @@
             <div class="card-header">
                 <h6 class="float-start">MY ASSIGNED CLASSES</h6>
                 <div class="btn-group btn-group-sm float-end" role="group">
-
+                    <a class="btn btn-sm btn-secondary mr-2" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
                 </div>
             </div>
             <div class="card-body p-3 mb-2">
@@ -84,15 +84,15 @@
                         </div>
                     </div>
                     <div id="data-container">
-                                <li class="list-group-item d-flex justify-content-between align-items-center pe-2">
-                                    <span class="d-inline-flex align-items-center">
-                                        <i class="fe fe-check text-primary me-2" aria-hidden="true"></i><?php echo strtoupper($cl->name); ?></span>
-                                    <div class="form-check form-switch</a>">
+                        <li class="list-group-item d-flex justify-content-between align-items-center pe-2">
+                            <span class="d-inline-flex align-items-center">
+                                <i class="fe fe-check text-primary me-2" aria-hidden="true"></i><?php echo strtoupper($cl->name); ?></span>
+                            <div class="form-check form-switch</a>">
 
-                                    </div>
-                                </li>
+                            </div>
+                        </li>
 
-                            
+
                     </div>
 
                 </ul>
@@ -117,7 +117,7 @@
             $("#clsbtn_<?php echo $s->id ?>").click(function() {
                 var val = $(this).val();
                 $("#cls").text(val);
-                
+
                 $("#data-container").html('<?php echo $s->title; ?>');
 
                 $('#data-container li').removeClass('text-black');

@@ -4,7 +4,7 @@
             <div class="card-header">
                 <h6 class="float-start">Appraisal Results</h6>
                 <div class="btn-group btn-group-sm float-end" role="group">
-                    <a class="btn btn-danger" onclick="goBack()"><i class=""></i> Back</a>
+                    <a class="btn btn-sm btn-secondary" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
                 </div>
             </div>
             <div class="card-body p-3 mb-2">

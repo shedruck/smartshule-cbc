@@ -117,7 +117,7 @@
       <div class="card-footer">
         <div class="float-end">
           <?php echo anchor('enotes/trs', '<i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel', 'class="btn btn-secondary mb-1 d-inline-flex go_back"'); ?>
-          <button type="submit" class="btn btn-info mb-1 d-inline-flex" onclick="return confirm('Are you sure?')">
+          <button type="submit" class="btn btn-info mb-1 d-inline-flex" id="auto-disappear-save"  onclick="return confirm('Are you sure?')">
             <i class="fe fe-check-square me-1 lh-base"></i>
             <?php echo ($updType == 'edit') ? 'Update' : 'Save'; ?>
           </button>
@@ -171,4 +171,3 @@
     });
   });
 </script>
-

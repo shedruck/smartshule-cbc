@@ -6,10 +6,10 @@ if ($this->input->get()) {
     $get = [];
 }
 
-if ($exam == 1) {
-    $extype = 1;
-} else if ($exam == 2) {
+if ($exam_type->type == 1) {
     $extype = 2;
+} else if ($exam_type->type == 2) {
+    $extype = 1;
 }
 
 ?>
@@ -53,7 +53,11 @@ if ($exam == 1) {
 <?php endif; ?>
 
 
-
+<?php
+//  echo "<pre>";
+//  print_r($exams);
+//         echo "<pre>";
+?>
 
 
 
@@ -72,11 +76,6 @@ if ($exam == 1) {
                 </div>
                 <div class="col-lg-4 col-xl-4">
                     <?php
-                    $exams = array(
-                        1 => 'Opener Exam',
-                        2 => 'Mid Term Exam',
-                        3 => 'End Term Exam'
-                    );
 
                     echo form_dropdown('exam', ['' => 'Select Exam'] + $exams, $exam, 'class="js-example-placeholder-exam js-states form-control" id="exam"')
                     ?>
@@ -97,7 +96,7 @@ if ($exam == 1) {
                     <div class="p-4 border-end w-100">
                         <?php if (isset($students)) : ?>
                             <div class="table-responsive push">
-                                <input type="number" name="extype" value="<?php echo $extype ?>" class="form-control" hidden>
+                                <input type="number" name="extype" value="<?php echo $exam_type->type ?>" class="form-control" hidden>
                                 <table class="table table-bordered text-nowrap">
                                     <tbody>
                                         <tr class="table-primary bg-primary">
@@ -152,7 +151,6 @@ if ($exam == 1) {
                                                 <?php endif; ?>
                                             </tr>
 
-
                                         <?php $index++;
                                         } ?>
                                     </tbody>
@@ -192,7 +190,8 @@ if ($exam == 1) {
                 </div>
                 <div class="float-end d-inline-block btn-list">
                     <button type="submit" class="btn btn-primary" id="submitButton"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button>
-                    <a class="btn btn-secondary" id="cancelButton"><i class="fe fe-arrow-left-circle me-1 lh-base"></i>Cancel</a>
+                    <a class="btn btn-secondary" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
+
                 </div>
             </div>
         </div>

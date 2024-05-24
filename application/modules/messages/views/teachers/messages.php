@@ -3,11 +3,12 @@
         <div class="card">
             <div class="card-header">
                 <h6 class="float-start">Messages & Feedback</h6>
-                <div class="btn-group btn-group-sm float-end" role="group">
-                    <a class="btn btn-primary" href="<?php echo base_url('messages/trs/new_message'); ?>">
+                <div class="float-end" >
+                    <a class="btn btn-primary btn-sm" href="<?php echo base_url('messages/trs/new_message'); ?>">
                         <i class="glyphicon glyphicon-plus"></i>
                         New Message
                     </a>
+                    <a class="btn btn-sm btn-secondary" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
                 </div>
 
             </div>

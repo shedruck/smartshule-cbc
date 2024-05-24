@@ -6,6 +6,7 @@
                 <div class="btn-group btn-group-sm float-end" role="group">
                     <button data-bs-toggle="modal" data-bs-target="#hobies" class="btn btn-primary"><i class="mdi  mdi-plus"></i> Record Favourites and Hobbies</button>
                     <?php echo anchor('class_groups/trs/ViewHobbies/', '<i class="fa fa-search"></i> View Students Hobbies', 'class="btn btn-success"'); ?>
+                    <a class="btn btn-sm btn-secondary mr-2" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
                 </div>
             </div>
             <div class="card-body p-3 mb-2">

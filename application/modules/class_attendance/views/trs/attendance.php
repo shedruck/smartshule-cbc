@@ -3,7 +3,9 @@
     <div class="card">
       <div class="card-header">
         <h5 class="mb-0"><b>Record Attendance</b></h5>
-
+        <div class="float-end">
+          <a class="btn btn-sm btn-secondary mr-2" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
+        </div>
       </div>
 
       <div class="card-body p-2">

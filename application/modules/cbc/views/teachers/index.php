@@ -17,8 +17,7 @@
                                              <div class="ms-3">
                                                  <h5 class="fw-bold">Formative Assessment</h5>
                                                  <p class="mb-0">
-                                                     Different types of “Form Validation” are implemented in this
-                                                     Vexel admin template and used strict validation rules.
+                                                     Ongoing evaluations which help tailor teaching methods, providing timely feedback to improve student learning.
                                                  </p>
                                              </div>
                                          </div>
@@ -41,9 +40,7 @@
                                              <div class="ms-3">
                                                  <h5 class="fw-bold">Summative Assessment</h5>
                                                  <p class="mb-0">
-                                                     The documentation provides clear-cut material for the Vexel
-                                                     admin template.
-                                                     a way that every user can understand.
+                                                     End-of-term exams and projects measure overall achievement, essential for tracking academic progress and standards.
                                                  </p>
                                              </div>
                                          </div>
@@ -51,7 +48,7 @@
                                  </div>
                              </div>
 
-                             <div class="col-lg-4 col-md-6 col-sm-12 my_page">
+                             <div class="col-lg-4 col-md-6 col-sm-12 my_page" ids="socialbtn" onclick="loadPage(3)">
                                  <div class="card rounded-3 tx-fixed-white bg-primary">
                                      <div class="card-body">
                                          <div class="d-flex">
@@ -64,9 +61,7 @@
                                              <div class="ms-3">
                                                  <h5 class="fw-bold">Social Behavior</h5>
                                                  <p class="mb-0">
-                                                     We included nine (9) types of the best possible chart
-                                                     options for your project. You can use with your
-                                                     requirement.
+                                                     Behavioral tracking fosters positive social skills, supporting students' holistic development and school culture.
                                                  </p>
                                              </div>
                                          </div>
@@ -99,6 +94,9 @@
                          $("#summativebtn").click(function() {
                              redirectToPage(2);
                          });
+                         $("#socialbtn").click(function() {
+                             redirectToPage(3);
+                         });
                      });
 
                      function redirectToPage(page) {
@@ -111,6 +109,8 @@
                                  window.location.href = BASE_URL + 'cbc/trs/begin_form';
                              } else if (page == 2) {
                                  window.location.href = BASE_URL + 'cbc/trs/begin_summative_form';
+                             } else if (page == 3) {
+                                 window.location.href = BASE_URL + 'cbc/trs/begin_social';
                              }
                          }, 1000);
                      }
@@ -126,6 +126,8 @@
                                  window.location.href = BASE_URL + 'cbc/trs/begin_form';
                              } else if (page == 2) {
                                  window.location.href = BASE_URL + 'cbc/trs/begin_summative_form';
+                             } else if (page == 3) {
+                                 window.location.href = BASE_URL + 'cbc/trs/begin_social';
                              }
                          }, 1000);
                      }

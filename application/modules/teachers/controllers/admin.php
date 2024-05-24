@@ -335,9 +335,12 @@ class Admin extends Admin_Controller
                 'user_id' => $tid,
                 'status' => $this->input->post('status'),
                 'designation' => $this->input->post('position'),
+                'special' => $this->input->post('special'),
                 'created_by' => $user->id,
                 'created_on' => time()
             );
+
+            
             $ok = $this->teachers_m->create($tt_data);
 
             if ($ok)
@@ -522,6 +525,7 @@ class Admin extends Admin_Controller
                 'ref_address' => $this->input->post('ref_address'),
                 'ref_additionals' => $this->input->post('ref_additionals'),
                 'tsc_number' => $this->input->post('tsc_number'),
+                'special' => $this->input->post('special'),
                 //'user_id' => 773,
                 'status' => $this->input->post('status'),
                 'designation' => $this->input->post('position'),

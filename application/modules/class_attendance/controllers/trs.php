@@ -39,6 +39,8 @@ class Trs extends Trs_Controller
       $user = $this->ion_auth->get_user();
       $form_data = array(
         'class_id' => $class,
+        'term' => $this->school->term,
+        'year' => $this->school->year,
         'attendance_date' => strtotime($this->input->post('attendance_date')),
         'title' => $this->input->post('title'),
         'created_by' => $user->id,

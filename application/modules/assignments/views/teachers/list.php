@@ -3,8 +3,9 @@
         <div class="card">
             <div class="card-header">
                 <h6 class="float-start">Class Assignments</h6>
-
-            </div>
+                
+        </div>
+            <!-- </div> -->
             <div class="card-body p-2">
                 <!-- <table id="datatable-buttons" class="table table-striped table-bordered"> -->
                 <table id="responsiveDataTable" class="table table-bordered">

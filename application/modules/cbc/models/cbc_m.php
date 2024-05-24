@@ -46,6 +46,12 @@ class Cbc_m extends MY_Model
         return $this->db->insert_id();
     }
 
+    function create_exam($data, $table)
+    {
+        $this->db->insert($table, $data);
+        return $this->db->insert_id();
+    }
+
     /**
      * Assign Subjects to Classes by Term
      *

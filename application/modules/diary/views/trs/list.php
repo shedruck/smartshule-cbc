@@ -6,9 +6,7 @@
         <div class="float-end">
           <?php echo anchor('diary/trs/create', '<i class="mdi mdi-plus"></i>  Add Entry Per Student', 'class="btn btn-primary"'); ?>
           <div class="btn-group mt-2 mb-2">
-            <!-- <button type="button" class="btn btn-success btn-pill dropdown-toggle" data-bs-toggle="dropdown"> -->
-            <!-- Action <span class="caret"></span> -->
-            <button type="button" class="btn btn-success btn-pill dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-edit"></i> Add Entry Per Level <span class="caret"></span> </button>
+             <button type="button" class="btn btn-success btn-pill dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-edit"></i> Add Entry Per Level <span class="caret"></span> </button>
             </button>
             <ul class="dropdown-menu dropdown-plus-title">
               <li class="dropdown-plus-title">

@@ -21,7 +21,7 @@
               <div class="input-group-text">
                 <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
               </div>
-              <?php echo form_input('attendance_date', $result->attendance_date > 0 ? date('d M Y', $result->attendance_date) : $result->attendance_date, 'class="validate[required] form-control datepicker" placeholder="Choose date"'); ?>
+              <?php echo form_input('attendance_date', $result->attendance_date > 0 ? date('d M Y', $result->attendance_date) : $result->attendance_date, 'id="attendance_date" class="validate[required] form-control datepicker " placeholder="Choose date" required'); ?>
             </div>
             <?php echo form_error('attendance_date'); ?>
           </div>
@@ -111,63 +111,110 @@
           </div>
 
 
-          </div>
-          <div class="card-footer">
-            <div class='form-group'>
-              <div class="col-md-12 text-md-end">
-                <?php echo anchor('class_attendance/attendance/list', '<i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel', 'class="btn btn-secondary mb-1 d-inline-flex go_back"'); ?>
-                <span></span>
-                <?php
-                $button_text = ($updType == 'edit') ? 'Update' : '<i class="fe fe-check-square me-1 lh-base"></i> Save';
-                $button_attributes = ($updType == 'create') ? "id='submit' class='btn btn-info mb-1 d-inline-flex' onclick='return confirm(\"Are you sure?\")'" : "id='submit' class='btn btn-info mb-1 d-inline-flex' onclick='return confirm(\"Are you sure?\")'";
-                ?>
-
-                <button type="submit" <?php echo $button_attributes ?>><?php echo $button_text ?></button>
-
-              </div>
-            </div>
-            <?php echo form_close(); ?>
-          </div>
-        <?php else : ?>
-          <p class='text'><?php echo lang('web_no_elements'); ?></p>
-        <?php endif ?>
       </div>
+      <div class="card-footer">
+        <div class='form-group'>
+          <div class="col-md-12 text-md-end">
+            <?php echo anchor('class_attendance/trs/list', '<i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel', 'class="btn btn-secondary mb-1 d-inline-flex go_back"'); ?>
+            <span></span>
+            <?php
+            $button_text = ($updType == 'edit') ? 'Update' : '<i class="fe fe-check-square me-1 lh-base"></i> Save';
+            $button_attributes = ($updType == 'create') ? " id='submit' class='btn btn-info mb-1 d-inline-flex' onclick='return confirm(\"Are you sure?\")'" : "id='submit' class='btn btn-info mb-1 d-inline-flex' onclick='return confirm(\"Are you sure?\")'";
+            ?>
+
+            <button type="submit" <?php echo $button_attributes ?>><?php echo $button_text ?></button>
+
+          </div>
+        </div>
+        <?php echo form_close(); ?>
+      </div>
+    <?php else : ?>
+      <p class='text'><?php echo lang('web_no_elements'); ?></p>
+    <?php endif ?>
     </div>
   </div>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById("user1").addEventListener("change", function() {
-        updatePresentRadioButtons(this.checked);
-      });
-
-      document.getElementById("user2").addEventListener("change", function() {
-        updateAbsentRadioButtons(this.checked);
-      });
-
-      function updatePresentRadioButtons(isChecked) {
-        var presentRadioButtons = document.querySelectorAll('.switchx.check-le[value="Present"]');
-        presentRadioButtons.forEach(function(radioButton) {
-          radioButton.checked = isChecked;
-        });
-      }
-
-      function updateAbsentRadioButtons(isChecked) {
-        var absentRadioButtons = document.querySelectorAll('.switchx.check[value="Absent"]');
-        absentRadioButtons.forEach(function(radioButton) {
-          radioButton.checked = isChecked;
-        });
-      }
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("user1").addEventListener("change", function() {
+      updatePresentRadioButtons(this.checked);
     });
-  </script>
-  <style>
-    .card-header {
-      display: flex;
-      justify-content: space-between;
+
+    document.getElementById("user2").addEventListener("change", function() {
+      updateAbsentRadioButtons(this.checked);
+    });
+
+    function updatePresentRadioButtons(isChecked) {
+      var presentRadioButtons = document.querySelectorAll('.switchx.check-le[value="Present"]');
+      presentRadioButtons.forEach(function(radioButton) {
+        radioButton.checked = isChecked;
+      });
     }
 
-    /* style radio button */
-    .custom-control-input:checked+.custom-control-label::before {
-      border-color: #000000 !important;
-      background-color: #000000 !important;
+    function updateAbsentRadioButtons(isChecked) {
+      var absentRadioButtons = document.querySelectorAll('.switchx.check[value="Absent"]');
+      absentRadioButtons.forEach(function(radioButton) {
+        radioButton.checked = isChecked;
+      });
     }
-  </style>
+  });
+</script>
+<style>
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* style radio button */
+  .custom-control-input:checked+.custom-control-label::before {
+    border-color: #000000 !important;
+    background-color: #000000 !important;
+  }
+</style>
+
+<script>
+  (function() {
+    'use strict';
+
+    function setOnClick(id, callback) {
+      var element = document.getElementById(id);
+      if (element) {
+        element.onclick = callback;
+      } else {
+        console.warn(`Element with id "${id}" not found.`);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      setOnClick('submit', function() {
+        var attendanceDate = document.getElementById('attendance_date').value;
+        if (!attendanceDate) {
+          console.warn('Attendance date field is empty.');
+          return;
+        }
+
+        let timerInterval;
+        Swal.fire({
+          title: 'Saved!',
+          text: 'Your changes have been saved.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector('b');
+            timerInterval = setInterval(() => {
+              if (b) b.textContent = Swal.getTimerLeft();
+            }, 100);
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          }
+        });
+      });
+
+      // Your existing SweetAlert functions here...
+
+    });
+  })();
+</script>
