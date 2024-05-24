@@ -115,30 +115,30 @@
                         <path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
                         </path>
                     </svg> -->
-                        <i class="fa fa-folder-o side-menu__icon"></i>
-                        <span class="side-menu__label">Professional Docs</span>
-                        <i class="fe fe-chevron-right side-menu__angle"></i>
-                    </a>
-                    <ul class="slide-menu child1 <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
-                        <li class="slide <?php echo $this->uri->segment(1) === "schemes_of_work" ? 'active' : '';  ?>">
-                            <a href="<?php echo base_url('schemes_of_work/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "schemes_of_work" ? 'active' : '';  ?>">Schemes of Work</a>
-                        </li>
-                        <li class="slide <?php echo $this->uri->segment(1) === "lesson_plan" ? 'active' : '';  ?>">
-                            <a href="<?php echo base_url('lesson_plan/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "lesson_plan" ? 'active' : '';  ?>">Lesson Plans</a>
-                        </li>
-                        <li class="slide <?php echo $this->uri->segment(1) === "record_of_work_covered" ? 'active' : '';  ?>">
-                            <a href="<?php echo base_url('record_of_work_covered/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "record_of_work_covered" ? 'active' : '';  ?>">Record of Work Covered</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- End::slide -->
-                <?php
-                $set = array('evideos', 'enotes', 'past_papers', 'lesson_materials', 'newsletters');
-                ?>
-                <li class="slide has-sub <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
-                    <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="side-menu__icon" fill="#000000">
+                    <i class="fa fa-folder-o side-menu__icon"></i>
+                    <span class="side-menu__label">Professional Docs</span>
+                    <i class="fe fe-chevron-right side-menu__angle"></i>
+                </a>
+                <ul class="slide-menu child1 <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
+                    <li class="slide <?php echo $this->uri->segment(1) === "schemes_of_work" ? 'active' : '';  ?>">
+                        <a href="<?php echo base_url('schemes_of_work/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "schemes_of_work" ? 'active' : '';  ?>">Schemes of Work</a>
+                    </li>
+                    <li class="slide <?php echo $this->uri->segment(1) === "lesson_plan" ? 'active' : '';  ?>">
+                        <a href="<?php echo base_url('lesson_plan/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "lesson_plan" ? 'active' : '';  ?>">Lesson Plans</a>
+                    </li>
+                    <li class="slide <?php echo $this->uri->segment(1) === "record_of_work_covered" ? 'active' : '';  ?>">
+                        <a href="<?php echo base_url('record_of_work_covered/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "record_of_work_covered" ? 'active' : '';  ?>">Record of Work Covered</a>
+                    </li>  
+                </ul>
+            </li>
+            
+            <!-- End::slide -->
+            <?php
+                $set = array('evideos', 'enotes','past_papers','lesson_materials','newsletters');
+            ?>
+            <li class="slide has-sub <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
+                <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="side-menu__icon" fill="#000000">
                         <path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
                         </path>
                     </svg> -->
