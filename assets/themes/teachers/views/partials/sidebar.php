@@ -117,7 +117,7 @@
                         </path>
                     </svg> -->
                     <i class="fa fa-folder-o side-menu__icon"></i>
-                    <span class="side-menu__label">Proffesional Documents</span>
+                    <span class="side-menu__label">Professional Docs</span>
                     <i class="fe fe-chevron-right side-menu__angle"></i>
                 </a>
                 <ul class="slide-menu child1 <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">

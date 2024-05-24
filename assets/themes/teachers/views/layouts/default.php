@@ -64,6 +64,10 @@
     <!-- Sweetalerts CSS -->
     <link rel="stylesheet" href="../assets/libs/sweetalert2/sweetalert2.min.css">
 
+    <!-- Toasts -->
+    <link href="<?php echo base_url() ?>assets/themes/teachers/toast-master/css/jquery.toast.css" rel="stylesheet">
+    <script src="<?php echo base_url() ?>assets/themes/teachers/toast-master/js/jquery.toast.js"></script>
+
     <style>
         .popover-content.note-children-container {
             display: none;
@@ -792,6 +796,21 @@
     }
 </script>
 
+<?php if ($message = $this->session->flashdata('message')) : ?>
+    <script>
+        $(document).ready(function () {
+            $.toast({
+                heading: '<?php echo ucfirst($message['type']); ?>',
+                text: '<?php echo $message['text']; ?>',
+                position: 'top-right',
+                loaderBg: '#ff6849',
+                icon: '<?php echo $message['type']; ?>',
+                hideAfter: 3500,
+                stack: 6
+            });
+        });
+    </script>
+<?php endif; ?>
 
 
 </html>
