@@ -57,7 +57,7 @@
                                                       Action
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item text-success" href='<?php echo site_url('qa/trs/manage/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-share'></i> View</a></li>
+                                                        <li><a class="dropdown-item text-success" href='<?php echo site_url('qa/trs/manage/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-share'></i> Manage</a></li>
                                                         <li><a class="dropdown-item text-primary" href='<?php echo site_url('qa/trs/edit/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-edit'></i> Edit</a></li>
 														<?php if ($qs > 0) { ?>
 															<li><a class="dropdown-item text-warning" href='<?php echo site_url('qa/trs/view_qa/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-list'></i> View</a></li>

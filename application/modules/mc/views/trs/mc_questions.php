@@ -17,9 +17,6 @@
 						echo   form_open_multipart(current_url(), $attributes);
 						?>
 						<div class="card">
-							<div class="card-header">
-
-							</div>
 							<div class="card-body">
 								<div class="card">
 									<div class="card-header bg-default">

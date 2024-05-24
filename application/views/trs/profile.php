@@ -21,7 +21,14 @@
               <div class="card-body">
                 <div class="profile-img-1">
 
-                  <img src="<?php echo base_url('assets/themes/default/img/member.png'); ?>" alt="user-img" width="150" class="img-circle">
+                  <?php
+                  if (isset($pass->passport) && $pass->passport !== null) { ?>
+                    <img src="<?php echo base_url('uploads/files/' . $pass->passport); ?>" alt="user-img" width="150" height="150" class="img-circle">
+                  <?php } else { ?>
+                    <img src="<?php echo base_url('assets/themes/default/img/member.png'); ?>" alt="user-img" width="150" class="img-circle">
+                    <?php }
+                    ?>
+
                 </div>
                 <div>
                   <div class="text-warning mb-0 mt-2">
@@ -78,15 +85,15 @@
                   if (!empty($slips)) {
                   ?>
                     <table id="grid-pagination" class="table table-bordered">
-                      <thead class="bg-primary">
-                        <th class="tx-fixed-white"> #</th>
-                        <th class="tx-fixed-white">Month</th>
-                        <th class="tx-fixed-white">Year</th>
-                        <th class="tx-fixed-white">Bank</th>
-                        <th class="tx-fixed-white">
+                      <thead class="table-success">
+                        <th> #</th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Bank</th>
+                        <th>
                           Date Processed
                         </th>
-                        <th class="text-center tx-fixed-white" width="20%"> Option </th>
+                        <th class="text-center" width="20%"> Option </th>
                       </thead>
 
                       <?php
