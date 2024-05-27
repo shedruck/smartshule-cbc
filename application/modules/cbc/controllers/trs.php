@@ -593,31 +593,40 @@ class Trs extends Trs_Controller
     function generate_reports()
     {
 
+        $data['stud'] = $this->cbc_tr->find_student();
+        $data["exams"] = $this->cbc_tr->exams();
+
         if ($this->input->post()) {
 
             $class = $this->input->post('class');
-            $term = $this->input->post('term');
-            $year = $this->input->post('year');
+            $exam = $this->input->post('exam');
+            $student = $this->input->post('student');
+          
+            $ex = $this->cbc_tr->get_exam($exam);
 
+            $data['ex'] = $this->cbc_tr->get_exam($exam);
+
+            $st = $this->worker->get_student($student);
+
+
+            $data['student'] = $student;
+            $data['exam'] = $exam;
             $data['class'] = $class;
-            $data['term'] = $term;
-            $data['year'] = $year;
+            $data['term'] = $ex->term;
+            $data['year'] = $ex->year;
+                      
+           if ($this->input->post('student')) {
+                $data['grouped_marks'] = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
 
+                $data['reports'] = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
+                $data['class'] = $st->cl->id;
+           } else{
+                $data['grouped_marks'] = $this->cbc_tr->fetch_marks($exam, $class);
 
-            $exs = $this->cbc_tr->get_termexams($term, $year);
-
-            $ids = [];  
-
-            foreach ($exs as $e) {
-                $ids[] = $e->id;
-            }
-
-            $data['exams'] = $ids;
-
-            $data['grouped_marks'] = $this->cbc_tr->fetch_marks($ids, $class);
-
-            $data['reports'] = $this->cbc_tr->fetch_marks($ids, $class);
-            $pivot_data = $this->cbc_tr->fetch_marks($ids, $class);
+                $data['reports'] = $this->cbc_tr->fetch_marks($exam, $class);
+           }
+           
+            $pivot_data = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
         }
 
         // echo "<pre>";

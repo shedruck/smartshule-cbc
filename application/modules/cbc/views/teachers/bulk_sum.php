@@ -2,6 +2,8 @@
 
 $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
 
+$comments = array('1' => 'Below Expectation', '2' => 'Approaching Expectation', '3' => 'Meeting Expectation', '4' => 'Exceeding Expectation');
+
 $this->load->model('cbc_tr');
 
 
@@ -19,55 +21,56 @@ $this->load->model('cbc_tr');
         echo form_open(current_url());
         ?>
         <div class="row">
-          <div class="col-xl-4">
+          <div class="col-md-4">
             <div class="row m-2">
-              <label class="col-md-3 form-label" for='title'>Class <span class='required'>*</span></label>
+              <label class="col-md-3 form-label" for='title'>Exam <span class='required'>*</span></label>
               <div class="col-md-9">
                 <?php
+                $attributes = 'class="form-control js-example-basic-single"';
+                echo form_dropdown('exam', $exams, '', $attributes);
+                ?>
+                <?php echo form_error('exam'); ?>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="row m-2">
+              <label class="col-md-4 form-label" for='title'>Class <span class='required'>*</span></label>
+              <div class="col-md-8">
+                <?php
                 $options = array('' => 'Select Class') + $this->streams;
-                $attributes = 'class="form-control"';
+                $attributes = 'class="form-control js-example-basic-single"';
                 echo form_dropdown('class', $options, '', $attributes);
                 ?>
                 <?php echo form_error('class'); ?>
-
               </div>
             </div>
           </div>
-          <div class="col-xl-4">
-            <div class="row m-2">
-              <label class="col-md-3 form-label" for='title'>Term <span class='required'>*</span></label>
-              <div class="col-md-9">
-                <?php
-                $option = array('1' => 'Term 1', '2' => 'Term 2', '3' => 'Term 3');
-                $attributes = 'class="form-control"';
-                echo form_dropdown('term', $option, '', $attributes);
-                ?>
-                <?php echo form_error('term'); ?>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-4">
-            <div class="row m-2">
-              <label class="col-md-3 form-label" for='title'>Year <span class='required'>*</span></label>
-              <div class="col-md-9">
-                <?php
-                $years = range(2022, date('Y'));
-                $years = array_combine($years, $years);
 
-                $attributes = 'class="form-control"';
-                echo form_dropdown('year', $years, '', $attributes);
+          <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+            <label class="form-label mb-0" for='title'>OR</label>
+          </div>
+
+          <div class="col-md-4">
+            <div class="row m-2">
+              <label class="col-md-4 form-label" for='title'>Student <span class='required'>*</span></label>
+              <div class="col-md-8">
+                <?php
+                $options = array('' => 'Select Student') + $stud;
+                $attributes = 'class="form-control js-example-basic-single"';
+                echo form_dropdown('student', $options, '', $attributes);
                 ?>
-                <?php echo form_error('year'); ?>
+                <?php echo form_error('student'); ?>
               </div>
             </div>
           </div>
         </div>
 
+
         <div class="row">
-          <!-- Second Row -->
           <div class="col-xl-12">
             <div class="row m-2 justify-content-end">
-
               <div class="col-auto">
                 <button type="submit" class="btn btn-primary mb-1 d-inline-flex">
                   <i class="fe fe-check-square me-1 lh-base"></i>
@@ -78,6 +81,8 @@ $this->load->model('cbc_tr');
             </div>
           </div>
         </div>
+
+
 
       </div>
       <?php echo form_close(); ?>
@@ -92,11 +97,10 @@ $exm1 = $this->cbc_tr->get_exam($exams[0]);
 $exm2 = $this->cbc_tr->get_exam($exams[1]);
 $exm3 = $this->cbc_tr->get_exam($exams[2]);
 
-if (($exm1->type == 1 && empty($exm2) && empty($exm3)) || ($exm1->type == 1 && $exm2->type == 1 && empty($exm3)) || ($exm1->type == 1 && $exm2->type == 1 && $exm3->type == 1)) {
+if ($ex->type == 1) {
 
   if ($grouped_marks) {
     foreach ($grouped_marks as $ky => $st) {
-
 
 ?>
       <div class="invoice-box">
@@ -119,7 +123,7 @@ if (($exm1->type == 1 && empty($exm2) && empty($exm3)) || ($exm1->type == 1 && $
                     $birthDateTime->setTimestamp($birthdateTimestamp);
 
                     $currentDateTime = new DateTime();
-                    $scl = $this->cbc_tr->get_exam($exams[0]);
+
                     // Calculate the difference
                     $ageInterval = $currentDateTime->diff($birthDateTime);
 
@@ -136,7 +140,7 @@ if (($exm1->type == 1 && empty($exm2) && empty($exm3)) || ($exm1->type == 1 && $
                     ?>
                     <h4>SUMMATIVE REPORT</h4>
                     <h6 class="upper-casr"><b>NAME:</b> <u><?php echo $stu->first_name . ' ' . $stu->last_name ?> </u>&nbsp; <b>ADM NO:</b> <u><?php echo $stu->admission_number ?> </u> &nbsp; <b>AGE:</b> <u><?php echo  $age; ?></u></h6>
-                    <span class="upper_case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $scl->term . ' ' . $scl->year ?></span><br>
+                    <span class="upper_case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $term . ' ' . $year ?></span><br>
 
                     <div class="key-container">
                       <div class="key-item key-title">Key:</div>
@@ -164,98 +168,36 @@ if (($exm1->type == 1 && empty($exm2) && empty($exm3)) || ($exm1->type == 1 && $
           <tr class="table-success">
             <th>#</th>
             <th>Subject</th>
-            <?php if ($exams[0]) { ?><th><?php $exm = $this->cbc_tr->get_exam($exams[0]);
-                                          echo ucwords($exm->exam); ?></th> <?php  } ?>
-            <?php if ($exams[1]) { ?><th><?php $exm = $this->cbc_tr->get_exam($exams[1]);
-                                          echo ucwords($exm->exam); ?></th> <?php  } ?>
-            <?php if ($exams[2]) { ?><th><?php $exm = $this->cbc_tr->get_exam($exams[2]);
-                                          echo ucwords($exm->exam); ?></th> <?php  } ?>
-            <th>Terms Average</th>
+            <th>Score</th>
+            <th>Comment</th>
             <th>Teacher</th>
           </tr>
           <tbody>
             <?php
+
+
             $i = 1;
             foreach ($st as $sub => $subs) {
-              // Reset variables at the start of each subject iteration
-              $m0 = $m1 = $m2 = $ot0 = $ot1 = $ot2 = null;
+
+              foreach ($subs as $kety => $v) {
 
             ?>
-              <tr style="font-size: 14px; text-align:center">
-                <td><?php echo $i++ ?></td>
-                <td style="text-align:left"><?php echo $subjects[$sub] ?></td>
-                <?php if ($exams[0]) { ?><td><?php foreach ($subs as $is => $ex) {
-
-                                                foreach ($ex as $key => $v) {
-
-                                                  if ($v['exam'] == $exams[0]) {
-                                                    $m0 = $v['score'];
-                                                    echo $m0;
-                                                    echo ' (' . $rankings[$m0] . ')';
-                                                  }
-                                                }
-                                              } ?></td>
-                  </th> <?php  } ?>
-                <?php if ($exams[1]) { ?><td>
-                    <?php foreach ($subs as $is => $ex) {
-
-                      foreach ($ex as $key => $v) {
-
-                        if ($v['exam'] == $exams[1]) {
-                          $m1 = $v['score'];
-                          echo  $m1;
-                          echo ' (' . $rankings[$m1] . ')';
-                        }
-                      }
-                    } ?>
-                  </td>
-                  </th> <?php  } ?>
-                <?php if ($exams[2]) { ?><td>
-                    <?php foreach ($subs as $is => $ex) {
-
-                      foreach ($ex as $key => $v) {
-
-                        if ($v['exam'] == $exams[2]) {
-                          $m2 = $v['score'];
-                          echo $m2;
-                          echo ' (' . $rankings[$m2] . ')';
-                        }
-                      }
-                    } ?>
-                  </td>
-                  </th> <?php  } ?>
-                <td>
-                  <!-- Average -->
-                  <?php
-                  if (is_null($m0) && is_null($m1) && is_null($m2)) {
-                    $avg = 0;
-                  } else {
-                    $scores = array_filter([$m0, $m1, $m2], function ($score) {
-                      return !is_null($score);
-                    });
-                    $avg = array_sum($scores) / count($scores);
-                  }
-
-                  $av = round($avg);
-                  echo $av;
-
-                  if (isset($rankings[$av])) {
-                    echo ' (' . $rankings[$av] . ')';
-                  } else {
-                    echo ' (No ranking)';
-                  }
-                  ?>
-                </td>
-                <td> <?php
+                <tr style="font-size: 14px; text-align:center">
+                  <td><?php echo $i++ ?></td>
+                  <td style="text-align:left"><?php echo $subjects[$sub] ?></td>
+                  <td style="text-align:center"><?php echo $v['score'] . " (" . $rankings[$v['score']] . ' )'; ?></td>
+                  <td style="text-align:left"><?php echo $comments[$v['score']]; ?></td>
+                  <td><?php
                       $this->load->model('teachers/teachers_m');
                       $trs = $this->cbc_tr->get_teachers($class, $term,  $year, $sub);
                       $td = $this->teachers_m->find($trs->teacher);
                       echo $td->first_name . ' ' . $td->last_name;
 
                       ?></td>
-              </tr>
-            <?php
 
+                </tr>
+            <?php
+              }
             }
             ?>
           </tbody>
@@ -330,7 +272,7 @@ if (($exm1->type == 1 && empty($exm2) && empty($exm3)) || ($exm1->type == 1 && $
                     ?>
                     <h4>SUMMATIVE REPORT</h4>
                     <h6 class="upper-casr"><b>NAME:</b> <u><?php echo $stu->first_name . ' ' . $stu->last_name ?> </u>&nbsp; <b>ADM NO:</b> <u><?php echo $stu->admission_number ?> </u> &nbsp; <b>AGE:</b> <u><?php echo  $age; ?></u></h6>
-                    <span class="upper_case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $scl->term . ' ' . $scl->year ?></span><br>
+                    <span class="upper_case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $term . ' ' . $year ?></span><br>
 
                     <div class="key-container">
                       <div class="key-item key-title">Key:</div>
@@ -359,16 +301,11 @@ if (($exm1->type == 1 && empty($exm2) && empty($exm3)) || ($exm1->type == 1 && $
           <tr class="table-success">
             <th>#</th>
             <th>Subject</th>
-            <?php if ($exams[0]) { ?><th><?php $exm = $this->cbc_tr->get_exam($exams[0]);
-                                          echo ucwords($exm->exam); ?></th> <?php  } ?>
-            <?php if ($exams[1]) { ?><th><?php $exm = $this->cbc_tr->get_exam($exams[1]);
-                                          echo ucwords($exm->exam); ?></th> <?php  } ?>
-            <?php if ($exams[2]) { ?><th><?php $exm = $this->cbc_tr->get_exam($exams[2]);
-                                          echo ucwords($exm->exam); ?></th> <?php  } ?>
-            <th>Terms Average</th>
+            <th>Score <?php ?></th>
+
             <?php
             $cls = $this->cbc_tr->get_classes($class);
-            $set = $this->cbc_tr->get_settings($cls->class, $exams[0]);
+            $set = $this->cbc_tr->get_settings($cls->class, $exam);
             if ($set->grade == 1) { ?>
               <th>Grade</th>
             <?php  }
@@ -376,7 +313,7 @@ if (($exm1->type == 1 && empty($exm2) && empty($exm3)) || ($exm1->type == 1 && $
             ?>
             <?php
             $cls = $this->cbc_tr->get_classes($class);
-            $set = $this->cbc_tr->get_settings($cls->class, $exams[0]);
+            $set = $this->cbc_tr->get_settings($cls->class, $exam);
             if ($set->comments == 1) { ?>
               <th>Comment</th>
             <?php  }
@@ -388,282 +325,110 @@ if (($exm1->type == 1 && empty($exm2) && empty($exm3)) || ($exm1->type == 1 && $
             <?php
             $i = 1;
             foreach ($st as $sub => $subs) {
-              // Reset variables at the start of each subject iteration
-              $m0 = $m1 = $m2 = $ot0 = $ot1 = $ot2 = null;
+              foreach ($subs as $kety => $v) {
+                # code...
+
+                $m0 = $m1 = $m2 = $ot0 = $ot1 = $ot2 = null;
 
             ?>
-              <tr style="font-size: 14px; text-align:center">
-                <td><?php echo $i++ ?></td>
-                <td style="text-align:left"><?php echo $subjects[$sub] ?></td>
-                <?php if ($exams[0]) { ?><td><?php foreach ($subs as $is => $ex) {
+                <tr style="font-size: 14px; text-align:center">
+                  <td><?php echo $i++ ?></td>
+                  <td style="text-align:left"><?php echo $subjects[$sub] ?></td>
+                  <td><?php
 
-                                                foreach ($ex as $key => $v) {
-
-                                                  if ($v['exam'] == $exams[0]) {
-                                                    $m0 = $v['score'];
-                                                    $ot0 = $v['outof'];
+                      $m1 = $v['score'];
+                      $ot1 = $v['outof'];
 
 
-                                                    $quarterSize = $ot0 / 4;
-                                                    $firstQuarterEnd = $quarterSize;
-                                                    $secondQuarterEnd = $quarterSize * 2;
-                                                    $thirdQuarterEnd = $quarterSize * 3;
-                                                    $fourthQuarterEnd = $ot0;
+                      $quarterSize = $ot1 / 4;
+                      $firstQuarterEnd = $quarterSize;
+                      $secondQuarterEnd = $quarterSize * 2;
+                      $thirdQuarterEnd = $quarterSize * 3;
+                      $fourthQuarterEnd = $ot1;
 
-                                                    if ($m0 <= $firstQuarterEnd) {
-                                                      $cm = "BE";
-                                                    } elseif ($m0 <= $secondQuarterEnd) {
-                                                      $cm = "AE";
-                                                    } elseif ($m0 <= $thirdQuarterEnd) {
-                                                      $cm = "ME";
-                                                    } elseif ($m0 <= $fourthQuarterEnd) {
-                                                      $cm = "EE";
-                                                    } else {
-                                                      $cm = "Value out of range";
-                                                    }
-
-                                                    $cls = $this->cbc_tr->get_classes($class);
-                                                    $set = $this->cbc_tr->get_settings($cls->class, $exams[0]);
-
-                                                    if ($set->marks == 1 && $set->rubric == 1) {
-                                                      echo $m0 . " (" . $cm . ")";
-                                                    } elseif ($set->marks == 0 && $set->rubric == 1) {
-                                                      echo $cm;
-                                                    } elseif ($set->marks == 1 && $set->rubric == 0) {
-                                                      echo $m0;
-                                                    }
-                                                  }
-                                                }
-                                              } ?></td>
-                  </td> <?php  } ?>
-                <?php if ($exams[1]) { ?><td>
-                    <?php foreach ($subs as $is => $ex) {
-
-                      foreach ($ex as $key => $v) {
-
-                        if ($v['exam'] == $exams[1]) {
-                          $m1 = $v['score'];
-                          $ot1 = $v['outof'];
-
-                          $quarterSize = $ot1 / 4;
-                          $firstQuarterEnd = $quarterSize;
-                          $secondQuarterEnd = $quarterSize * 2;
-                          $thirdQuarterEnd = $quarterSize * 3;
-                          $fourthQuarterEnd = $ot1;
-
-                          if ($m1 <= $firstQuarterEnd) {
-                            $cm = "BE";
-                          } elseif ($m1 <= $secondQuarterEnd) {
-                            $cm = "AE";
-                          } elseif ($m1 <= $thirdQuarterEnd) {
-                            $cm = "ME";
-                          } elseif ($m1 <= $fourthQuarterEnd) {
-                            $cm = "EE";
-                          } else {
-                            $cm = "Value out of range";
-                          }
-
-
-                          $cls = $this->cbc_tr->get_classes($class);
-                          $set = $this->cbc_tr->get_settings($cls->class, $exams[0]);
-
-                          if ($set->marks == 1 && $set->rubric == 1) {
-                            echo $m1 . " (" . $cm . ")";
-                          } elseif ($set->marks == 0 && $set->rubric == 1) {
-                            echo $cm;
-                          } elseif ($set->marks == 1 && $set->rubric == 0) {
-                            echo $m1;
-                          }
-                        }
-                      }
-                    } ?>
-                  </td>
-                  </td> <?php  } ?>
-                <?php if ($exams[2]) { ?><td>
-                    <?php foreach ($subs as $is => $ex) {
-
-                      foreach ($ex as $key => $v) {
-
-                        if ($v['exam'] == $exams[2]) {
-                          $m2 = $v['score'];
-                          $ot2 = $v['outof'];
-
-                          $quarterSize = $ot2 / 4;
-                          $firstQuarterEnd = $quarterSize;
-                          $secondQuarterEnd = $quarterSize * 2;
-                          $thirdQuarterEnd = $quarterSize * 3;
-                          $fourthQuarterEnd = $ot2;
-
-                          if ($m2 <= $firstQuarterEnd) {
-                            $cm = "BE";
-                          } elseif ($m2 <= $secondQuarterEnd) {
-                            $cm = "AE";
-                          } elseif ($m2 <= $thirdQuarterEnd) {
-                            $cm = "ME";
-                          } elseif ($m2 <= $fourthQuarterEnd) {
-                            $cm = "EE";
-                          } else {
-                            $cm = "Value out of range";
-                          }
-
-
-                          $cls = $this->cbc_tr->get_classes($class);
-                          $set = $this->cbc_tr->get_settings($cls->class, $exams[0]);
-
-                          if ($set->marks == 1 && $set->rubric == 1) {
-                            echo $m2 . " (" . $cm . ")";
-                          } elseif ($set->marks == 0 && $set->rubric == 1) {
-                            echo $cm;
-                          } elseif ($set->marks == 1 && $set->rubric == 0) {
-                            echo $m2;
-                          }
-                        }
-                      }
-                    } ?>
-                  </td>
-                  </td> <?php  } ?>
-                <td>
-                  <!-- Average -->
-                  <?php
-                  // Calculate average based on the gathered scores
-                  $cls = $this->cbc_tr->get_classes($class);
-                  $st = $this->cbc_tr->get_settings($cls->class, $exams[0]);
-                  $st1 = $this->cbc_tr->get_settings($cls->class, $exams[1]);
-
-                  if (
-                    $st->compute == 2 || $st1->compute == 2
-                  ) {
-                    if (!$m2 && !$m1) {
-                      $av = $m0;
-                    } elseif (!$m2) {
-                      if ($m0 !== null && $m1 !== null) {
-                        $avg = ($m0 / $ot0 + $m1 / $ot1) / 2;
-                        $tot = ($ot0 + $ot1) / 2;
-                        $av = $avg * $tot;
+                      if ($m1 <= $firstQuarterEnd) {
+                        $cm = "BE";
+                      } elseif ($m1 <= $secondQuarterEnd) {
+                        $cm = "AE";
+                      } elseif ($m1 <= $thirdQuarterEnd) {
+                        $cm = "ME";
+                      } elseif ($m1 <= $fourthQuarterEnd) {
+                        $cm = "EE";
                       } else {
-                        $av = 0; // or handle the case when either $m0 or $m1 is null
+                        $cm = "Value out of range";
                       }
-                    } else {
-                      if (
-                        $m0 !== null && $m1 !== null && $m2 !== null
-                      ) {
-                        $avg = ($m1 / $ot1 + $m2 / $ot2 + $m0 / $ot0) / 3;
-                        $tot = ($ot0 + $ot1 + $ot2) / 3;
-                        $av = $avg * $tot;
-                      } else {
-                        $av = 0; // or handle the case when any of $m0, $m1, or $m2 is null
+
+
+                      $cls = $this->cbc_tr->get_classes($class);
+                      $set = $this->cbc_tr->get_settings($cls->class, $exam);
+
+                      if ($set->marks == 1 && $set->rubric == 1) {
+                        echo $m1 . " (" . $cm . ")";
+                      } elseif ($set->marks == 0 && $set->rubric == 1) {
+                        echo $cm;
+                      } elseif ($set->marks == 1 && $set->rubric == 0) {
+                        echo $m1;
                       }
-                    }
-                  } else {
-                    if (!$m2) {
-                      $av = $m0 + $m1;
-                    } elseif (!$m1) {
-                      $av = $m0 + $m2;
-                    } elseif (!$m0) {
-                      $av = $m1 + $m2;
-                    } elseif (!$m0 && !$m1) {
-                      $av = $m2;
-                    } elseif (!$m0 && !$m2) {
-                      $av = $m1;
-                    } elseif (!$m1 && !$m2) {
-                      $av = $m0;
-                    } else {
-                      $av = $m0 + $m1 + $m2;
-                    }
-                  }
-
-                  $total = $ot0 + $ot1 + $ot2;
-
-                  $quarterSize = $total / 4;
-                  $firstQuarterEnd = $quarterSize;
-                  $secondQuarterEnd = $quarterSize * 2;
-                  $thirdQuarterEnd = $quarterSize * 3;
-                  $fourthQuarterEnd = $total;
-
-                  if (
-                    $av <= $firstQuarterEnd
-                  ) {
-                    $cm = "BE";
-                  } elseif ($av <= $secondQuarterEnd) {
-                    $cm = "AE";
-                  } elseif ($av <= $thirdQuarterEnd) {
-                    $cm = "ME";
-                  } elseif ($av <= $fourthQuarterEnd) {
-                    $cm = "EE";
-                  } else {
-                    $cm = "Value out of range";
-                  }
-
-                  $avi = round($av);
-
-                  $cls = $this->cbc_tr->get_classes($class);
-                  $set = $this->cbc_tr->get_settings($cls->class, $exams[0]);
-
-                  if ($set->marks == 1 && $set->rubric == 1) {
-                    echo $avi . " (" . $cm . ")";
-                  } elseif ($set->marks == 0 && $set->rubric == 1) {
-                    echo $cm;
-                  } elseif ($set->marks == 1 && $set->rubric == 0) {
-                    echo $avi;
-                  }
-                  ?>
-                </td>
-                   <!-- GRades -->
-                <?php
-                $cls = $this->cbc_tr->get_classes($class);
-                $set = $this->cbc_tr->get_settings($cls->class, $exams[0]);
-                if ($set->grade == 1) { ?>
-                  <td>
-                    <?php
-                    $grades = $this->cbc_tr->get_grades($set->gs_system);
-                    $score = $avi;
-                    foreach ($grades as $grade) {
-                      if (
-                        $score >= $grade->minimum_marks && $score <= $grade->maximum_marks
-                      ) {
-                        echo $grade->grade;
-                      }
-                    }
-
-                    ?>
-                  </td>
-                <?php  }
-
-                ?>
-
-               <!-- comments -->
-                <?php
-                $cls = $this->cbc_tr->get_classes($class);
-                $set = $this->cbc_tr->get_settings($cls->class, $exams[0]);
-                if ($set->comments == 1) { ?>
-                  <td>
-                    <?php
-                    $grades = $this->cbc_tr->get_grades($set->gs_system);
-                    $score = $avi;
-                    foreach ($grades as $grade) {
-                      if (
-                        $score >= $grade->minimum_marks && $score <= $grade->maximum_marks
-                      ) {
-                        echo $grade->comment;
-                      }
-                    }
-
-                    ?>
-                  </td>
-                <?php  }
-
-                ?>
-
-                <td> <?php
-                      $this->load->model('teachers/teachers_m');
-                      $trs = $this->cbc_tr->get_teachers($class, $term,  $year, $sub);
-                      $td = $this->teachers_m->find($trs->teacher);
-                      echo $td->first_name . ' ' . $td->last_name;
-
                       ?></td>
-              </tr>
-            <?php
 
+
+
+                  <!-- GRades -->
+                  <?php
+                  $cls = $this->cbc_tr->get_classes($class);
+                  $set = $this->cbc_tr->get_settings($cls->class, $exam);
+                  if ($set->grade == 1) { ?>
+                    <td>
+                      <?php
+                      $grades = $this->cbc_tr->get_grades($set->gs_system);
+                      $score = $m1;
+                      foreach ($grades as $grade) {
+                        if (
+                          $score >= $grade->minimum_marks && $score <= $grade->maximum_marks
+                        ) {
+                          echo $grade->grade;
+                        }
+                      }
+
+                      ?>
+                    </td>
+                  <?php  }
+
+                  ?>
+
+                  <!-- comments -->
+                  <?php
+                  $cls = $this->cbc_tr->get_classes($class);
+                  $set = $this->cbc_tr->get_settings($cls->class, $exam);
+                  if ($set->comments == 1) { ?>
+                    <td style="text-align:left">
+                      <?php
+                      $grades = $this->cbc_tr->get_grades($set->gs_system);
+                      $score = $m1;
+                      foreach ($grades as $grade) {
+                        if (
+                          $score >= $grade->minimum_marks && $score <= $grade->maximum_marks
+                        ) {
+                          echo $grade->comment;
+                        }
+                      }
+
+                      ?>
+                    </td>
+                  <?php  }
+
+                  ?>
+
+                  <td> <?php
+                        $this->load->model('teachers/teachers_m');
+                        $trs = $this->cbc_tr->get_teachers($class, $term,  $year, $sub);
+                        $td = $this->teachers_m->find($trs->teacher);
+                        echo $td->first_name . ' ' . $td->last_name;
+
+                        ?></td>
+                </tr>
+            <?php
+              }
             }
             ?>
           </tbody>
