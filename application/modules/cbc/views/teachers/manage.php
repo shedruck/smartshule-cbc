@@ -1,3 +1,6 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 <?php if ($this->session->flashdata('created_message')) : ?>
   <div class="alert-container inserted-alert">
     <div class="alert alert-solid-success" role="alert">
@@ -170,6 +173,7 @@
                                 'value' => 1,
                                 'class' => 'form-check-input',
                                 'checked' => (isset($result->type) && $result->type == 'rubric') ? TRUE : FALSE,
+                                'onclick' => "toggleComputeAverageDiv({$s->id})"
                               ));
                               ?>
                               <label class="form-check-label" for="rubric_<?php echo $s->id; ?>">Rubric</label>
@@ -182,11 +186,40 @@
                                 'value' => 2,
                                 'class' => 'form-check-input',
                                 'checked' => (isset($result->type) && $result->type == 'marks') ? TRUE : FALSE,
+                                'onclick' => "toggleComputeAverageDiv({$s->id})"
                               ));
                               ?>
                               <label class="form-check-label" for="marks_<?php echo $s->id; ?>">Marks</label>
                             </div>
                             <?php echo form_error('type_' . $s->id); ?>
+                          </div>
+
+                          <div id="computeAverageDiv_<?php echo $s->id; ?>" class="mb-3 m-2" style="display: none;">
+                            <label class="form-label"><b>Compute Term's Average By: </b></label>
+                            <div class="form-check form-check-inline">
+                              <?php
+                              echo form_radio(array(
+                                'name' => 'compute_' . $s->id,
+                                'id' => 'addition_' . $s->id,
+                                'value' => 1,
+                                'class' => 'form-check-input',
+                                'checked' => (isset($result->compute) && $result->compute == 'addition') ? TRUE : FALSE,
+                              ));
+                              ?>
+                              <label class="form-check-label" for="addition_<?php echo $s->id; ?>">Addition</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <?php
+                              echo form_radio(array(
+                                'name' => 'compute_' . $s->id,
+                                'id' => 'avarage_' . $s->id,
+                                'value' => 2,
+                                'class' => 'form-check-input',
+                                'checked' => (isset($result->compute) && $result->compute == 'avarage') ? TRUE : FALSE,
+                              ));
+                              ?>
+                              <label class="form-check-label" for="avarage_<?php echo $s->id; ?>">Average</label>
+                            </div>
                           </div>
 
                           <div class="mb-3 m-2">
@@ -204,6 +237,8 @@
                               <?php echo form_error('gs_system_' . $s->id); ?>
                             </div>
                           </div>
+
+
 
                           <div class="mb-3 m-2">
                             <label class="form-label"><b>Report Elements</b></label>
@@ -376,4 +411,20 @@
         var accordionRow = document.getElementById('accordion_row_' + id);
         accordionRow.style.display = accordionRow.style.display === 'none' ? 'table-row' : 'none';
       }
+    </script>
+
+    <script>
+      function toggleComputeAverageDiv(id) {
+        if (document.getElementById('marks_' + id).checked) {
+          document.getElementById('computeAverageDiv_' + id).style.display = 'block';
+        } else {
+          document.getElementById('computeAverageDiv_' + id).style.display = 'none';
+        }
+      }
+
+      // Initial check on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        var id = <?php echo $s->id; ?>;
+        toggleComputeAverageDiv(id);
+      });
     </script>

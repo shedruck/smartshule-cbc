@@ -70,19 +70,16 @@
                 ?>
                 <li class="slide has-sub <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
                     <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set) ? 'active' : ''; ?>">
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="side-menu__icon">
-                        <path d="M0 0h24v24H0V0z" fill="none"></path>
-                        <path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16zm0-11.47L17.74 9 12 13.47 6.26 9 12 4.53z">
-                        </path>
-                    </svg> -->
+
                         <i class="fa fa-graduation-cap side-menu__icon"></i>
                         <span class="side-menu__label">Academics</span>
                         <i class="fe fe-chevron-right side-menu__angle"></i>
                     </a>
                     <ul class="slide-menu child1 <?php echo in_array($this->uri->segment(1), $set) ? 'active' : ''; ?>">
-                        <li class="slide <?php echo $this->uri->segment(1) === "cbc" ? 'active' : '';  ?>">
-                            <a href="<?php echo base_url('cbc/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "cbc" ? 'active' : '';  ?>">CBC Assessments</a>
+                        <li class="slide">
+                            <a href="<?php echo base_url('cbc/trs') ?>" class="side-menu__item <?php echo ($this->uri->segment(1) === "cbc" && $this->uri->segment(2) === "trs" && !$this->uri->segment(3)) ? 'active' : ''; ?>">CBC Assessments</a>
                         </li>
+
                         <li class="slide <?php echo $this->uri->segment(1) === "assignments" ? 'active' : '';  ?>">
                             <a href="<?php echo base_url('assignments/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "assignments" ? 'active' : '';  ?>">Assignments</a>
                         </li>
@@ -115,33 +112,29 @@
                         <path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
                         </path>
                     </svg> -->
-                    <i class="fa fa-folder-o side-menu__icon"></i>
-                    <span class="side-menu__label">Professional Docs</span>
-                    <i class="fe fe-chevron-right side-menu__angle"></i>
-                </a>
-                <ul class="slide-menu child1 <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
-                    <li class="slide <?php echo $this->uri->segment(1) === "schemes_of_work" ? 'active' : '';  ?>">
-                        <a href="<?php echo base_url('schemes_of_work/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "schemes_of_work" ? 'active' : '';  ?>">Schemes of Work</a>
-                    </li>
-                    <li class="slide <?php echo $this->uri->segment(1) === "lesson_plan" ? 'active' : '';  ?>">
-                        <a href="<?php echo base_url('lesson_plan/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "lesson_plan" ? 'active' : '';  ?>">Lesson Plans</a>
-                    </li>
-                    <li class="slide <?php echo $this->uri->segment(1) === "record_of_work_covered" ? 'active' : '';  ?>">
-                        <a href="<?php echo base_url('record_of_work_covered/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "record_of_work_covered" ? 'active' : '';  ?>">Record of Work Covered</a>
-                    </li>  
-                </ul>
-            </li>
-            
-            <!-- End::slide -->
-            <?php
-                $set = array('evideos', 'enotes','past_papers','lesson_materials','newsletters');
-            ?>
-            <li class="slide has-sub <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
-                <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" class="side-menu__icon" fill="#000000">
-                        <path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z">
-                        </path>
-                    </svg> -->
+                        <i class="fa fa-folder-o side-menu__icon"></i>
+                        <span class="side-menu__label">Professional Docs</span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1 <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
+                        <li class="slide <?php echo $this->uri->segment(1) === "schemes_of_work" ? 'active' : '';  ?>">
+                            <a href="<?php echo base_url('schemes_of_work/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "schemes_of_work" ? 'active' : '';  ?>">Schemes of Work</a>
+                        </li>
+                        <li class="slide <?php echo $this->uri->segment(1) === "lesson_plan" ? 'active' : '';  ?>">
+                            <a href="<?php echo base_url('lesson_plan/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "lesson_plan" ? 'active' : '';  ?>">Lesson Plans</a>
+                        </li>
+                        <li class="slide <?php echo $this->uri->segment(1) === "record_of_work_covered" ? 'active' : '';  ?>">
+                            <a href="<?php echo base_url('record_of_work_covered/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "record_of_work_covered" ? 'active' : '';  ?>">Record of Work Covered</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- End::slide -->
+                <?php
+                $set = array('evideos', 'enotes', 'past_papers', 'lesson_materials', 'newsletters');
+                ?>
+                <li class="slide has-sub <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
+                    <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
                         <i class="fa fa-folder-open side-menu__icon"></i>
                         <span class="side-menu__label">Repositories</span>
                         <i class="fe fe-chevron-right side-menu__angle"></i>
@@ -169,46 +162,44 @@
                 <!-- Start::special menu -->
 
                 <?php
-                $set = array('set_exam', 'enotes', 'past_papers', 'lesson_materials', 'newsletters');
+                $set = array('cbc');
+
+                $set1 = array('cbc');
                 ?>
                 <?php
                 if ($this->profile->special === "" || $this->profile->special === null) {
                     # code...
                 } else { ?>
-                    <li class="slide has-sub" <?php echo in_array($this->uri->segment(3), $set) ? 'active open' : ''; ?>">
-                        <a href="javascript:void(0);" class="side-menu__item">
+                    <li class="slide has-sub <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
+                        <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
 
                             <i class="fas fa-shield-alt mdi-24px side-menu__icon"></i>
                             <span class="side-menu__label">Special Roles</span>
                             <i class="fe fe-chevron-right side-menu__angle"></i>
                         </a>
                         <ul class="slide-menu child1">
-                            <li class="slide side-menu__label1">
-                                <a href="javascript:void(0);">Nested Menu</a>
-                            </li>
                             <li class="slide has-sub">
-                                <a href="javascript:void(0);" class="side-menu__item">Exams
-                                    <i class="fe fe-chevron-right side-menu__angle"></i></a>
+                                <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>">Exams
+                                    <i class="fe fe-chevron-right side-menu__angle <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>"></i></a>
                                 <ul class="slide-menu child2">
-                                    <li class="slide">
-                                        <a href="<?php echo base_url('cbc/trs/set_exam') ?>" class="side-menu__item">Exam Setup</a>
+                                    <li class="slide <?php echo $this->uri->segment(3) === "set_exam" ? 'active open' : '';  ?>">
+                                        <a href="<?php echo base_url('cbc/trs/set_exam') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "set_exam" ? 'active' : '';  ?>">Exam Setup</a>
                                     </li>
-                                    <li class="slide">
-                                        <a href="<?php echo base_url('cbc/trs/all_exams') ?>" class="side-menu__item">Manage Exams</a>
+                                    <li class="slide <?php echo $this->uri->segment(3) === "all_exams" ? 'active' : '';  ?>">
+                                        <a href="<?php echo base_url('cbc/trs/all_exams') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "all_exams" ? 'active' : '';  ?>">Manage Exams</a>
                                     </li>
-                                     <li class="slide">
-                                        <a href="<?php echo base_url('cbc/trs/bulk_formative') ?>" class="side-menu__item">Formative Reports Per Class</a>
+                                    <li class="slide <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">
+                                        <a href="<?php echo base_url('cbc/trs/bulk_formative') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">Formative Reports Per Class</a>
                                     </li>
-                                    <li class="slide">
-                                        <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item">Formative Reports Per Student</a>
+                                    <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
+                                        <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">Formative Reports Per Student</a>
                                     </li>
-                                    <li class="slide">
-                                        <a href="<?php echo base_url('cbc/trs/generate_reports') ?>" class="side-menu__item">Summative Reports Per Class</a>
+                                    <li class="slide <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">
+                                        <a href="<?php echo base_url('cbc/trs/generate_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">Summative Reports Per Class</a>
                                     </li>
-                                    <li class="slide">
-                                        <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item">Summative Reports Per Student</a>
+                                    <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
+                                        <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">Summative Reports Per Student</a>
                                     </li>
-                                   
 
                                 </ul>
                             </li>

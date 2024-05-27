@@ -18,6 +18,13 @@
         </div>
       </div>
 
+      <?php
+      // echo "<pre>";
+      // print_r($result);
+      // echo "<pre>";
+      
+      ?>
+
       <div class="card-body p-2">
 
         <div class="row justify-content-center">
@@ -37,6 +44,7 @@
                   'value' => 1,
                   'class' => 'form-check-input',
                   'checked' => (isset($result->type) && $result->type == '1') ? TRUE : FALSE,
+                  'onclick' => "toggleComputeAverageDiv()"
                 ));
                 ?>
                 <label class="form-check-label" for="rubric">Rubric</label>
@@ -49,12 +57,42 @@
                   'value' => 2,
                   'class' => 'form-check-input',
                   'checked' => (isset($result->type) && $result->type == '2') ? TRUE : FALSE,
+                  'onclick' => "toggleComputeAverageDiv()"
                 ));
                 ?>
                 <label class="form-check-label" for="marks">Marks</label>
               </div>
               <?php echo form_error('type'); ?>
             </div>
+
+            <div id="computeAverageDiv" class="mb-3 m-2" style="display: none;">
+              <label class="form-label"><b>Compute Term's Average By: </b></label>
+              <div class="form-check form-check-inline">
+                <?php
+                echo form_radio(array(
+                  'name' => 'compute',
+                  'id' => 'addition',
+                  'value' => 1,
+                  'class' => 'form-check-input',
+                  'checked' => (isset($result->compute) && $result->compute == '1') ? TRUE : FALSE,
+                ));
+                ?>
+                <label class="form-check-label" for="addition">Addition</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <?php
+                echo form_radio(array(
+                  'name' => 'compute',
+                  'id' => 'avarage',
+                  'value' => 2,
+                  'class' => 'form-check-input',
+                  'checked' => (isset($result->compute) && $result->compute == '2') ? TRUE : FALSE,
+                ));
+                ?>
+                <label class="form-check-label" for="avarage">Average</label>
+              </div>
+            </div>
+
 
             <div class="mb-3 m-2">
               <label class="form-label"><b>Grading System</b></label>
@@ -185,3 +223,21 @@
     align-items: center;
   }
 </style>
+
+<script>
+  function toggleComputeAverageDiv() {
+    // Check if the "Marks" radio button is selected
+    if (document.getElementById('marks').checked) {
+      // Show the compute average div
+      document.getElementById('computeAverageDiv').style.display = 'block';
+    } else {
+      // Hide the compute average div
+      document.getElementById('computeAverageDiv').style.display = 'none';
+    }
+  }
+
+  // Initial check on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    toggleComputeAverageDiv();
+  });
+</script>

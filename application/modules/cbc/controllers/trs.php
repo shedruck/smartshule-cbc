@@ -434,6 +434,7 @@ class Trs extends Trs_Controller
                 'exam' => $exam,
                 'gs_system' => $this->input->post('gs_system_' . $class),
                 'type' => $this->input->post('type_' . $class),
+                'compute' => $this->input->post('compute_' . $class),
                 'rubric' => $this->input->post('rubric_' . $class),
                 'marks' => $this->input->post('marks_' . $class),
                 'comments' => $this->input->post('comments_' . $class),
@@ -483,6 +484,7 @@ class Trs extends Trs_Controller
                 'exam' => $exam,
                 'gs_system' => $this->input->post('gs_system'),
                 'type' => $this->input->post('type'),
+                'compute' => $this->input->post('compute'),
                 'rubric' => $this->input->post('rubric'),
                 'marks' => $this->input->post('marks'),
                 'comments' => $this->input->post('comments'),
@@ -499,7 +501,7 @@ class Trs extends Trs_Controller
             if ($ok) {
 
                 $form1 = [
-                    'type' => $this->input->post('type_' . $class),
+                    'type' => $this->input->post('type'),
                     'modified_by' => $this->user->id,
                     'modified_on' => time()
                 ];
@@ -593,7 +595,6 @@ class Trs extends Trs_Controller
 
         if ($this->input->post()) {
 
-
             $class = $this->input->post('class');
             $term = $this->input->post('term');
             $year = $this->input->post('year');
@@ -656,7 +657,20 @@ class Trs extends Trs_Controller
             $data['exams'] = $ids;
 
             $data['grouped_marks'] = $this->cbc_tr->fetch_marks_by_stud($ids, $student);
+
+            $data['reports'] = $this->cbc_tr->fetch_marks_by_stud($ids, $student);
+            $p = $this->cbc_tr->fetch_marks_by_stud($ids, $student);
+
+            $stdetails = $this->worker->get_student($student);
         }
+
+        $data['class'] = $stdetails->cl->id;
+
+        // echo "<pre>";
+        // print_r($stdetails);
+        // echo "<pre>";
+        // die;
+
         $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
         $this->template->title('Edit Settings')->build('teachers/single_sum', $data);
     }
@@ -946,4 +960,6 @@ class Trs extends Trs_Controller
         $this->template->title('Social Behavior Report')->build('teachers/social_print', $data);
 
     }
+
+   
 }

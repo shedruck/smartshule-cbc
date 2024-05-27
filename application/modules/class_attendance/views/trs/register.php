@@ -186,7 +186,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      setOnClick('submit', function() {
+      setOnClick('iisubmit', function() {
         var attendanceDate = document.getElementById('attendance_date').value;
         if (!attendanceDate) {
           console.warn('Attendance date field is empty.');

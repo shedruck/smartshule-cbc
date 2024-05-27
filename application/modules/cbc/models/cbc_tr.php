@@ -331,9 +331,18 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $id)->get('cbc_settings')->row();
     }
 
+    function get_grades($id){
+        return $this->db->where('grade_id', $id)->get('gs_grades')->result();
+    }
+
     function get_classgrp($id)
     {
         return $this->db->where('id', $id)->get('classes')->row();
+    }
+
+    function get_classes($clsgp)
+    {
+        return $this->db->where('id', $clsgp)->get('classes')->row();
     }
 
     function check_social($st, $t, $y){

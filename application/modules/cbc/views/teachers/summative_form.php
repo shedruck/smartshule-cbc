@@ -10,7 +10,10 @@ if ($exam_type->type == 1) {
     $extype = 2;
 } else if ($exam_type->type == 2) {
     $extype = 1;
+} else {
+    $extype = null; // Explicitly set $extype to null if it doesn't match 1 or 2
 }
+
 
 ?>
 
@@ -114,45 +117,52 @@ if ($exam_type->type == 1) {
                                         </tr>
                                         <?php
                                         $index = 1;
-                                        foreach ($students as $p) {
+                                        
+                                        if ($extype === "" || $extype === null) {
                                         ?>
-
                                             <tr>
-                                                <td class="">
-                                                    <input type="hidden" name="student[<?php echo $p->id ?>]" value="<?php echo $p->id ?>">
-
-                                                    <?php echo $index ?>
+                                                <td colspan="7">
+                                                    <div class="alert alert-danger">Please do Exam Setting first!!!</div>
                                                 </td>
-                                                <td>
-                                                    <p class="font-w600 mb-1"><?php echo $p->admission_number ?></p>
-                                                    <div class="text"><?php echo $p->first_name . ' ' . $p->middle_name . ' ' . $p->last_name ?> </div>
-                                                </td>
-                                                <?php if ($extype == 1) : ?>
-                                                    <td>
-                                                        <?php
-                                                        $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
-                                                        ?>
-
-                                                        <input type="number" id="secondInput" name="score[<?php echo $p->id ?>]" value="<?php echo ($score) ? $score->score : '' ?>" class="form-control secondInput" id="input-placeholder" placeholder="Score">
-                                                    </td>
-                                                <?php
-                                                elseif ($extype == 2) :
-                                                    $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
-                                                ?>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="4" name="score[<?php echo $p->id ?>]" id="Radio-md_4_<?php echo $p->id ?>" <?php echo $score ? $score->score == 4 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="3" name="score[<?php echo $p->id ?>]" id="Radio-md_3_<?php echo $p->id ?>" <?php echo $score ? $score->score == 3 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="2" name="score[<?php echo $p->id ?>]" id="Radio-md_2_<?php echo $p->id ?>" <?php echo $score ? $score->score == 2 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="1" name="score[<?php echo $p->id ?>]" id="Radio-md_1_<?php echo $p->id ?>" <?php echo $score ? $score->score == 1 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;">
-                                                        <div class="form-check d-inline-block">
-                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked_<?php echo $p->id ?>">
-                                                        </div>
-                                                    </td>
-                                                <?php endif; ?>
                                             </tr>
-
+                                            <?php
+                                        } else {
+                                            foreach ($students as $p) {
+                                            ?>
+                                                <tr>
+                                                    <td class="">
+                                                        <input type="hidden" name="student[<?php echo $p->id ?>]" value="<?php echo $p->id ?>">
+                                                        <?php echo $index ?>
+                                                    </td>
+                                                    <td>
+                                                        <p class="font-w600 mb-1"><?php echo $p->admission_number ?></p>
+                                                        <div class="text"><?php echo $p->first_name . ' ' . $p->middle_name . ' ' . $p->last_name ?> </div>
+                                                    </td>
+                                                    <?php if ($extype == 1) : ?>
+                                                        <td>
+                                                            <?php
+                                                            $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
+                                                            ?>
+                                                            <input type="number" id="secondInput" name="score[<?php echo $p->id ?>]" value="<?php echo ($score) ? $score->score : '' ?>" class="form-control secondInput" id="input-placeholder" placeholder="Score">
+                                                        </td>
+                                                    <?php elseif ($extype == 2) :
+                                                        $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
+                                                    ?>
+                                                        <td style="text-align: center;"><input class="form-check-input" type="radio" value="4" name="score[<?php echo $p->id ?>]" id="Radio-md_4_<?php echo $p->id ?>" <?php echo $score ? $score->score == 4 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input" type="radio" value="3" name="score[<?php echo $p->id ?>]" id="Radio-md_3_<?php echo $p->id ?>" <?php echo $score ? $score->score == 3 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input" type="radio" value="2" name="score[<?php echo $p->id ?>]" id="Radio-md_2_<?php echo $p->id ?>" <?php echo $score ? $score->score == 2 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input" type="radio" value="1" name="score[<?php echo $p->id ?>]" id="Radio-md_1_<?php echo $p->id ?>" <?php echo $score ? $score->score == 1 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;">
+                                                            <div class="form-check d-inline-block">
+                                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked_<?php echo $p->id ?>">
+                                                            </div>
+                                                        </td>
+                                                    <?php endif; ?>
+                                                </tr>
                                         <?php $index++;
-                                        } ?>
+                                            }
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
