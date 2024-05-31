@@ -86,12 +86,13 @@ class Cbc_tr extends MY_Model
                     'term' => $this->school->term,
                     'year' => $this->school->year,
                     'class' => $clas,
-                    'type' => 2
+                    'type' => 1
                 ]
             )
             ->get('subjects_assign')->result();
 
-        $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        // $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        $sub =  $this->populate('subjects', 'id', 'name');
 
         $out = [];
         foreach ($list as $p) {
@@ -124,13 +125,16 @@ class Cbc_tr extends MY_Model
         $list =  $this->db
             ->where(
                 [
+                    'term' => $this->school->term,
+                    // 'year' => $this->school->year,
                     'class_id' => $class->class,
                 ]
             )
-            ->get('cbc')
+            ->get('subjects_classes')
             ->result();
 
-        $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        // $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        $sub =  $this->populate('subjects', 'id', 'name');
 
         $out = [];
         foreach ($list as $p) {

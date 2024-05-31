@@ -360,7 +360,6 @@ class Trs extends Trs_Controller
         }
     }
 
-
     function begin_summative_form()
     {
         $data['classes'] = $this->cbc_tr->my_classes();
