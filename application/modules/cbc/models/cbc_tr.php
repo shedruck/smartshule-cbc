@@ -15,7 +15,8 @@ class Cbc_tr extends MY_Model
         return $this->db->insert_id();
     }
 
-    function exam_setting($data, $table) {
+    function exam_setting($data, $table)
+    {
         $this->db->insert($table, $data);
         return $this->db->insert_id();
     }
@@ -85,12 +86,13 @@ class Cbc_tr extends MY_Model
                     'term' => $this->school->term,
                     'year' => $this->school->year,
                     'class' => $clas,
-                    'type' => 2
+                    'type' => 1
                 ]
             )
             ->get('subjects_assign')->result();
 
-        $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        // $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        $sub =  $this->populate('subjects', 'id', 'name');
 
         $out = [];
         foreach ($list as $p) {
@@ -104,6 +106,56 @@ class Cbc_tr extends MY_Model
         return $out;
     }
 
+    function find_allocation2($clas)
+    {
+        if ($this->profile->special == 1) {
+            $out = $this->get_all_class_subjects($clas);
+        } else {
+            $out = $this->find_allocation($clas);
+        }
+
+        return $out;
+    }
+
+    //Function Get all class subjects
+    function get_all_class_subjects($clas)
+    {
+        $class = $this->get_cls_group($clas);
+
+        $list =  $this->db
+            ->where(
+                [
+                    'term' => $this->school->term,
+                    // 'year' => $this->school->year,
+                    'class_id' => $class->class,
+                ]
+            )
+            ->get('subjects_classes')
+            ->result();
+
+        // $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        $sub =  $this->populate('subjects', 'id', 'name');
+
+        $out = [];
+        foreach ($list as $p) {
+            $nm = isset($sub[$p->subject_id]) ? $sub[$p->subject_id] : 'Undefined subject';
+            $out[] =  [
+                'id' => $p->subject_id,
+                'name' => $nm
+            ];
+        }
+
+        return $out;
+
+        // return $list;
+    }
+
+    //Get Class Group
+    function get_cls_group($clas)
+    {
+        return $this->db->where('id', $clas)->get('classes')->row();
+    }
+
     function fetch_strands($subject)
     {
         return $this->db->where('subject', $subject)->where('status', 1)->order_by('id', 'ASC')->get('cbc_la')->result();
@@ -115,7 +167,7 @@ class Cbc_tr extends MY_Model
 
         $strands = [];
         foreach ($list as $uy => $d) {
-           $strands[$d->id] = $d->name;
+            $strands[$d->id] = $d->name;
         }
         return $strands;
     }
@@ -222,11 +274,11 @@ class Cbc_tr extends MY_Model
     {
         $this->select_all_key('admission');
         return $this->db
-                    ->where($this->dx('class') . " ='" . $class . "'", NULL, FALSE)
-                    ->where($this->dx('status') . " ='1'", NULL, FALSE)
-                    ->order_by('first_name','ASC')
-                    ->get('admission')
-                    ->result();
+            ->where($this->dx('class') . " ='" . $class . "'", NULL, FALSE)
+            ->where($this->dx('status') . " ='1'", NULL, FALSE)
+            ->order_by('first_name', 'ASC')
+            ->get('admission')
+            ->result();
     }
 
     function get_asses_strands($id, $strand, $substrand, $task)
@@ -249,32 +301,33 @@ class Cbc_tr extends MY_Model
         ])->get('cbc_assess')->result();
 
         $fn = [];
-        foreach($list as $p)
-        {
+        foreach ($list as $p) {
             $row = $this->get_asses_strands($p->id, $post->strand, $post->substrand, $post->task);
             $fn[$p->student] =  $row;
-        }   
+        }
 
         return $fn;
     }
 
     function find_task($id)
     {
-        return $this->db->where('id',$id)->where('status',1)->get('cbc_tasks')->row();
+        return $this->db->where('id', $id)->where('status', 1)->get('cbc_tasks')->row();
     }
 
     //Get Class Students
-    function get_stu_marks($sub,$exam,$stu) {
+    function get_stu_marks($sub, $exam, $stu)
+    {
         return $this->db
-                    ->where('sub',$sub)
-                    ->where('exam',$exam)
-                    ->where('student',$stu)
-                    ->get('cbc_marks')
-                    ->row();
+            ->where('sub', $sub)
+            ->where('exam', $exam)
+            ->where('student', $stu)
+            ->get('cbc_marks')
+            ->row();
     }
 
     //Function to Create CBC Marks
-    function create_marks($table,$data) {
+    function create_marks($table, $data)
+    {
         $this->db->insert($table, $data);
         return $this->db->insert_id();
     }
@@ -286,13 +339,14 @@ class Cbc_tr extends MY_Model
     }
 
     //Check whether marks for exam exist
-    function check_exists($sub,$exam,$cls) {
+    function check_exists($sub, $exam, $cls)
+    {
         return $this->db
-                    ->where('sub',$sub)
-                    ->where('exam',$exam)
-                    ->where('class',$cls)
-                    ->get('cbc_marks')
-                    ->row();
+            ->where('sub', $sub)
+            ->where('exam', $exam)
+            ->where('class', $cls)
+            ->get('cbc_marks')
+            ->row();
     }
 
 
@@ -303,7 +357,8 @@ class Cbc_tr extends MY_Model
     }
 
 
-    function all_exams(){
+    function all_exams()
+    {
         return $this->db->order_by('id', 'DESC')->get('cbc_threads')->result();
     }
 
@@ -313,13 +368,13 @@ class Cbc_tr extends MY_Model
         $ex = array(); // Initialize the array
 
         foreach ($list as $l) {
-            $ex[$l->id] = $l->exam.' Term '.$l->term.' '.$l->year; // Append each element to the array
+            $ex[$l->id] = $l->exam . ' Term ' . $l->term . ' ' . $l->year; // Append each element to the array
         }
 
         return $ex;
     }
 
-    
+
 
     function get_exam($id)
     {
@@ -331,7 +386,8 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $id)->get('cbc_settings')->row();
     }
 
-    function get_grades($id){
+    function get_grades($id)
+    {
         return $this->db->where('grade_id', $id)->get('gs_grades')->result();
     }
 
@@ -345,7 +401,8 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $clsgp)->get('classes')->row();
     }
 
-    function check_social($st, $t, $y){
+    function check_social($st, $t, $y)
+    {
         return $this->db->where('student', $st)->where('term', $t)->where('year', $y)->get('cbc_social')->row();
     }
 
@@ -357,11 +414,13 @@ class Cbc_tr extends MY_Model
     {
         return $this->db->where('id', $id)->get('cbc_settings')->row();
     }
-    function update_setting($id, $data, $table){
+    function update_setting($id, $data, $table)
+    {
         return $this->db->where('id', $id)->update($table, $data);
     }
 
-    function update_exam($id, $data, $table) {
+    function update_exam($id, $data, $table)
+    {
         return $this->db->where('id', $id)->update($table, $data);
     }
 
@@ -385,12 +444,13 @@ class Cbc_tr extends MY_Model
     {
         return $this->db->order_by('id', 'DESC')->get('class_groups')->result();
     }
-     function get_termexams($term, $year){
+    function get_termexams($term, $year)
+    {
         return $this->db->where('term', $term)->where('year', $year)->get('cbc_threads')->result();
-     }
+    }
     function get_teachers($class, $term, $year, $sub)
     {
-        return $this-> db->where('class', $class)->where('term', $term)->where('year', $year)->where('subject', $sub)->get('subjects_assign')->row();
+        return $this->db->where('class', $class)->where('term', $term)->where('year', $year)->where('subject', $sub)->get('subjects_assign')->row();
     }
 
 
@@ -411,7 +471,7 @@ class Cbc_tr extends MY_Model
             $results = $query->result();
             $grouped_results = [];
 
-             foreach ($query->result() as $row) {
+            foreach ($query->result() as $row) {
                 $grouped_results[$row->student][$row->sub][] = (array) $row;
             }
             return $grouped_results;
@@ -457,7 +517,7 @@ class Cbc_tr extends MY_Model
 
     public function fetch_marks_by_stud($exam, $st)
     {
-        if (empty($exam) && empty($st) ) {
+        if (empty($exam) && empty($st)) {
             return [];
         }
 
@@ -486,11 +546,11 @@ class Cbc_tr extends MY_Model
         $this->select_all_key('admission');
         $list = $this->db->get('admission')->result();
 
-       $myst = [];
-       foreach ($list as $key => $l) {
-       $myst[$l->id] =  $l->first_name.' '.$l->last_name;
-       }
-        
+        $myst = [];
+        foreach ($list as $key => $l) {
+            $myst[$l->id] =  $l->first_name . ' ' . $l->last_name;
+        }
+
         return  $myst;
     }
 
@@ -499,12 +559,13 @@ class Cbc_tr extends MY_Model
         return $this->db->where('class', $cls)->where('term', $term)->where('year', $year)->where('subject', $sb)->get('cbc_assess')->result();
     }
 
-    function get_formative($ids) {
+    function get_formative($ids)
+    {
 
         if (empty($ids)) {
-          return [];
+            return [];
         }
-        
+
         $query = $this->db->where_in('assess_id', $ids)->where('status', 1)->get('cbc_assess_tasks');
 
         if ($query->num_rows() > 0) {
@@ -540,8 +601,6 @@ class Cbc_tr extends MY_Model
             ->limit(10); // Limit the result to 10 records
         $result = $this->db->get('class_attendance')->result();
         return $result;
-
-
     }
 
 
@@ -552,10 +611,10 @@ class Cbc_tr extends MY_Model
         }
 
         $this->db->where('class_id', $id)
-        ->where('term', $this->school->term)
+            ->where('term', $this->school->term)
             ->where('year', $this->school->year)
             ->order_by('attendance_date', 'DESC'); // Sort by attendance_date in ascending order
-      $result = $this->db->get('class_attendance')->result();
+        $result = $this->db->get('class_attendance')->result();
         return $result;
     }
 
@@ -583,7 +642,7 @@ class Cbc_tr extends MY_Model
             }
         }
 
-      
+
         return $result;
     }
 
@@ -591,7 +650,7 @@ class Cbc_tr extends MY_Model
     {
 
         if (empty($id)) {
-          return [];
+            return [];
         }
 
         $data = $this->db->where_in('attendance_id', $id)->get('class_attendance_list')->result();
@@ -615,7 +674,7 @@ class Cbc_tr extends MY_Model
         // Sort the array by present count in descending order
         arsort($presentCounts);
 
-          $topStudents = array_slice($presentCounts, 0, 5, true);
+        $topStudents = array_slice($presentCounts, 0, 5, true);
 
         return $topStudents;
     }

@@ -86,7 +86,9 @@
 
    <script>
      function show_subjects(k) {
-       var endpoint = "<?php echo base_url('cbc/trs/get_subjects') ?>/" + k;
+      // console.log(k);
+
+       var endpoint = "<?php echo base_url('cbc/trs/get_subjects_for_summ') ?>/" + k;
        var BASE_URL = "<?php echo base_url() ?>";
        $('#data-container').empty();
        $.ajax({
