@@ -458,7 +458,7 @@ class Cbc_tr extends MY_Model
 
 
         $query = $this->db
-            ->where_in('exam', $exam)
+            ->where('exam', $exam)
             ->where('class', $cls)
             ->get('cbc_marks');
 
@@ -468,7 +468,7 @@ class Cbc_tr extends MY_Model
             $grouped_results = [];
 
             foreach ($query->result() as $row) {
-                $grouped_results[$row->student][$row->sub][$row->exam][] = (array) $row;
+                $grouped_results[$row->student][$row->sub][] = (array) $row;
             }
             return $grouped_results;
         } else {
@@ -501,7 +501,7 @@ class Cbc_tr extends MY_Model
             $grouped_results = [];
 
             foreach ($query->result() as $row) {
-                $grouped_results[$row->student][$row->sub][$row->exam][] = (array) $row;
+                $grouped_results[$row->student][$row->sub][] = (array) $row;
             }
             return $grouped_results;
         } else {
@@ -518,7 +518,7 @@ class Cbc_tr extends MY_Model
         }
 
         $query = $this->db
-            ->where_in('exam', $exam)
+            ->where('exam', $exam)
             ->where('student', $st)
             ->get('cbc_marks');
 
@@ -528,7 +528,7 @@ class Cbc_tr extends MY_Model
             $grouped_results = [];
 
             foreach ($query->result() as $row) {
-                $grouped_results[$row->student][$row->sub][$row->exam][] = (array) $row;
+                $grouped_results[$row->student][$row->sub][] = (array) $row;
             }
             return $grouped_results;
         } else {
