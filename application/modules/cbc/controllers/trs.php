@@ -57,7 +57,8 @@ class Trs extends Trs_Controller
     {
         $this->load->helper('form');
         $args = func_get_args();
-        $subjects = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
+        // $subjects = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
+        $subjects = $this->cbc_tr->populate('subjects', 'id', 'name');
         $su =  isset($subjects[$subject]) ? $subjects[$subject] : 'Subject';
         $data['strands'] =  $this->cbc->fetch_strands($subject);
 
