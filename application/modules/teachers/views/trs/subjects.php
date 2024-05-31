@@ -31,7 +31,12 @@
                     <td><?php echo $index; ?></td>
                     <td><?php echo $value->code ?></td>
                     <td><?php echo ucfirst($value->name) ?></td>
-                    <td><?php echo ucfirst($value->type) ?></td>
+                    <td><?php 
+                    if ($value->type == 1) {
+                     echo "IGCSE/8.4.4";
+                    }else {
+                          echo "CBC";
+                    } ?></td>
                     <td><?php echo $class ?></td>
 
                   </tr>

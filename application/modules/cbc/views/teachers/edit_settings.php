@@ -65,50 +65,7 @@
               <?php echo form_error('type'); ?>
             </div>
 
-            <div id="computeAverageDiv" class="mb-3 m-2" style="display: none;">
-              <label class="form-label"><b>Compute Term's Average By: </b></label>
-              <div class="form-check form-check-inline">
-                <?php
-                echo form_radio(array(
-                  'name' => 'compute',
-                  'id' => 'addition',
-                  'value' => 1,
-                  'class' => 'form-check-input',
-                  'checked' => (isset($result->compute) && $result->compute == '1') ? TRUE : FALSE,
-                ));
-                ?>
-                <label class="form-check-label" for="addition">Addition</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <?php
-                echo form_radio(array(
-                  'name' => 'compute',
-                  'id' => 'avarage',
-                  'value' => 2,
-                  'class' => 'form-check-input',
-                  'checked' => (isset($result->compute) && $result->compute == '2') ? TRUE : FALSE,
-                ));
-                ?>
-                <label class="form-check-label" for="avarage">Average</label>
-              </div>
-            </div>
-
-
-            <div class="mb-3 m-2">
-              <label class="form-label"><b>Grading System</b></label>
-              <div class="input-group">
-                <?php
-                $this->load->model('cbc_tr');
-                $checkg = $this->cbc_tr->check_grading($exam);
-                ?>
-                <?php
-
-                echo form_dropdown('gs_system', $gradings, (isset($checkg->gs_system)) ? $checkg->gs_system : '', 'class="form-control select" data-placeholder="Select Options..."');
-                ?>
-                <?php echo form_error('gs_system'); ?>
-              </div>
-            </div>
-
+            
             <div class="mb-3 m-2">
               <label class="form-label"><b>Report Elements</b></label>
               <div class="mb-3 m-2">

@@ -191,15 +191,13 @@
                                     <li class="slide <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">
                                         <a href="<?php echo base_url('cbc/trs/bulk_formative') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">Formative Reports Per Class</a>
                                     </li>
-                                    <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
-                                        <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">Formative Reports Per Student</a>
-                                    </li>
+                                   
                                     <li class="slide <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">
-                                        <a href="<?php echo base_url('cbc/trs/generate_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">Summative Reports Per Class</a>
+                                        <a href="<?php echo base_url('cbc/trs/generate_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">Summative Reports Per Exam</a>
                                     </li>
-                                    <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
+                                    <!-- <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
                                         <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">Summative Reports Per Student</a>
-                                    </li>
+                                    </li> -->
 
                                 </ul>
                             </li>
@@ -221,10 +219,10 @@
                                     <i class="fe fe-chevron-right side-menu__angle"></i></a>
                                 <ul class="slide-menu child2">
                                     <li class="slide">
-                                        <a href="javascript:void(0);" class="side-menu__item">Assign Subjects</a>
+                                        <a href="<?php echo base_url('teachers/trs/assign_sub') ?>" class="side-menu__item">Assign Subjects</a>
                                     </li>
                                     <li class="slide">
-                                        <a href="javascript:void(0);" class="side-menu__item">Assign ClassTeacher</a>
+                                        <a href="<?php echo base_url('class_groups/trs/assign_ctr') ?>" class="side-menu__item">Assign ClassTeacher</a>
                                     </li>
                                     <li class="slide">
                                         <a href="javascript:void(0);" class="side-menu__item">Manage Teachers</a>

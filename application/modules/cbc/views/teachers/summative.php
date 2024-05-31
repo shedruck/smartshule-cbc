@@ -14,7 +14,8 @@
                    <p class="mb-0 text-gray-600"><?php echo $obj->name ?></p>
                    <span class="fs-5"><?php echo $obj->total ?></span>
                    <span class="fs-12 text-success ms-1">Student(s)</span>
-                   <button class="btn btn-primary off-canvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="show_subjects(<?php echo $cl ?>)">Select Subject</button>
+                   <button class="btn btn-primary off-canvas mt-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="show_subjects(<?php echo $cl ?>)"><i class="fas fa-file-alt"></i>
+                      Begin Summative</button>
                  </div>
                  <div class="min-w-fit-content ms-3">
                    <span class="avatar avatar-md br-5 bg-primary-transparent text-primary">

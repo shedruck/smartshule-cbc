@@ -655,22 +655,17 @@ class Cbc_tr extends MY_Model
 
         $data = $this->db->where_in('attendance_id', $id)->get('class_attendance_list')->result();
 
-        // Initialize an array to store the count of present days for each student
-        $presentCounts = array();
+         $presentCounts = array();
 
         // Iterate through the data
         foreach ($data as $row) {
-            // Extract student and status from the current row
             $student = $row->student;
             $status = $row->status;
 
-            // Check if the student already exists in the presentCounts array
             if (!isset($presentCounts[$student])) {
-                // If not, initialize the count to 0
-                $presentCounts[$student] = 0;
+               $presentCounts[$student] = 0;
             }
 
-            // If status is 'present' or 'Present' (case-insensitive), increment the count for the student
             if (strcasecmp($status, 'present') === 0) {
                 $presentCounts[$student]++;
             }
@@ -683,4 +678,79 @@ class Cbc_tr extends MY_Model
 
         return $topStudents;
     }
+
+
+   function get_students_by_class($cls){
+
+        $this->select_all_key('admission');
+        $this->db->where($this->dx('class') . " ='" . $cls . "'", NULL, FALSE);
+        return $this->db->get('admission')->result();
+
+   }
+
+    public function get_clsgroup($class)
+    {
+        $this->db->where('id', $class); 
+        $query = $this->db->get('classes'); 
+        return $query->row();
+    }
+
+    function  get_subids($cls){
+        $this->db->where('class_id', $cls);
+        $query = $this->db->get('cbc');
+        return $query->result();
+    }
+
+    function  get_subjects_by_class($ids)
+    {
+        $this->db->where_in('id', $ids);
+        $query = $this->db->get('cbc_subjects');
+        return $query->result();
+    }
+
+    public function insert_input($input, $st, $ex)
+    {
+       
+        $data = array(
+            'remarks' => $input
+        );
+        $this->db->where('student', $st);
+        $this->db->where('exam', $ex);
+        $result = $this->db->update('cbc_marks', $data); 
+        return $result;
+    }
+
+    public function get_field($ky, $exam)
+    {
+        $this->db->select('remarks');
+        $this->db->where('student', $ky);
+        $this->db->where('exam', $exam);
+        $query = $this->db->get('cbc_marks');
+        $result = $query->row();
+
+        return $result ? $result->remarks : null;
+    }
+
+    public function insert_tr_remarks($input, $st, $ex)
+    {
+        $data = array(
+            'tr_remarks' => $input
+        );
+        $this->db->where('student', $st);
+        $this->db->where('exam', $ex);
+        $this->db->update('cbc_marks', $data);
+    }
+
+    public function get_tr_remarks($ky, $exam)
+    {
+        $this->db->select('tr_remarks');
+        $this->db->where('student', $ky);
+        $this->db->where('exam', $exam);
+        $query = $this->db->get('cbc_marks');
+        $result = $query->row();
+
+        return $result ? $result->tr_remarks : null;
+    }
+
+
 }

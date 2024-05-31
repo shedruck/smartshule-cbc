@@ -97,11 +97,11 @@
       <div class="card">
         <div class="card-header">
 
-        <?php  
-        $stud = $this->worker->get_student($studentid);
-        ?>
+          <?php
+          $stud = $this->worker->get_student($studentid);
+          ?>
 
-          <h6 class="mb-0 text-uppercase" id="studentDataContainer"> <b>SOCIAL BEHAVIOR REPORT <span class="text-secondary"> <?php echo ' - '.$stud->first_name.' '. $stud->last_name ?></span> TERM <?php echo $t.' - '.$y ?> </b></h6>
+          <h6 class="mb-0 text-uppercase" id="studentDataContainer"> <b>SOCIAL BEHAVIOR REPORT <span class="text-secondary"> <?php echo ' - ' . $stud->first_name . ' ' . $stud->last_name ?></span> TERM <?php echo $t . ' - ' . $y ?> </b></h6>
 
         </div>
         <div class="card-body p-0">
@@ -120,123 +120,126 @@
                     <tr>
                       <td>Consideration for Others</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="cons" <?php echo (isset($rec->cons) && $rec->cons == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="cons" <?php echo (isset($rec->cons) && $rec->cons == 'A') ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="cons" <?php echo (isset($rec->cons) && $rec->cons == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="cons" <?php echo (isset($rec->cons) && $rec->cons == 'B') ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="cons" <?php echo (isset($rec->cons) && $rec->cons == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="cons" <?php echo (isset($rec->cons) && $rec->cons == 'C') ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="cons" <?php echo (isset($rec->cons) && $rec->cons == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="cons" <?php echo (isset($rec->cons) && $rec->cons == 'D') ? 'checked' : ''; ?>>
                       </td>
                     </tr>
+
                     <tr>
                       <td>Organization</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="org" <?php echo (isset($rec->org) && $rec->org == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="org" <?php echo (isset($rec->org) && strpos($rec->org, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="org" <?php echo (isset($rec->org) && $rec->org == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="org" <?php echo (isset($rec->org) && strpos($rec->org, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="org" <?php echo (isset($rec->org) && $rec->org == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="org" <?php echo (isset($rec->org) && strpos($rec->org, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="org" <?php echo (isset($rec->org) && $rec->org == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="org" <?php echo (isset($rec->org) && strpos($rec->org, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Communication</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="comm" <?php echo (isset($rec->comm) && $rec->comm == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="comm" <?php echo (isset($rec->comm) && strpos($rec->comm, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="comm" <?php echo (isset($rec->comm) && $rec->comm == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="comm" <?php echo (isset($rec->comm) && strpos($rec->comm, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="comm" <?php echo (isset($rec->comm) && $rec->comm == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="comm" <?php echo (isset($rec->comm) && strpos($rec->comm, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="comm" <?php echo (isset($rec->comm) && $rec->comm == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="comm" <?php echo (isset($rec->comm) && strpos($rec->comm, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Respect for School Property</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="property" <?php echo (isset($rec->property) && $rec->property == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="property" <?php echo (isset($rec->property) && strpos($rec->property, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="property" <?php echo (isset($rec->property) && $rec->property == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="property" <?php echo (isset($rec->property) && strpos($rec->property, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="property" <?php echo (isset($rec->property) && $rec->property == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="property" <?php echo (isset($rec->property) && strpos($rec->property, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="property" <?php echo (isset($rec->property) && $rec->property == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="property" <?php echo (isset($rec->property) && strpos($rec->property, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Cooperation</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="coop" <?php echo (isset($rec->coop) && $rec->coop == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="coop" <?php echo (isset($rec->coop) && strpos($rec->coop, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="coop" <?php echo (isset($rec->coop) && $rec->coop == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="coop" <?php echo (isset($rec->coop) && strpos($rec->coop, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="coop" <?php echo (isset($rec->coop) && $rec->coop == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="coop" <?php echo (isset($rec->coop) && strpos($rec->coop, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="coop" <?php echo (isset($rec->coop) && $rec->coop == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="coop" <?php echo (isset($rec->coop) && strpos($rec->coop, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Self Confidence</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="conf" <?php echo (isset($rec->conf) && $rec->conf == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="conf" <?php echo (isset($rec->conf) && strpos($rec->conf, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="conf" <?php echo (isset($rec->conf) && $rec->conf == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="conf" <?php echo (isset($rec->conf) && strpos($rec->conf, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="conf" <?php echo (isset($rec->conf) && $rec->conf == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="conf" <?php echo (isset($rec->conf) && strpos($rec->conf, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="conf" <?php echo (isset($rec->conf) && $rec->conf == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="conf" <?php echo (isset($rec->conf) && strpos($rec->conf, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Accepts responsibility</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="accept" <?php echo (isset($rec->accept) && $rec->accept == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="accept" <?php echo (isset($rec->accept) && strpos($rec->accept, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="accept" <?php echo (isset($rec->accept) && $rec->accept == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="accept" <?php echo (isset($rec->accept) && strpos($rec->accept, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="accept" <?php echo (isset($rec->accept) && $rec->accept == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="accept" <?php echo (isset($rec->accept) && strpos($rec->accept, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="accept" <?php echo (isset($rec->accept) && $rec->accept == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="accept" <?php echo (isset($rec->accept) && strpos($rec->accept, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Self Motivation</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="motivation" <?php echo (isset($rec->motivation) && $rec->motivation == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="motivation" <?php echo (isset($rec->motivation) && strpos($rec->motivation, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="motivation" <?php echo (isset($rec->motivation) && $rec->motivation == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="motivation" <?php echo (isset($rec->motivation) && strpos($rec->motivation, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="motivation" <?php echo (isset($rec->motivation) && $rec->motivation == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="motivation" <?php echo (isset($rec->motivation) && strpos($rec->motivation, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="motivation" <?php echo (isset($rec->motivation) && $rec->motivation == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="motivation" <?php echo (isset($rec->motivation) && strpos($rec->motivation, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
+
+
 
                   </tbody>
                 </table>
@@ -255,110 +258,108 @@
                     <tr>
                       <td>Works independently</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="ind" <?php echo (isset($rec->ind) && $rec->ind == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="ind" <?php echo (isset($rec->ind) && strpos($rec->ind, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="ind" <?php echo (isset($rec->ind) && $rec->ind == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="ind" <?php echo (isset($rec->ind) && strpos($rec->ind, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="ind" <?php echo (isset($rec->ind) && $rec->ind == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="ind" <?php echo (isset($rec->ind) && strpos($rec->ind, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="ind" <?php echo (isset($rec->ind) && $rec->ind == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="ind" <?php echo (isset($rec->ind) && strpos($rec->ind, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Completes assignments at school</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="school" <?php echo (isset($rec->school) && $rec->school == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="school" <?php echo (isset($rec->school) && strpos($rec->school, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="school" <?php echo (isset($rec->school) && $rec->school == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="school" <?php echo (isset($rec->school) && strpos($rec->school, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="school" <?php echo (isset($rec->school) && $rec->school == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="school" <?php echo (isset($rec->school) && strpos($rec->school, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="school" <?php echo (isset($rec->school) && $rec->school == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="school" <?php echo (isset($rec->school) && strpos($rec->school, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Completes homework</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="home" <?php echo (isset($rec->home) && $rec->home == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="home" <?php echo (isset($rec->home) && strpos($rec->home, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="home" <?php echo (isset($rec->home) && $rec->home == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="home" <?php echo (isset($rec->home) && strpos($rec->home, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="home" <?php echo (isset($rec->home) && $rec->home == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="home" <?php echo (isset($rec->home) && strpos($rec->home, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="home" <?php echo (isset($rec->home) && $rec->home == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="home" <?php echo (isset($rec->home) && strpos($rec->home, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Contribution in Group Work</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="groupw" <?php echo (isset($rec->groupw) && $rec->groupw == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="groupw" <?php echo (isset($rec->groupw) && strpos($rec->groupw, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="groupw" <?php echo (isset($rec->groupw) && $rec->groupw == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="groupw" <?php echo (isset($rec->groupw) && strpos($rec->groupw, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="groupw" <?php echo (isset($rec->groupw) && $rec->groupw == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="groupw" <?php echo (isset($rec->groupw) && strpos($rec->groupw, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="groupw" <?php echo (isset($rec->groupw) && $rec->groupw == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="groupw" <?php echo (isset($rec->groupw) && strpos($rec->groupw, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Uses Time Wisely</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="time_" <?php echo (isset($rec->time_) && $rec->time_ == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="time_" <?php echo (isset($rec->time_) && strpos($rec->time_, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="time_" <?php echo (isset($rec->time_) && $rec->time_ == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="time_" <?php echo (isset($rec->time_) && strpos($rec->time_, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="time_" <?php echo (isset($rec->time_) && $rec->time_ == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="time_" <?php echo (isset($rec->time_) && strpos($rec->time_, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="time_" <?php echo (isset($rec->time_) && $rec->time_ == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="time_" <?php echo (isset($rec->time_) && strpos($rec->time_, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Class Concentration</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="conce" <?php echo (isset($rec->conce) && $rec->conce == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="conce" <?php echo (isset($rec->conce) && strpos($rec->conce, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="conce" <?php echo (isset($rec->conce) && $rec->conce == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="conce" <?php echo (isset($rec->conce) && strpos($rec->conce, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="conce" <?php echo (isset($rec->conce) && $rec->conce == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="conce" <?php echo (isset($rec->conce) && strpos($rec->conce, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="conce" <?php echo (isset($rec->conce) && $rec->conce == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="conce" <?php echo (isset($rec->conce) && strpos($rec->conce, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Punctuality</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="punctual" <?php echo (isset($rec->punctual) && $rec->punctual == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="punctual" <?php echo (isset($rec->punctual) && strpos($rec->punctual, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="punctual" <?php echo (isset($rec->punctual) && $rec->punctual == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="punctual" <?php echo (isset($rec->punctual) && strpos($rec->punctual, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="punctual" <?php echo (isset($rec->punctual) && $rec->punctual == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="punctual" <?php echo (isset($rec->punctual) && strpos($rec->punctual, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="punctual" <?php echo (isset($rec->punctual) && $rec->punctual == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="punctual" <?php echo (isset($rec->punctual) && strpos($rec->punctual, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
-
-
                   </tbody>
                 </table>
               </div>
@@ -375,95 +376,93 @@
                     <tr>
                       <td>Read Fluently</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="fluent" <?php echo (isset($rec->fluent) && $rec->fluent == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="fluent" <?php echo (isset($rec->fluent) && strpos($rec->fluent, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="fluent" <?php echo (isset($rec->fluent) && $rec->fluent == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="fluent" <?php echo (isset($rec->fluent) && strpos($rec->fluent, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="fluent" <?php echo (isset($rec->fluent) && $rec->fluent == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="fluent" <?php echo (isset($rec->fluent) && strpos($rec->fluent, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="fluent" <?php echo (isset($rec->fluent) && $rec->fluent == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="fluent" <?php echo (isset($rec->fluent) && strpos($rec->fluent, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Speed</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="speed" <?php echo (isset($rec->speed) && $rec->speed == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="speed" <?php echo (isset($rec->speed) && strpos($rec->speed, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="speed" <?php echo (isset($rec->speed) && $rec->speed == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="speed" <?php echo (isset($rec->speed) && strpos($rec->speed, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="speed" <?php echo (isset($rec->speed) && $rec->speed == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="speed" <?php echo (isset($rec->speed) && strpos($rec->speed, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="speed" <?php echo (isset($rec->speed) && $rec->speed == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="speed" <?php echo (isset($rec->speed) && strpos($rec->speed, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Can Comprehend</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="compr" <?php echo (isset($rec->compr) && $rec->compr == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="compr" <?php echo (isset($rec->compr) && strpos($rec->compr, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="compr" <?php echo (isset($rec->compr) && $rec->compr == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="compr" <?php echo (isset($rec->compr) && strpos($rec->compr, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="compr" <?php echo (isset($rec->compr) && $rec->compr == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="compr" <?php echo (isset($rec->compr) && strpos($rec->compr, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="compr" <?php echo (isset($rec->compr) && $rec->compr == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="compr" <?php echo (isset($rec->compr) && strpos($rec->compr, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Extensive Reading</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="exte" <?php echo (isset($rec->exte) && $rec->exte == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="exte" <?php echo (isset($rec->exte) && strpos($rec->exte, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="exte" <?php echo (isset($rec->exte) && $rec->exte == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="exte" <?php echo (isset($rec->exte) && strpos($rec->exte, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="exte" <?php echo (isset($rec->exte) && $rec->exte == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="exte" <?php echo (isset($rec->exte) && strpos($rec->exte, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="exte" <?php echo (isset($rec->exte) && $rec->exte == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="exte" <?php echo (isset($rec->exte) && strpos($rec->exte, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Use of Tone Variation</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="tone" <?php echo (isset($rec->tone) && $rec->tone == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="tone" <?php echo (isset($rec->tone) && strpos($rec->tone, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="tone" <?php echo (isset($rec->tone) && $rec->tone == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="tone" <?php echo (isset($rec->tone) && strpos($rec->tone, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="tone" <?php echo (isset($rec->tone) && $rec->tone == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="tone" <?php echo (isset($rec->tone) && strpos($rec->tone, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="tone" <?php echo (isset($rec->tone) && $rec->tone == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="tone" <?php echo (isset($rec->tone) && strpos($rec->tone, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Spellings</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="spell" <?php echo (isset($rec->spell) && $rec->spell == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="spell" <?php echo (isset($rec->spell) && strpos($rec->spell, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="spell" <?php echo (isset($rec->spell) && $rec->spell == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="spell" <?php echo (isset($rec->spell) && strpos($rec->spell, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="spell" <?php echo (isset($rec->spell) && $rec->spell == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="spell" <?php echo (isset($rec->spell) && strpos($rec->spell, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="spell" <?php echo (isset($rec->spell) && $rec->spell == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="spell" <?php echo (isset($rec->spell) && strpos($rec->spell, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
-
-
                   </tbody>
                 </table>
               </div>
@@ -481,94 +480,93 @@
                     <tr>
                       <td>Kusoma kwa Mtiririko</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="mtrr" <?php echo (isset($rec->mtrr) && $rec->mtrr == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="mtrr" <?php echo (isset($rec->mtrr) && strpos($rec->mtrr, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="mtrr" <?php echo (isset($rec->mtrr) && $rec->mtrr == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="mtrr" <?php echo (isset($rec->mtrr) && strpos($rec->mtrr, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="mtrr" <?php echo (isset($rec->mtrr) && $rec->mtrr == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="mtrr" <?php echo (isset($rec->mtrr) && strpos($rec->mtrr, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="mtrr" <?php echo (isset($rec->mtrr) && $rec->mtrr == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="mtrr" <?php echo (isset($rec->mtrr) && strpos($rec->mtrr, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Kusoma kwa Kasi</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="kasi" <?php echo (isset($rec->kasi) && $rec->kasi == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="kasi" <?php echo (isset($rec->kasi) && strpos($rec->kasi, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="kasi" <?php echo (isset($rec->kasi) && $rec->kasi == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="kasi" <?php echo (isset($rec->kasi) && strpos($rec->kasi, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="kasi" <?php echo (isset($rec->kasi) && $rec->kasi == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="kasi" <?php echo (isset($rec->kasi) && strpos($rec->kasi, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="kasi" <?php echo (isset($rec->kasi) && $rec->kasi == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="kasi" <?php echo (isset($rec->kasi) && strpos($rec->kasi, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Kusoma na kuelewa</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="klw" <?php echo (isset($rec->klw) && $rec->klw == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="klw" <?php echo (isset($rec->klw) && strpos($rec->klw, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="klw" <?php echo (isset($rec->klw) && $rec->klw == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="klw" <?php echo (isset($rec->klw) && strpos($rec->klw, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="klw" <?php echo (isset($rec->klw) && $rec->klw == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="klw" <?php echo (isset($rec->klw) && strpos($rec->klw, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="klw" <?php echo (isset($rec->klw) && $rec->klw == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="klw" <?php echo (isset($rec->klw) && strpos($rec->klw, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Kusoma kwa Ziada</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="ziada" <?php echo (isset($rec->ziada) && $rec->ziada == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="ziada" <?php echo (isset($rec->ziada) && strpos($rec->ziada, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="ziada" <?php echo (isset($rec->ziada) && $rec->ziada == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="ziada" <?php echo (isset($rec->ziada) && strpos($rec->ziada, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="ziada" <?php echo (isset($rec->ziada) && $rec->ziada == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="ziada" <?php echo (isset($rec->ziada) && strpos($rec->ziada, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="ziada" <?php echo (isset($rec->ziada) && $rec->ziada == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="ziada" <?php echo (isset($rec->ziada) && strpos($rec->ziada, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Mawimbi ya Sauti</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="sauti" <?php echo (isset($rec->sauti) && $rec->sauti == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="sauti" <?php echo (isset($rec->sauti) && strpos($rec->sauti, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="sauti" <?php echo (isset($rec->sauti) && $rec->sauti == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="sauti" <?php echo (isset($rec->sauti) && strpos($rec->sauti, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="sauti" <?php echo (isset($rec->sauti) && $rec->sauti == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="sauti" <?php echo (isset($rec->sauti) && strpos($rec->sauti, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="sauti" <?php echo (isset($rec->sauti) && $rec->sauti == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="sauti" <?php echo (isset($rec->sauti) && strpos($rec->sauti, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
                     <tr>
                       <td>Hijai</td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="A" name="hj" <?php echo (isset($rec->hj) && $rec->hj == 'A') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="A" name="hj" <?php echo (isset($rec->hj) && strpos($rec->hj, 'A') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="B" name="hj" <?php echo (isset($rec->hj) && $rec->hj == 'B') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="B" name="hj" <?php echo (isset($rec->hj) && strpos($rec->hj, 'B') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="C" name="hj" <?php echo (isset($rec->hj) && $rec->hj == 'C') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="C" name="hj" <?php echo (isset($rec->hj) && strpos($rec->hj, 'C') !== false) ? 'checked' : ''; ?>>
                       </td>
                       <td style="text-align: center;">
-                        <input class="form-check-input r-size" type="radio" value="D" name="hj" <?php echo (isset($rec->hj) && $rec->hj == 'D') ? 'checked' : ''; ?>>
+                        <input class="form-check-input r-size" type="checkbox" value="D" name="hj" <?php echo (isset($rec->hj) && strpos($rec->hj, 'D') !== false) ? 'checked' : ''; ?>>
                       </td>
                     </tr>
-
                   </tbody>
                 </table>
 
@@ -775,6 +773,25 @@
           // Handle error
         }
       });
+    });
+  });
+</script>
+
+<script>
+  // Get all checkboxes with the class "form-check-input"
+  var checkboxes = document.querySelectorAll('.form-check-input');
+
+  // Add an event listener to each checkbox
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('click', function() {
+      // If the checkbox is checked, uncheck all other checkboxes in the same group
+      if (this.checked) {
+        checkboxes.forEach(function(otherCheckbox) {
+          if (otherCheckbox !== checkbox && otherCheckbox.name === checkbox.name) {
+            otherCheckbox.checked = false;
+          }
+        });
+      }
     });
   });
 </script>

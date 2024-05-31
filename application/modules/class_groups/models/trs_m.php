@@ -26,6 +26,10 @@ class Trs_m extends MY_Model
         {
                 return $this->db->where('id', $id)->update('qa_answers', $data);
         } 
+
+        function update_cltr($cl, $table, $data) {
+            return $this->db->where('id', $cl)->update( $table, $data);
+        }
 		
 
     function check_sub($tr, $id)
@@ -959,6 +963,41 @@ class Trs_m extends MY_Model
                     ->result();
     }
 
-   
+    function get_allstreams(){
+        return $this->db->get('classes')->result(); 
+
+    }
+
+    // function check_exists($tr, $cl){
+    //     return $this->db->where('class_teacher', $tr)->where('class_teacher', $tr)->get('classes')->result();  
+    // }
+
+    function get_profile()
+    {
+        $this->select_all_key('users');
+
+        $list = $this->db->get('users')->result();
+
+        $trs = [];
+        foreach ($list as $jj => $l) {
+            // Use a unique identifier as the key
+            $trs[$l->id] = $l->first_name . ' ' . $l->last_name;
+        }
+        return $trs;
+    }
+
+    function get_teachers()
+    {
+        $this->select_all_key('teachers');
+
+        $list = $this->db->get('teachers')->result();
+
+        $trs = [];
+        foreach ($list as $j => $l) {
+            // Use a unique identifier as the key
+            $trs[$l->user_id] = $l->first_name . ' ' . $l->last_name;
+        }
+        return $trs;
+    }
 
 }

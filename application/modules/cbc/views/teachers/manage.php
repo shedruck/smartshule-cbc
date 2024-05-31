@@ -1,4 +1,4 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
 
 <?php if ($this->session->flashdata('created_message')) : ?>
@@ -194,52 +194,7 @@
                             <?php echo form_error('type_' . $s->id); ?>
                           </div>
 
-                          <div id="computeAverageDiv_<?php echo $s->id; ?>" class="mb-3 m-2" style="display: none;">
-                            <label class="form-label"><b>Compute Term's Average By: </b></label>
-                            <div class="form-check form-check-inline">
-                              <?php
-                              echo form_radio(array(
-                                'name' => 'compute_' . $s->id,
-                                'id' => 'addition_' . $s->id,
-                                'value' => 1,
-                                'class' => 'form-check-input',
-                                'checked' => (isset($result->compute) && $result->compute == 'addition') ? TRUE : FALSE,
-                              ));
-                              ?>
-                              <label class="form-check-label" for="addition_<?php echo $s->id; ?>">Addition</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                              <?php
-                              echo form_radio(array(
-                                'name' => 'compute_' . $s->id,
-                                'id' => 'avarage_' . $s->id,
-                                'value' => 2,
-                                'class' => 'form-check-input',
-                                'checked' => (isset($result->compute) && $result->compute == 'avarage') ? TRUE : FALSE,
-                              ));
-                              ?>
-                              <label class="form-check-label" for="avarage_<?php echo $s->id; ?>">Average</label>
-                            </div>
-                          </div>
-
-                          <div class="mb-3 m-2">
-                            <label class="form-label"><b>Grading System</b></label>
-                            <div class="input-group">
-                              <?php
-                              $this->load->model('cbc_tr');
-                              $checkg = $this->cbc_tr->check_grading($exam);
-
-                              ?>
-                              <?php
-
-                              echo form_dropdown('gs_system_' . $s->id, $gradings, (isset($checkg->gs_system)) ? $checkg->gs_system : '', 'class="form-control select" data-placeholder="Select Options..."');
-                              ?>
-                              <?php echo form_error('gs_system_' . $s->id); ?>
-                            </div>
-                          </div>
-
-
-
+                         
                           <div class="mb-3 m-2">
                             <label class="form-label"><b>Report Elements</b></label>
                             <div class="mb-3 m-2">

@@ -26,8 +26,8 @@
                     <img src="<?php echo base_url('uploads/files/' . $pass->passport); ?>" alt="user-img" width="150" height="150" class="img-circle">
                   <?php } else { ?>
                     <img src="<?php echo base_url('assets/themes/default/img/member.png'); ?>" alt="user-img" width="150" class="img-circle">
-                    <?php }
-                    ?>
+                  <?php }
+                  ?>
 
                 </div>
                 <div>
@@ -76,52 +76,176 @@
           <div class="col-xxl-9 col-xl-8 col-lg-7 col-md-7">
             <div class="card">
               <div class="card-header">
-                <h5 class="mb-0">Recent Payslips</h5>
+                <h5 class="mb-0">About</h5>
               </div>
-              <div class="card-body pr-3">
+              <div class="card-body p-0">
 
-                <div class="table-responsive ml-2">
-                  <?php
-                  if (!empty($slips)) {
-                  ?>
-                    <table id="grid-pagination" class="table table-bordered">
-                      <thead class="table-success">
-                        <th> #</th>
-                        <th>Month</th>
-                        <th>Year</th>
-                        <th>Bank</th>
-                        <th>
-                          Date Processed
-                        </th>
-                        <th class="text-center" width="20%"> Option </th>
-                      </thead>
+                <?php
+                // echo "<pre>";
+                // print_r($this->profile);
+                // echo "<pre>";
+                ?>
 
-                      <?php
-                      $i = 0;
-                      foreach ($slips as $p) {
-                        $i++;
-                        $u = $this->ion_auth->get_user($p->employee);
-                      ?>
-                        <tbody>
-                          <tr class="">
-                            <td><?php echo $i ?>. </td>
-                            <td> <?php echo $p->month ?></td>
-                            <td><?php echo $p->year ?></td>
-                            <td><?php echo $p->bank_details ?></td>
-                            <td class="hide-phone">
-                              <p class="font-13 m-b-0"> <?php echo date('jS M, Y', $p->salary_date); ?></p>
-                            </td>
-                            <td class="text-center"><a href="<?php echo base_url('trs/slip/' . $p->id) ?>" class="btn btn-primary-light rounded-pill"> <i class="mdi mdi-account-search m-r-5"></i> View</a>
-                            </td>
-                          </tr>
-                        <?php }
-                    } else { ?>
-                        <p class='text'><?php echo lang('web_no_elements'); ?></p>
-                      <?php }
-                      ?>
-                        </tbody>
+                <div class="table-responsive p-5">
+                  <h5 class="mb-3">Personal Info</h5>
+                  <div class="row">
+                    <div class="col-xl-8 ms-3">
+                      <div class="row row-sm">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">First Name : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->first_name ?></span>
+                        </div>
+                      </div>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Last Name : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->last_name ?></span>
+                        </div>
+                      </div>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Gender : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->gender ?></span>
+                        </div>
+                      </div>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Phone : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->phone ?></span>
+                        </div>
+                      </div>
 
-                    </table>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Email : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->email ?></span>
+                        </div>
+                      </div>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Address : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->address ?></span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="border-top"></div>
+                <div class="table-responsive p-5">
+                  <h5 class="mb-3">Identification and Documentation</h5>
+                  <div class="row">
+                    <div class="col-xl-8 ms-3">
+                      <div class="row row-sm">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">ID Number : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->id_no ?></span>
+                        </div>
+                      </div>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Huduma Number : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->huduma_number ?></span>
+                        </div>
+                      </div>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">TSC Number : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->tsc_number ?></span>
+                        </div>
+                      </div>
+
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Staff NO: </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->staff_no ?></span>
+                        </div>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+                <div class="border-top"></div>
+                <div class="table-responsive p-5">
+                  <h5 class="mb-3">Employment Details</h5>
+                  <div class="row">
+                    <div class="col-xl-8 ms-3">
+                      <div class="row row-sm">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Position : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->position ?></span>
+                        </div>
+                      </div>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Department : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->department ?></span>
+                        </div>
+                      </div>
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Division : </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->division ?></span>
+                        </div>
+                      </div>
+
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Qualification: </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->qualification ?></span>
+                        </div>
+                      </div>
+
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Contract Type: </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->contract_type ?></span>
+                        </div>
+                      </div>
+
+                      <div class="row row-sm mt-3">
+                        <div class="col-md-3">
+                          <span class="fw-semibold fs-14">Date Joined: </span>
+                        </div>
+                        <div class="col-md-9">
+                          <span class="fs-15 text-primary"><?php echo $this->profile->date_joined ?></span>
+                        </div>
+                      </div>
+
+
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

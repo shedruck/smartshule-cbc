@@ -2808,7 +2808,16 @@ class Trs extends Trs_Controller
    }
 
    public function subjectAssigned(){
-    $data['subjects']= $this->trs_m->get_assigned_subjects();
+   
+    $subs  = $this->trs_m->get_assigned_subjects();
+
+    $subscbc  = $this->trs_m->get_assigned_subjects_cbc();
+
+    $subjects = array_merge($subs, $subscbc);
+
+    $data['subjects'] = $subjects;
+
+    
     $this->template->title('Teacher | Subjects Assigned')->build('trs/subjects',$data);
    }
        

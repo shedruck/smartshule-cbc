@@ -14,6 +14,11 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
         <?php
         $attributes = array('class' => 'form-horizontal', 'id' => 'form');
         echo form_open(current_url());
+
+        $selected_term = isset($term) ? $term : '';
+        $selected_class = isset($class) ? $class : '';
+        $selected_year = isset($year) ? $year : '';
+        $selected_subject = isset($subject) ? $subject : '';
         ?>
         <div class="row">
           <div class="col-xl-4">
@@ -22,37 +27,41 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
               <div class="col-md-9">
                 <?php
                 $options = array('' => 'Select Class') + $this->streams;
-                $attributes = 'class="form-control js-example-basic-single"';
-                echo form_dropdown('class', $options, '', $attributes);
+                $attributes = 'class="form-control js-example-basic-single" id="classDropdown"';
+                echo form_dropdown('class', $options, $selected_class, $attributes);
                 ?>
                 <?php echo form_error('class'); ?>
 
               </div>
             </div>
           </div>
-          <div class="col-xl-4">
-            <div class="row m-2">
-              <label class="col-md-3 form-label" for='title'>Subject <span class='required'>*</span></label>
-              <div class="col-md-9">
-                <?php
-                $options = array('' => 'Select subject') + $subjects;
-                $attributes = 'class="form-control js-example-basic-single"';
-                echo form_dropdown('subject', $options, '', $attributes);
-                ?>
-                <?php echo form_error('subject'); ?>
-              </div>
-            </div>
-          </div>
+
           <div class="col-xl-4">
             <div class="row m-2">
               <label class="col-md-3 form-label" for='title'>Term <span class='required'>*</span></label>
               <div class="col-md-9">
                 <?php
                 $option = array('1' => 'Term 1', '2' => 'Term 2', '3' => 'Term 3');
-                $attributes = 'class="form-control"';
-                echo form_dropdown('term', $option, '', $attributes);
+                $attributes = 'class="form-control js-example-basic-single"';
+                echo form_dropdown('term', $option, $selected_term, $attributes);
                 ?>
                 <?php echo form_error('term'); ?>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-4">
+            <div class="row m-2">
+              <label class="col-md-3 form-label" for='title'>Year <span class='required'>*</span></label>
+              <div class="col-md-9">
+                <?php
+                $years = range(2022, date('Y'));
+                $years = array_combine($years, $years);
+
+                $attributes = 'class="form-control js-example-basic-single"';
+                echo form_dropdown('year', $years, $selected_year, $attributes);
+                ?>
+                <?php echo form_error('year'); ?>
               </div>
             </div>
           </div>
@@ -66,16 +75,14 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
               <!-- First Column -->
               <div class="col-xl-4 d-flex justify-content-start">
                 <div class="row m-2 w-100">
-                  <label class="col-md-3 form-label" for='title'>Year <span class='required'>*</span></label>
+                  <label class="col-md-3 form-label" for='title'>Subject <span class='required'>*</span></label>
                   <div class="col-md-9">
                     <?php
-                    $years = range(2022, date('Y'));
-                    $years = array_combine($years, $years);
-
-                    $attributes = 'class="form-control"';
-                    echo form_dropdown('year', $years, '', $attributes);
+                    $options = array('' => 'Select Subject');
+                    $attributes = 'class="form-control js-example-basic-single" id="subjectDropdown"';
+                    echo form_dropdown('subject', $options, $selected_subject, $attributes);
                     ?>
-                    <?php echo form_error('year'); ?>
+                    <?php echo form_error('subject'); ?>
                   </div>
                 </div>
               </div>
@@ -86,9 +93,9 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
 
               <!-- Third Column -->
               <div class="col-xl-4 d-flex justify-content-end align-items-center">
-                <button type="submit" class="btn btn-primary mb-1 d-inline-flex me-2">
-                  <i class="fe fe-check-square me-1 lh-base"></i>
-                  <?php echo ($updType == 'edit') ? 'Update' : 'Submit'; ?>
+                <button type="submit" class="btn btn-warning mb-1 d-inline-flex me-2">
+                  <i class="fas fa-filter me-1 lh-base"></i>
+                  <?php echo ($updType == 'edit') ? 'Update' : 'Filter'; ?>
                 </button>
                 <button class="btn btn-info" onclick="printInvoice(event)">
                   <i class=" fas fa-print"></i> Print
@@ -108,10 +115,8 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
 
 <?php
 
-// echo '<pre>';
-// print_r($report);
-// echo '</pre>';
-
+if ($this->input->post()) {
+ 
 if ($report) {
   foreach ($report as $ky => $st) {
 
@@ -151,7 +156,7 @@ if ($report) {
 
 
                   ?>
-                  <h4>FORMATIVE REPORT</h4>
+                  <h5><b>FORMATIVE REPORT - <?php echo $subjects[$subject]; ?></b></h5>
                   <h6 class="upper-casr"><b>NAME:</b> <u><?php echo htmlspecialchars($stu->first_name . ' ' . $stu->last_name) ?> </u>&nbsp; <b>ADM NO:</b> <u><?php echo htmlspecialchars($stu->admission_number) ?> </u> &nbsp; <b>AGE:</b> <u><?php echo  htmlspecialchars($age); ?></u></h6>
                   <span class="upper_case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $this->school->term . ' ' . $this->school->year ?></span><br>
                 </td>
@@ -238,6 +243,7 @@ if ($report) {
     <p class="alert alert-danger">No results found !</p>
   </div>
 <?php
+}
 }
 ?>
 
@@ -386,6 +392,42 @@ if ($report) {
 
   }
 </style>
+
+<script>
+  $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+
+    $('#classDropdown').change(function() {
+      var selectedClass = $(this).val();
+
+      if (selectedClass) {
+        $.ajax({
+          url: '<?php echo site_url('cbc/trs/fetch_subjects'); ?>',
+          type: 'POST',
+          data: {
+            class: selectedClass
+          },
+          dataType: 'json',
+          success: function(data) {
+            console.log(data);
+            var subjectDropdown = $('#subjectDropdown');
+            subjectDropdown.empty();
+            subjectDropdown.append('<option value="">Select Subject</option>');
+            $.each(data, function(key, value) {
+              subjectDropdown.append('<option value="' + key + '">' + value + '</option>');
+            });
+            subjectDropdown.trigger('change'); // Update the dropdown
+          },
+          error: function() {
+            alert('No subjects Found for the selected class.');
+          }
+        });
+      } else {
+        $('#subjectDropdown').empty().append('<option value="">Select Subject</option>').trigger('change');
+      }
+    });
+  });
+</script>
 
 <script>
   function printInvoice(event) {
