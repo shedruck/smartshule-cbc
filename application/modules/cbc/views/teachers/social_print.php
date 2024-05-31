@@ -23,7 +23,7 @@
                 <?php
                 $options = array('' => 'Select student') + $students;
                 $attributes = 'class="form-control js-example-basic-single" id="student" onchange="checkFields()"';
-                echo form_dropdown('student', $options, '', $attributes);
+                echo form_dropdown('student', $options, $student, $attributes);
                 ?>
                 <?php echo form_error('student'); ?>
 
@@ -37,7 +37,7 @@
                 <?php
                 $option = array('1' => 'Term 1', '2' => 'Term 2', '3' => 'Term 3');
                 $attributes = 'class="form-control" id="term" onchange="checkFields()"';
-                echo form_dropdown('term', $option, '', $attributes);
+                echo form_dropdown('term', $option, $term, $attributes);
                 ?>
                 <?php echo form_error('term'); ?>
               </div>
@@ -51,7 +51,7 @@
                 $years = range(2022, date('Y'));
                 $years = array_combine($years, $years);
                 $attributes = 'class="form-control" id="years"'; // Adding the id attribute
-                echo form_dropdown('year', $years, '', $attributes);
+                echo form_dropdown('year', $years, $year, $attributes);
                 ?>
                 <?php echo form_error('year'); ?>
               </div>
@@ -66,8 +66,8 @@
             <div class="row m-2 justify-content-end">
 
               <div class="col-auto">
-                <button type="submit" class="btn btn-primary mb-1 d-inline-flex" id="submitButton" onclick="toggleDiv(event)" disabled>
-                  <?php echo ($updType == 'edit') ? 'Update' : '<i class="fe fe-check-square me-1 lh-base"></i> Add '; ?>
+                <button type="submit" class="btn btn-warning mb-1 d-inline-flex" id="submitButton" onclick="toggleDiv(event)" disabled>
+                  <?php echo ($updType == 'edit') ? 'Update' : '<i class="fe fe-filter me-1 lh-base"></i> filter '; ?>
 
                 </button>
                 <button class="btn btn-info" onclick="printDiv('newDiv')"> <i class="bi bi-printer"></i> Print</button>
@@ -139,6 +139,11 @@
 
         </div>
         <div class="card-body p-0">
+          <?php
+          // echo "<pre>";
+          // print_r($rec);
+          // echo "<pre>";
+          ?>
           <div class="d-lg-flex d-block">
             <div class="p-4 border-end w-100">
               <div class="table-responsive push">
@@ -154,105 +159,82 @@
                     <tr>
                       <td>Consideration for Others</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->cons ?>
+                        <?php echo (isset($rec->cons) && $rec->cons !== '0') ? $rec->cons : '--'; ?>
                       </td>
-                      <td>
-                        Works independently
-                      </td>
+                      <td>Works independently</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->ind ?>
+                        <?php echo (isset($rec->ind) && $rec->ind !== '0') ? $rec->ind : '--'; ?>
                       </td>
                     </tr>
                     <tr>
                       <td>Organization</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->org ?>
+                        <?php echo (isset($rec->org) && $rec->org !== '0') ? $rec->org : '--'; ?>
                       </td>
-                      <td>
-                        Completes assignments at school
-                      </td>
+                      <td>Completes assignments at school</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->school ?>
+                        <?php echo (isset($rec->school) && $rec->school !== '0') ? $rec->school : '--'; ?>
                       </td>
                     </tr>
                     <tr>
                       <td>Communication</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->comm ?>
+                        <?php echo (isset($rec->comm) && $rec->comm !== '0') ? $rec->comm : '--'; ?>
                       </td>
-                      <td>
-                        Completes Homework
-                      </td>
+                      <td>Completes Homework</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->home ?>
+                        <?php echo (isset($rec->home) && $rec->home !== '0') ? $rec->home : '--'; ?>
                       </td>
                     </tr>
                     <tr>
                       <td>Respect for School Property</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->property ?>
+                        <?php echo (isset($rec->property) && $rec->property !== '0') ? $rec->property : '--'; ?>
                       </td>
-                      <td>
-                        Contribution in Group Work
-                      </td>
+                      <td>Contribution in Group Work</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->groupw ?>
+                        <?php echo (isset($rec->groupw) && $rec->groupw !== '0') ? $rec->groupw : '--'; ?>
                       </td>
-
                     </tr>
                     <tr>
                       <td>Cooperation</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->coop ?>
+                        <?php echo (isset($rec->coop) && $rec->coop !== '0') ? $rec->coop : '--'; ?>
                       </td>
-                      <td>
-                        Uses Time Wisely
-                      </td>
+                      <td>Uses Time Wisely</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->time_ ?>
+                        <?php echo (isset($rec->time_) && $rec->time_ !== '0') ? $rec->time_ : '--'; ?>
                       </td>
-
                     </tr>
                     <tr>
                       <td>Self Confidence</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->conf ?>
+                        <?php echo (isset($rec->conf) && $rec->conf !== '0') ? $rec->conf : '--'; ?>
                       </td>
-                      <td>
-                        Class Concentration
-                      </td>
+                      <td>Class Concentration</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->conce ?>
+                        <?php echo (isset($rec->conce) && $rec->conce !== '0') ? $rec->conce : '--'; ?>
                       </td>
-
                     </tr>
                     <tr>
                       <td>Accepts responsibility</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->accept ?>
+                        <?php echo (isset($rec->accept) && $rec->accept !== '0') ? $rec->accept : '--'; ?>
                       </td>
-                      <td>
-                        Punctuality
-                      </td>
+                      <td>Punctuality</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->punctual ?>
+                        <?php echo (isset($rec->punctual) && $rec->punctual !== '0') ? $rec->punctual : '--'; ?>
                       </td>
-
                     </tr>
-
                     <tr>
                       <td>Self Motivation</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->motivation ?>
+                        <?php echo (isset($rec->motivation) && $rec->motivation !== '0') ? $rec->motivation : '--'; ?>
                       </td>
-                      <td style="text-align: center;">
-
-                      </td>
-                      <td style="text-align: center;">
-
-                      </td>
-
+                      <td style="text-align: center;"></td>
+                      <td style="text-align: center;"></td>
                     </tr>
+
 
                   </tbody>
                 </table>
@@ -270,80 +252,64 @@
                     </tr>
                     <tr>
                       <td>Read Fluently</td>
-                      <td style="text-align: center;"><?php echo $rec->fluent ?></td>
-                      <td>
-                        Kusoma kwa Mtiririko
-                      </td>
                       <td style="text-align: center;">
-                        <?php echo $rec->mtrr ?>
+                        <?php echo (isset($rec->fluent) && $rec->fluent !== '0') ? $rec->fluent : '--'; ?>
+                      </td>
+                      <td>Kusoma kwa Mtiririko</td>
+                      <td style="text-align: center;">
+                        <?php echo (isset($rec->mtrr) && $rec->mtrr !== '0') ? $rec->mtrr : '--'; ?>
                       </td>
                     </tr>
                     <tr>
                       <td>Speed</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->speed ?>
+                        <?php echo (isset($rec->speed) && $rec->speed !== '0') ? $rec->speed : '--'; ?>
                       </td>
-                      <td>
-                        Kusoma kwa Kasi
-                      </td>
+                      <td>Kusoma kwa Kasi</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->kasi ?>
+                        <?php echo (isset($rec->kasi) && $rec->kasi !== '0') ? $rec->kasi : '--'; ?>
                       </td>
-
                     </tr>
                     <tr>
                       <td>Can Comprehend</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->compr ?>
+                        <?php echo (isset($rec->compr) && $rec->compr !== '0') ? $rec->compr : '--'; ?>
                       </td>
-                      <td>
-                        Kusoma na kuelewa
-                      </td>
+                      <td>Kusoma na kuelewa</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->klw ?>
+                        <?php echo (isset($rec->klw) && $rec->klw !== '0') ? $rec->klw : '--'; ?>
                       </td>
-
                     </tr>
                     <tr>
                       <td>Extensive Reading</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->exte ?>
+                        <?php echo (isset($rec->exte) && $rec->exte !== '0') ? $rec->exte : '--'; ?>
                       </td>
-                      <td>
-                        Kusoma kwa Ziada
-                      </td>
+                      <td>Kusoma kwa Ziada</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->ziada ?>
+                        <?php echo (isset($rec->ziada) && $rec->ziada !== '0') ? $rec->ziada : '--'; ?>
                       </td>
-
                     </tr>
                     <tr>
                       <td>Use of Tone Variation</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->tone ?>
+                        <?php echo (isset($rec->tone) && $rec->tone !== '0') ? $rec->tone : '--'; ?>
                       </td>
-                      <td>
-                        Mawimbi ya Sauti
-                      </td>
+                      <td>Mawimbi ya Sauti</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->sauti ?>
+                        <?php echo (isset($rec->sauti) && $rec->sauti !== '0') ? $rec->sauti : '--'; ?>
                       </td>
-
                     </tr>
                     <tr>
                       <td>Spellings</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->spell ?>
+                        <?php echo (isset($rec->spell) && $rec->spell !== '0') ? $rec->spell : '--'; ?>
                       </td>
-                      <td>
-                        Hijai
-                      </td>
+                      <td>Hijai</td>
                       <td style="text-align: center;">
-                        <?php echo $rec->hj ?>
+                        <?php echo (isset($rec->hj) && $rec->hj !== '0') ? $rec->hj : '--'; ?>
                       </td>
-
                     </tr>
-
 
                   </tbody>
                 </table>

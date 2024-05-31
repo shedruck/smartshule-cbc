@@ -19,6 +19,10 @@ $this->load->model('cbc_tr');
         <?php
         $attributes = array('class' => 'form-horizontal', 'id' => 'form');
         echo form_open(current_url());
+
+        $selected_exam = isset($exam) ? $exam : '';
+        $selected_class = isset($class) ? $class : '';
+        $selected_student = isset($student) ? $student : '';
         ?>
         <div class="row">
           <div class="col-md-4">
@@ -26,8 +30,9 @@ $this->load->model('cbc_tr');
               <label class="col-md-3 form-label" for='title'>Exam <span class='required'>*</span></label>
               <div class="col-md-9">
                 <?php
+                $exams = array('' => 'Select Exam') + $exams;
                 $attributes = 'class="form-control js-example-basic-single"';
-                echo form_dropdown('exam', $exams, '', $attributes);
+                echo form_dropdown('exam', $exams, $selected_exam, $attributes);
                 ?>
                 <?php echo form_error('exam'); ?>
               </div>
@@ -40,8 +45,8 @@ $this->load->model('cbc_tr');
               <div class="col-md-8">
                 <?php
                 $options = array('' => 'Select Class') + $this->streams;
-                $attributes = 'class="form-control js-example-basic-single"';
-                echo form_dropdown('class', $options, '', $attributes);
+                $attributes = 'class="form-control js-example-basic-single"  id="classDropdown"';
+                echo form_dropdown('class', $options, $selected_class, $attributes);
                 ?>
                 <?php echo form_error('class'); ?>
               </div>
@@ -57,9 +62,9 @@ $this->load->model('cbc_tr');
               <label class="col-md-4 form-label" for='title'>Student <span class='required'>*</span></label>
               <div class="col-md-8">
                 <?php
-                $options = array('' => 'Select Student') + $stud;
-                $attributes = 'class="form-control js-example-basic-single"';
-                echo form_dropdown('student', $options, '', $attributes);
+                $options = array('' => 'Select Student');
+                $attributes = 'class="form-control js-example-basic-single" id="studentDropdown"';
+                echo form_dropdown('student', $options, $selected_student, $attributes);
                 ?>
                 <?php echo form_error('student'); ?>
               </div>
@@ -72,9 +77,9 @@ $this->load->model('cbc_tr');
           <div class="col-xl-12">
             <div class="row m-2 justify-content-end">
               <div class="col-auto">
-                <button type="submit" class="btn btn-primary mb-1 d-inline-flex">
-                  <i class="fe fe-check-square me-1 lh-base"></i>
-                  <?php echo ($updType == 'edit') ? 'Update' : 'Submit'; ?>
+                <button type="submit" class="btn btn-warning mb-1 d-inline-flex me-2">
+                  <i class="fas fa-filter me-1 lh-base"></i>
+                  <?php echo ($updType == 'edit') ? 'Update' : 'Filter'; ?>
                 </button>
                 <button class="btn btn-info" onclick="printInvoice(event)"> <i class=" fas fa-print"></i> Print </button>
               </div>
@@ -91,371 +96,362 @@ $this->load->model('cbc_tr');
 </div>
 <!-- // Display the grouped results -->
 
-<?php
+<?php if ($ex->type == 1) {
+  if ($this->input->post()) {
+    if ($grouped_marks) {
+      foreach ($grouped_marks as $ky => $st) { ?>
 
-$exm1 = $this->cbc_tr->get_exam($exams[0]);
-$exm2 = $this->cbc_tr->get_exam($exams[1]);
-$exm3 = $this->cbc_tr->get_exam($exams[2]);
+        <div class="invoice-box">
+          <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+              <td colspan="2">
+                <table>
+                  <tr>
+                    <td class="title" style="width: 16%;">
+                      <img src="<?php echo base_url('uploads/files/' . $this->school->document); ?>" style="height:68px;" alt="header">
+                    </td>
+                    <td style="width: 66%;" class="text-center">
+                      <?php
+                      $stu = $this->worker->get_student($ky);
+                      $birthdateTimestamp = $stu->dob;
 
-if ($ex->type == 1) {
+                      $birthDateTime = new DateTime();
+                      $birthDateTime->setTimestamp($birthdateTimestamp);
 
-  if ($grouped_marks) {
-    foreach ($grouped_marks as $ky => $st) {
+                      $currentDateTime = new DateTime();
 
-?>
-      <div class="invoice-box">
-        <table cellpadding="0" cellspacing="0">
-          <tr class="top">
-            <td colspan="2">
-              <table>
+                      $ageInterval = $currentDateTime->diff($birthDateTime);
 
-                <tr>
-                  <td class="title" style="width: 16%;">
-                    <img src="<?php echo base_url('uploads/files/' . $this->school->document); ?>" style="height:68px;" alt="header">
-                  </td>
+                      $age = $stu->dob === "" ? "---" : $ageInterval->y;
 
-                  <td style=" width: 66%;" class="text-center">
-                    <?php
-                    $stu = $this->worker->get_student($ky);
-                    $birthdateTimestamp = $stu->dob;
+                      $this->load->model('cbc_tr');
+                      ?>
+                      <h4>SUMMATIVE REPORT</h4>
+                      <h6 class="upper-case"><b>NAME:</b> <u><?php echo $stu->first_name . ' ' . $stu->last_name ?> </u>&nbsp; <b>ADM NO:</b> <u><?php echo $stu->admission_number ?> </u> &nbsp; <b>AGE:</b> <u><?php echo  $age; ?></u></h6>
+                      <span class="upper-case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $term . ' ' . $year ?></span><br>
 
-                    $birthDateTime = new DateTime();
-                    $birthDateTime->setTimestamp($birthdateTimestamp);
-
-                    $currentDateTime = new DateTime();
-
-                    // Calculate the difference
-                    $ageInterval = $currentDateTime->diff($birthDateTime);
-
-
-                    if ($stu->dob === "") {
-                      $age = "---";
-                    } else {
-                      $age = $ageInterval->y;
-                    }
-
-                    $this->load->model('cbc_tr');
-
-
-                    ?>
-                    <h4>SUMMATIVE REPORT</h4>
-                    <h6 class="upper-casr"><b>NAME:</b> <u><?php echo $stu->first_name . ' ' . $stu->last_name ?> </u>&nbsp; <b>ADM NO:</b> <u><?php echo $stu->admission_number ?> </u> &nbsp; <b>AGE:</b> <u><?php echo  $age; ?></u></h6>
-                    <span class="upper_case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $term . ' ' . $year ?></span><br>
-
-                    <div class="key-container">
-                      <div class="key-item key-title">Key:</div>
-                      <div class="key-item">4 = EE</div>
-                      <div class="key-item">3 = ME</div>
-                      <div class="key-item">2 = AE</div>
-                      <div class="key-item">1 = BE</div>
-                    </div>
-                  </td>
-                  <td style=" width: 16%;">
-                    <?php if ($passport) { ?>
-                      <div class="img-container right">
-                        <img src="<?php echo base_url('uploads/' . $passport->fpath . '/' . $passport->filename); ?>" style="height:68px;" alt="header">
+                      <div class="key-container">
+                        <div class="key-item key-title">Key:</div>
+                        <div class="key-item">4 = EE</div>
+                        <div class="key-item">3 = ME</div>
+                        <div class="key-item">2 = AE</div>
+                        <div class="key-item">1 = BE</div>
                       </div>
-                    <?php } ?>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
+                    </td>
+                    <td style="width: 16%;">
+                      <?php if ($passport) { ?>
+                        <div class="img-container right">
+                          <img src="<?php echo base_url('uploads/' . $passport->fpath . '/' . $passport->filename); ?>" style="height:68px;" alt="header">
+                        </div>
+                      <?php } ?>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
 
-
-        <table class="table table-bordered">
-          <tr class="table-success">
-            <th>#</th>
-            <th>Subject</th>
-            <th>Score</th>
-            <th>Comment</th>
-            <th>Teacher</th>
-          </tr>
-          <tbody>
-            <?php
-
-
-            $i = 1;
-            foreach ($st as $sub => $subs) {
-
-              foreach ($subs as $kety => $v) {
-
-            ?>
-                <tr style="font-size: 14px; text-align:center">
-                  <td><?php echo $i++ ?></td>
-                  <td style="text-align:left"><?php echo $subjects[$sub] ?></td>
-                  <td style="text-align:center"><?php echo $v['score'] . " (" . $rankings[$v['score']] . ' )'; ?></td>
-                  <td style="text-align:left"><?php echo $comments[$v['score']]; ?></td>
-                  <td><?php
-                      $this->load->model('teachers/teachers_m');
-                      $trs = $this->cbc_tr->get_teachers($class, $term,  $year, $sub);
-                      $td = $this->teachers_m->find($trs->teacher);
-                      echo $td->first_name . ' ' . $td->last_name;
-
-                      ?></td>
-
-                </tr>
-            <?php
-              }
-            }
-            ?>
-          </tbody>
-        </table>
-
-
-        <hr>
-        <div class="col-xl-12">
-          <h6 style="font-size:13px;"><strong>GENERAL REMARKS ON SUMMATIVE ASSESSMENT</strong></h6>
-          <p>Here </p>
-        </div>
-
-        <div class="col-xl-12">
-          <h6 style="font-size:13px;"><strong>Class teacher’s comments:</strong></h6>
-          <p>Here </p>
-        </div>
-
-      </div>
-
-
-    <?php
-    }
-  } else {
-    ?>
-    <div class="row">
-      <p class="alert alert-danger">No results found !</p>
-    </div>
-    <?php
-  }
-} else {
-  if ($reports) {
-    foreach ($reports as $ky => $st) {
-
-    ?>
-      <!-- Marks report -->
-      <div class="invoice-box">
-        <table cellpadding="0" cellspacing="0">
-          <tr class="top">
-            <td colspan="2">
-              <table>
-
-                <tr>
-                  <td class="title" style="width: 16%;">
-                    <img src="<?php echo base_url('uploads/files/' . $this->school->document); ?>" style="height:68px;" alt="header">
-                  </td>
-
-                  <td style=" width: 66%;" class="text-center  justify-content-center">
-                    <?php
-                    $stu = $this->worker->get_student($ky);
-                    $birthdateTimestamp = $stu->dob;
-
-                    $scl = $this->cbc_tr->get_exam($exams[0]);
-
-                    $birthDateTime = new DateTime();
-                    $birthDateTime->setTimestamp($birthdateTimestamp);
-
-                    $currentDateTime = new DateTime();
-
-                    // Calculate the difference
-                    $ageInterval = $currentDateTime->diff($birthDateTime);
-
-
-                    if ($stu->dob === "") {
-                      $age = "---";
-                    } else {
-                      $age = $ageInterval->y;
-                    }
-
-                    $this->load->model('cbc_tr');
-
-
-                    ?>
-                    <h4>SUMMATIVE REPORT</h4>
-                    <h6 class="upper-casr"><b>NAME:</b> <u><?php echo $stu->first_name . ' ' . $stu->last_name ?> </u>&nbsp; <b>ADM NO:</b> <u><?php echo $stu->admission_number ?> </u> &nbsp; <b>AGE:</b> <u><?php echo  $age; ?></u></h6>
-                    <span class="upper_case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $term . ' ' . $year ?></span><br>
-
-                    <div class="key-container">
-                      <div class="key-item key-title">Key:</div>
-                      <div class="key-item">4 = EE</div>
-                      <div class="key-item">3 = ME</div>
-                      <div class="key-item">2 = AE</div>
-                      <div class="key-item">1 = BE</div>
-                    </div>
-                  </td>
-
-                  <td style=" width: 16%;">
-                    <?php if ($passport) { ?>
-                      <div class="img-container right">
-                        <img src="<?php echo base_url('uploads/' . $passport->fpath . '/' . $passport->filename); ?>" style="height:68px;" alt="header">
-                      </div>
-                    <?php } ?>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-
-
-        <table class="table table-bordered">
-          <tr class="table-success">
-            <th>#</th>
-            <th>Subject</th>
-            <th>Score <?php ?></th>
-
-            <?php
-            $cls = $this->cbc_tr->get_classes($class);
-            $set = $this->cbc_tr->get_settings($cls->class, $exam);
-            if ($set->grade == 1) { ?>
-              <th>Grade</th>
-            <?php  }
-
-            ?>
-            <?php
-            $cls = $this->cbc_tr->get_classes($class);
-            $set = $this->cbc_tr->get_settings($cls->class, $exam);
-            if ($set->comments == 1) { ?>
+          <table class="table table-bordered">
+            <tr class="table-success">
+              <th>#</th>
+              <th>Subject</th>
+              <th>Score</th>
               <th>Comment</th>
-            <?php  }
-
-            ?>
-            <th>Teacher</th>
-          </tr>
-          <tbody>
-            <?php
-            $i = 1;
-            foreach ($st as $sub => $subs) {
-              foreach ($subs as $kety => $v) {
-                # code...
-
-                $m0 = $m1 = $m2 = $ot0 = $ot1 = $ot2 = null;
-
-            ?>
-                <tr style="font-size: 14px; text-align:center">
-                  <td><?php echo $i++ ?></td>
-                  <td style="text-align:left"><?php echo $subjects[$sub] ?></td>
-                  <td><?php
-
-                      $m1 = $v['score'];
-                      $ot1 = $v['outof'];
-
-
-                      $quarterSize = $ot1 / 4;
-                      $firstQuarterEnd = $quarterSize;
-                      $secondQuarterEnd = $quarterSize * 2;
-                      $thirdQuarterEnd = $quarterSize * 3;
-                      $fourthQuarterEnd = $ot1;
-
-                      if ($m1 <= $firstQuarterEnd) {
-                        $cm = "BE";
-                      } elseif ($m1 <= $secondQuarterEnd) {
-                        $cm = "AE";
-                      } elseif ($m1 <= $thirdQuarterEnd) {
-                        $cm = "ME";
-                      } elseif ($m1 <= $fourthQuarterEnd) {
-                        $cm = "EE";
-                      } else {
-                        $cm = "Value out of range";
-                      }
-
-
-                      $cls = $this->cbc_tr->get_classes($class);
-                      $set = $this->cbc_tr->get_settings($cls->class, $exam);
-
-                      if ($set->marks == 1 && $set->rubric == 1) {
-                        echo $m1 . " (" . $cm . ")";
-                      } elseif ($set->marks == 0 && $set->rubric == 1) {
-                        echo $cm;
-                      } elseif ($set->marks == 1 && $set->rubric == 0) {
-                        echo $m1;
-                      }
-                      ?></td>
-
-
-
-                  <!-- GRades -->
-                  <?php
-                  $cls = $this->cbc_tr->get_classes($class);
-                  $set = $this->cbc_tr->get_settings($cls->class, $exam);
-                  if ($set->grade == 1) { ?>
-                    <td>
-                      <?php
-                      $grades = $this->cbc_tr->get_grades($set->gs_system);
-                      $score = $m1;
-                      foreach ($grades as $grade) {
-                        if (
-                          $score >= $grade->minimum_marks && $score <= $grade->maximum_marks
-                        ) {
-                          echo $grade->grade;
-                        }
-                      }
-
-                      ?>
-                    </td>
-                  <?php  }
-
-                  ?>
-
-                  <!-- comments -->
-                  <?php
-                  $cls = $this->cbc_tr->get_classes($class);
-                  $set = $this->cbc_tr->get_settings($cls->class, $exam);
-                  if ($set->comments == 1) { ?>
-                    <td style="text-align:left">
-                      <?php
-                      $grades = $this->cbc_tr->get_grades($set->gs_system);
-                      $score = $m1;
-                      foreach ($grades as $grade) {
-                        if (
-                          $score >= $grade->minimum_marks && $score <= $grade->maximum_marks
-                        ) {
-                          echo $grade->comment;
-                        }
-                      }
-
-                      ?>
-                    </td>
-                  <?php  }
-
-                  ?>
-
-                  <td> <?php
+              <th>Teacher</th>
+            </tr>
+            <tbody>
+              <?php
+              $i = 1;
+              foreach ($st as $sub => $subs) {
+                foreach ($subs as $kety => $v) { ?>
+                  <tr style="font-size: 14px; text-align:center">
+                    <td><?php echo $i++ ?></td>
+                    <td style="text-align:left"><?php echo $subjects[$sub] ?></td>
+                    <td style="text-align:center"><?php echo $v['score'] . " (" . $rankings[$v['score']] . ' )'; ?></td>
+                    <td style="text-align:left"><?php echo $comments[$v['score']]; ?></td>
+                    <td><?php
                         $this->load->model('teachers/teachers_m');
-                        $trs = $this->cbc_tr->get_teachers($class, $term,  $year, $sub);
+                        $trs = $this->cbc_tr->get_teachers($class, $term, $year, $sub);
                         $td = $this->teachers_m->find($trs->teacher);
                         echo $td->first_name . ' ' . $td->last_name;
-
                         ?></td>
-                </tr>
-            <?php
+                  </tr>
+              <?php
+                }
               }
-            }
+              ?>
+            </tbody>
+          </table>
+
+          <hr>
+          <div class="col-xl-12">
+            <?php
+            $updated_value = $this->cbc_tr->get_field($ky, $exam);
+            $teacher_comment = $this->cbc_tr->get_tr_remarks($ky, $exam);
             ?>
-          </tbody>
-        </table>
+            <div class="row">
+              <div class="col-xl-7">
+                <h6 style="font-size:13px;"><strong>GENERAL REMARKS ON SUMMATIVE ASSESSMENT</strong></h6>
+                <p><input type="text" class="inputField dotted-underline" data-ky="<?php echo $ky; ?>" value="<?php echo $updated_value ?>" placeholder="Type remarks here..."> </p>
+              </div>
+              <div class="col-xl-5">
+                <h6 style="font-size:13px;"><strong>Signiture</strong></h6>
+              </div>
 
+            </div>
 
-        <hr>
-        <div class="col-xl-12">
-          <h6 style="font-size:13px;"><strong>GENERAL REMARKS ON SUMMATIVE ASSESSMENT</strong></h6>
-          <p>Here </p>
+          </div>
+
+          <div class="col-xl-12">
+            <h6 style="font-size:13px;"><strong>Class teacher’s comments:</strong></h6>
+            <p><input type="text" class="commentField dotted-underline" data-ky="<?php echo $ky; ?>" value="<?php echo $teacher_comment ?>" placeholder="Type your comment..."> </p>
+          </div>
+
         </div>
 
-        <div class="col-xl-12">
-          <h6 style="font-size:13px;"><strong>Class teacher’s comments:</strong></h6>
-          <p>Here </p>
-        </div>
-
+      <?php }
+    } else { ?>
+      <div class="row">
+        <p class="alert alert-danger">No results found !</p>
       </div>
+      <?php }
+  }
+} else {
+  if ($this->input->post()) {
+    if ($reports) {
+      foreach ($reports as $ky => $st) {
 
-    <?php
-    }
-  } else {
-    ?>
-    <div class="row">
-      <p class="alert alert-danger">No results found !</p>
-    </div>
+      ?>
+        <!-- Marks report -->
+        <div class="invoice-box">
+          <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+              <td colspan="2">
+                <table>
+
+                  <tr>
+                    <td class="title" style="width: 16%;">
+                      <img src="<?php echo base_url('uploads/files/' . $this->school->document); ?>" style="height:68px;" alt="header">
+                    </td>
+
+                    <td style=" width: 66%;" class="text-center  justify-content-center">
+                      <?php
+                      $stu = $this->worker->get_student($ky);
+                      $birthdateTimestamp = $stu->dob;
+
+                      $scl = $this->cbc_tr->get_exam($exams[0]);
+
+                      $birthDateTime = new DateTime();
+                      $birthDateTime->setTimestamp($birthdateTimestamp);
+
+                      $currentDateTime = new DateTime();
+
+                      // Calculate the difference
+                      $ageInterval = $currentDateTime->diff($birthDateTime);
+
+
+                      if ($stu->dob === "") {
+                        $age = "---";
+                      } else {
+                        $age = $ageInterval->y;
+                      }
+
+                      $this->load->model('cbc_tr');
+
+
+                      ?>
+                      <h4>SUMMATIVE REPORT</h4>
+                      <h6 class="upper-casr"><b>NAME:</b> <u><?php echo $stu->first_name . ' ' . $stu->last_name ?> </u>&nbsp; <b>ADM NO:</b> <u><?php echo $stu->admission_number ?> </u> &nbsp; <b>AGE:</b> <u><?php echo  $age; ?></u></h6>
+                      <span class="upper_case"><?php echo strtoupper($stu->cl->name) . ", TERM " . $term . ' ' . $year ?></span><br>
+
+                      <div class="key-container">
+                        <div class="key-item key-title">Key:</div>
+                        <div class="key-item">4 = EE</div>
+                        <div class="key-item">3 = ME</div>
+                        <div class="key-item">2 = AE</div>
+                        <div class="key-item">1 = BE</div>
+                      </div>
+                    </td>
+
+                    <td style=" width: 16%;">
+                      <?php if ($passport) { ?>
+                        <div class="img-container right">
+                          <img src="<?php echo base_url('uploads/' . $passport->fpath . '/' . $passport->filename); ?>" style="height:68px;" alt="header">
+                        </div>
+                      <?php } ?>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+
+          <table class="table table-bordered">
+            <tr class="table-success">
+              <th>#</th>
+              <th>Subject</th>
+              <th>Score <?php ?></th>
+
+              <?php
+              $cls = $this->cbc_tr->get_classes($class);
+              $set = $this->cbc_tr->get_settings($cls->class, $exam);
+              if ($set->grade == 1) { ?>
+                <th>Grade</th>
+              <?php  }
+
+              ?>
+              <?php
+              $cls = $this->cbc_tr->get_classes($class);
+              $set = $this->cbc_tr->get_settings($cls->class, $exam);
+              if ($set->comments == 1) { ?>
+                <th>Comment</th>
+              <?php  }
+
+              ?>
+              <th>Teacher</th>
+            </tr>
+            <tbody>
+              <?php
+              $i = 1;
+              foreach ($st as $sub => $subs) {
+                foreach ($subs as $kety => $v) {
+                  # code...
+
+                  $m0 = $m1 = $m2 = $ot0 = $ot1 = $ot2 = null;
+
+              ?>
+                  <tr style="font-size: 14px; text-align:center">
+                    <td><?php echo $i++ ?></td>
+                    <td style="text-align:left"><?php echo $subjects[$sub] ?></td>
+                    <td><?php
+
+                        $m1 = $v['score'];
+                        $ot1 = $v['outof'];
+
+
+                        $quarterSize = $ot1 / 4;
+                        $firstQuarterEnd = $quarterSize;
+                        $secondQuarterEnd = $quarterSize * 2;
+                        $thirdQuarterEnd = $quarterSize * 3;
+                        $fourthQuarterEnd = $ot1;
+
+                        if ($m1 <= $firstQuarterEnd) {
+                          $cm = "BE";
+                        } elseif ($m1 <= $secondQuarterEnd) {
+                          $cm = "AE";
+                        } elseif ($m1 <= $thirdQuarterEnd) {
+                          $cm = "ME";
+                        } elseif ($m1 <= $fourthQuarterEnd) {
+                          $cm = "EE";
+                        } else {
+                          $cm = "Value out of range";
+                        }
+
+
+                        $cls = $this->cbc_tr->get_classes($class);
+                        $set = $this->cbc_tr->get_settings($cls->class, $exam);
+
+                        if ($set->marks == 1 && $set->rubric == 1) {
+                          echo $m1 . " (" . $cm . ")";
+                        } elseif ($set->marks == 0 && $set->rubric == 1) {
+                          echo $cm;
+                        } elseif ($set->marks == 1 && $set->rubric == 0) {
+                          echo $m1;
+                        }
+                        ?></td>
+
+
+
+                    <!-- GRades -->
+                    <?php
+                    $cls = $this->cbc_tr->get_classes($class);
+                    $set = $this->cbc_tr->get_settings($cls->class, $exam);
+                    if ($set->grade == 1) { ?>
+                      <td>
+                        <?php
+                        $grades = $this->cbc_tr->get_grades($set->gs_system);
+                        $score = $m1;
+                        foreach ($grades as $grade) {
+                          if (
+                            $score >= $grade->minimum_marks && $score <= $grade->maximum_marks
+                          ) {
+                            echo $grade->grade;
+                          }
+                        }
+
+                        ?>
+                      </td>
+                    <?php  }
+
+                    ?>
+
+                    <!-- comments -->
+                    <?php
+                    $cls = $this->cbc_tr->get_classes($class);
+                    $set = $this->cbc_tr->get_settings($cls->class, $exam);
+                    if ($set->comments == 1) { ?>
+                      <td style="text-align:left">
+                        <?php
+                        $grades = $this->cbc_tr->get_grades($set->gs_system);
+                        $score = $m1;
+                        foreach ($grades as $grade) {
+                          if (
+                            $score >= $grade->minimum_marks && $score <= $grade->maximum_marks
+                          ) {
+                            echo $grade->comment;
+                          }
+                        }
+
+                        ?>
+                      </td>
+                    <?php  }
+
+                    ?>
+
+                    <td> <?php
+                          $this->load->model('teachers/teachers_m');
+                          $trs = $this->cbc_tr->get_teachers($class, $term,  $year, $sub);
+                          $td = $this->teachers_m->find($trs->teacher);
+                          echo $td->first_name . ' ' . $td->last_name;
+
+                          ?></td>
+                  </tr>
+              <?php
+                }
+              }
+              ?>
+            </tbody>
+          </table>
+
+
+          <hr>
+          <div class="col-xl-12">
+            <?php
+            $updated_value = $this->cbc_tr->get_field($ky, $exam);
+
+            $teacher_comment = $this->cbc_tr->get_tr_remarks($ky, $exam);
+            ?>
+            <h6 style="font-size:13px;"><strong>GENERAL REMARKS ON SUMMATIVE ASSESSMENT</strong></h6>
+            <p><input type="text" class="inputField dotted-underline" data-ky="<?php echo $ky; ?>" value="<?php echo $updated_value ?>" placeholder="Type remarks here..."> </p>
+          </div>
+
+          <div class="col-xl-12">
+            <h6 style="font-size:13px;"><strong>Class teacher’s comments:</strong></h6>
+            <p><input type="text" class="commentField dotted-underline" data-ky="<?php echo $ky; ?>" value="<?php echo $teacher_comment ?>" placeholder="Type your comment..."> </p>
+          </div>
+
+        </div>
+
+      <?php
+      }
+    } else {
+      ?>
+      <div class="row">
+        <p class="alert alert-danger">No results found !</p>
+      </div>
 <?php
+    }
   }
 }
 ?>
@@ -558,6 +554,45 @@ if ($ex->type == 1) {
     /* Extra space between the title and the key items */
   }
 
+  /* Hide input field borders */
+  .inputField {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 13px;
+    color: black;
+    width: 400px;
+
+  }
+
+  .commentField {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 13px;
+    color: black;
+    width: 400px;
+
+  }
+
+  .dotted-underline {
+    border: none;
+    border-bottom: 1px dotted black;
+    /* Change 'black' to any color you prefer */
+    outline: none;
+    /* Removes the default outline on focus */
+    padding-bottom: 2px;
+    /* Adjust padding to align with your design */
+    background: transparent;
+    /* Ensures no background color */
+  }
+
+  .dotted-underline:focus {
+    border-bottom: 1px solid black;
+    /* Optional: change the border style when the input is focused */
+  }
+
+
   @media print {
     body * {
       visibility: hidden;
@@ -588,4 +623,95 @@ if ($ex->type == 1) {
     event.preventDefault(); // Prevent the default form submission behavior
     window.print(); // Trigger the print dialog
   }
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+
+    $('#classDropdown').change(function() {
+      var selectedClass = $(this).val();
+
+      if (selectedClass) {
+        $.ajax({
+          url: '<?php echo site_url('cbc/trs/fetch_students'); ?>',
+          type: 'POST',
+          data: {
+            class: selectedClass
+          },
+          dataType: 'json',
+          success: function(data) {
+            var studentDropdown = $('#studentDropdown');
+            studentDropdown.empty();
+            studentDropdown.append('<option value="">Select Student</option>');
+            $.each(data, function(key, value) {
+              studentDropdown.append('<option value="' + key + '">' + value + '</option>');
+            });
+            studentDropdown.trigger('change'); // Update the dropdown
+          },
+          error: function() {
+            alert('An error occurred while fetching students.');
+          }
+        });
+      } else {
+        $('#studentDropdown').empty().append('<option value="">Select Student</option>').trigger('change');
+      }
+    });
+  });
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    // Debounce function to limit the rate of AJAX requests
+    function debounce(func, delay) {
+      let debounceTimer;
+      return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+      };
+    }
+
+    // Function to update field in the database
+    function updateColumnInDatabase(input, ky, exam, term, year, fieldType) {
+      $.ajax({
+        url: '<?php echo base_url("cbc/trs/save_input"); ?>',
+        method: 'POST',
+        data: {
+          input: input,
+          ky: ky,
+          exam: exam,
+          term: term,
+          year: year,
+          field: fieldType
+        },
+        success: function(response) {
+          var data = JSON.parse(response);
+          if (fieldType === 'input') {
+            $('.inputField[data-ky="' + ky + '"]').val(data.updated_value);
+          } else if (fieldType === 'comment') {
+            $('.commentField[data-ky="' + ky + '"]').val(data.updated_value);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('AJAX Error: ' + status + error);
+        }
+      });
+    }
+
+    // Apply debounce to input and comment fields
+    $('.inputField, .commentField').on('change', debounce(function() {
+      var input = $(this).val();
+      var ky = $(this).data('ky');
+      var exam = '<?php echo $exam; ?>';
+      var term = '<?php echo $term; ?>';
+      var year = '<?php echo $year; ?>';
+      var fieldType = $(this).hasClass('inputField') ? 'input' : 'comment';
+
+      updateColumnInDatabase(input, ky, exam, term, year, fieldType);
+    }, 0)); // Set delay to 0 for no delay
+  });
 </script>

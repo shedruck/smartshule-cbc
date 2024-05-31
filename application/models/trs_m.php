@@ -944,21 +944,7 @@ class Trs_m extends MY_Model
                     ->result();
     }
 
-    public function get_assigned_subjects(){
-        $id=$this->ion_auth->get_user()->id;
-        $this->select_all_key('teachers');
-        $this->select('subjects.*');
-        $this->select('subjects_assign.*');
-        return $this->db   
-                    
-                    ->join('teachers','teachers.id=subjects_assign.teacher')
-                    ->join('subjects','subjects.id = subjects_assign.subject')
-                    ->where($this->dx('teachers.user_id') . '=' . $id, NULL, FALSE)
-                    // ->where('teachers.user_id',$id)
-                    ->get('subjects_assign')
-                    ->result();
-    }
-
+    
    
 
 }

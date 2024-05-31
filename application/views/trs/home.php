@@ -42,7 +42,7 @@
             <a href="<?php echo base_url('trs/account'); ?>" class="btn btn-info-gradient" style="min-width:130px;"> <i class="mdi mdi-account-circle"></i> View Profile</a>
           </div>
           <div class="d-flex btn-list btn-list-icon justify-content-center mt-3">
-            <a href="<?php echo base_url('trs/subjectAssigned'); ?>" target="" class="btn btn-success-gradient">Subject Assigned</a>
+            <a href="<?php echo base_url('teachers/trs/subjectAssigned'); ?>" target="" class="btn btn-success-gradient">Subject Assigned</a>
           </div>
           <div class="d-flex justify-content-center mt-3">
             <a href="trs/zoom" class="btn btn-primary-gradient"><i class="mdi mdi-spin mdi-camcorder" aria-hidden="true"></i> Zoom Meeting</a>
@@ -259,9 +259,9 @@
         <div class="card">
           <div class="card-status bg-green br-te-7 br-ts-7"></div>
           <div class="card-header">
-            <h3 class="card-title">Top 5 Attendant</h3>
+            <h3 class="card-title">Top 5 Attendants</h3>
             <div class="card-options">
-              <a href="javascript:void(0);" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
+              <!-- <a href="javascript:void(0);" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a> -->
             </div>
           </div>
           <div class="card-body">

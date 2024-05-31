@@ -362,7 +362,7 @@ class Trs extends Trs_Controller
 
     function set_exam()
     {
-
+        $ok = false; // Initialize $ok variable
 
         if ($this->input->post()) {
 
@@ -386,16 +386,16 @@ class Trs extends Trs_Controller
 
 
             $ok = $this->cbc_tr->create_exam($form, 'cbc_threads');
+
+            if ($ok) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect("cbc/trs/all_exams/");
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                redirect("cbc/trs/all_exams/");
+            }
         }
 
-
-        if ($ok) {
-            // Set session message for updated records
-            $created_message = 'Exam successfully created';
-            $this->session->set_flashdata('created_message', array('type' => 'success', 'text' => $created_message));
-
-            redirect("cbc/trs/all_exams/");
-        }
 
         $this->template->title('Exam Setup')->build('teachers/set_exam');
     }
@@ -459,13 +459,16 @@ class Trs extends Trs_Controller
                 $md = $this->cbc_tr->exam_update($exam, $form1, 'cbc_threads');
             }
 
-            if ($md) {
-                // Set session message for updated records
-                $created_message = 'Exam Settings successfully Done';
-                $this->session->set_flashdata('created_message', array('type' => 'success', 'text' => $created_message));
+            
+                if ($md) {
+                    $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                    redirect("cbc/trs/manage_exams/" . $exam);
+                } else {
+                    $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                    redirect("cbc/trs/manage_exams/" . $exam);
+                }
 
-                redirect("cbc/trs/manage_exams/" . $exam);
-            }
+             
         }
     }
 
@@ -509,11 +512,12 @@ class Trs extends Trs_Controller
                 $md = $this->cbc_tr->exam_update($exam, $form1, 'cbc_threads');
             }
 
+        
             if ($md) {
-                // Set session message for updated records
-                $created_message = 'Exam Settings successfully Updated';
-                $this->session->set_flashdata('created_message', array('type' => 'success', 'text' => $created_message));
-
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect("cbc/trs/manage_exams/" . $exam);
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
                 redirect("cbc/trs/manage_exams/" . $exam);
             }
         }
@@ -638,6 +642,54 @@ class Trs extends Trs_Controller
         $this->template->title('Edit Settings')->build('teachers/bulk_sum', $data);
     }
 
+    public function fetch_students()
+    {
+        $class = $this->input->post('class');
+        if ($class) {
+           
+            $students = $this->cbc_tr->get_students_by_class($class);
+
+            // Prepare data to be returned as JSON
+            $data = array();
+            foreach ($students as $student) {
+                $data[$student->id] = $student->first_name.' '. $student->last_name; 
+            }
+
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function fetch_subjects()
+    {
+        $class = $this->input->post('class');
+        if ($class) {
+
+            $cls = $this->cbc_tr->get_clsgroup($class);
+            
+            $subids =   $this->cbc_tr->get_subids($cls->class);
+
+            $ids = [];
+            foreach ($subids as $key => $sub) {
+                $ids[] = $sub->subject_id;
+            }
+
+            $subjects = $this->cbc_tr->get_subjects_by_class($ids);
+
+            // Prepare data to be returned as JSON
+            $data = array();
+            foreach ($subjects as $subject) {
+                $data[$subject->id] = $subject->name;
+            }
+
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+
     function summ_single()
     {
 
@@ -699,6 +751,7 @@ class Trs extends Trs_Controller
             $data['class'] = $class;
             $data['term'] = $term;
             $data['year'] = $year;
+            $data['subject'] = $subject;
 
             $assess = $this->cbc_tr->get_assess($class, $term, $year, $subject);
 
@@ -716,9 +769,12 @@ class Trs extends Trs_Controller
         $data['subz'] =  $this->cbc->fetch_substrands_by_sub();
 
 
+
+        // $subids = $this->cbc_tr->get_subjects($class);
         // echo "<pre>";
-        // print_r()
+        // print_r($subids);
         // echo "<pre>";
+        // die;
 
 
         $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
@@ -970,5 +1026,30 @@ class Trs extends Trs_Controller
 
     }
 
+
+    public function save_input()
+    {
+        if ($this->input->post('input')) {
+            $input = $this->input->post('input');
+            $st = $this->input->post('ky');
+            $exam = $this->input->post('exam');
+            $term = $this->input->post('term');
+            $year = $this->input->post('year');
+            $field = $this->input->post('field');
+
+            if ($field === 'input') {
+                $this->cbc_tr->insert_input($input, $st, $exam);
+                $updated_value = $this->cbc_tr->get_field($st, $exam);
+            } else if ($field === 'comment') {
+                $this->cbc_tr->insert_tr_remarks($input, $st, $exam);
+                $updated_value = $this->cbc_tr->get_tr_remarks($st, $exam);
+            }
+
+            echo json_encode(array('updated_value' => $updated_value));
+        }
+    }
+
+
+   
    
 }

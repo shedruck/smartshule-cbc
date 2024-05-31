@@ -219,5 +219,69 @@ class Trs extends Trs_Controller
 
         $this->template->title('View Student')->build('teachers/view', $data);
     }
+
+
+    function assign_ctr(){
+
+        $data['classes'] = $this->streams;
+        $data['all_streams'] = $this->trs_m->get_allstreams();
+
+        $data['profile'] = $this->trs_m->get_profile();
+
+        $data['trs'] = $this->trs_m->get_teachers();
+
+      
+        $this->template->title('Assign Class Teacher')->build('teachers/assign', $data);
+ 
+      
+
+    }
+
+    function save_teacher(){
+        if ($this->input->post()) {
+            $teacher = $this->input->post('teacher_id');
+            $cls = $this->input->post('stream_id');
+
+            // $exist = $this->trs_m->check_exists($teacher, $cls);
+         $form = [
+            'class_teacher' => $teacher,
+         ];
+            $ok = $this->trs_m->update_cltr($cls, 'classes', $form);
+
+            if ($ok) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect('class_groups/trs/assign_ctr');
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                redirect('class_groups/trs/assign_ctr');
+            }
+        }
+    }
+
+    function edit_teacher($id){
+
+        $data['trs'] = $this->trs_m->get_teachers();
+        $data['class_id'] = $id;
+
+        if ($this->input->post()) {
+           
+            $form = [
+                'class_teacher' =>$this->input->post('teacher_id'),
+                
+            ];
+
+        $ok = $this->trs_m->update_cltr($id, 'classes', $form);
+
+            if ($ok) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect('class_groups/trs/assign_ctr');
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                redirect('class_groups/trs/assign_ctr');
+            }
+
+        }
+        $this->template->title('Edit Class Teacher')->build('teachers/edit', $data);
+    }
     
 }

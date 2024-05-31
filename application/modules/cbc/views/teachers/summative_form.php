@@ -1,4 +1,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+
 <?php
 if ($this->input->get()) {
     $get = (object) $this->input->get();
@@ -37,29 +41,8 @@ if ($exam_type->type == 1) {
     </div>
 </div>
 
-<?php if ($this->session->flashdata('inserted_message')) : ?>
-    <div class="alert-container inserted-alert">
-        <div class="alert alert-solid-success" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-            <i class="fa fa-check-circle-o me-2" aria-hidden="true"></i><?php echo $this->session->flashdata('inserted_message')['text']; ?>
-        </div>
-    </div>
-<?php endif; ?>
-
-<?php if ($this->session->flashdata('updated_message')) : ?>
-    <div class="alert-container updated-alert">
-        <div class="alert alert-solid-success" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-            <i class="fa fa-check-circle-o me-2" aria-hidden="true"></i><?php echo $this->session->flashdata('updated_message')['text']; ?>
-        </div>
-    </div>
-<?php endif; ?>
-
-
 <?php
-//  echo "<pre>";
-//  print_r($exams);
-//         echo "<pre>";
+
 ?>
 
 
@@ -112,12 +95,12 @@ if ($exam_type->type == 1) {
                                                 <th class="text-center tx-fixed-white">ME - 3</th>
                                                 <th class="text-center tx-fixed-white">AE - 2</th>
                                                 <th class="text-center tx-fixed-white">BE - 1</th>
-                                                <th class="text-center tx-fixed-white">Clear</th>
+
                                             <?php endif; ?>
                                         </tr>
                                         <?php
                                         $index = 1;
-                                        
+
                                         if ($extype === "" || $extype === null) {
                                         ?>
                                             <tr>
@@ -148,15 +131,12 @@ if ($exam_type->type == 1) {
                                                     <?php elseif ($extype == 2) :
                                                         $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
                                                     ?>
-                                                        <td style="text-align: center;"><input class="form-check-input" type="radio" value="4" name="score[<?php echo $p->id ?>]" id="Radio-md_4_<?php echo $p->id ?>" <?php echo $score ? $score->score == 4 ? 'checked' : '' : '' ?>></td>
-                                                        <td style="text-align: center;"><input class="form-check-input" type="radio" value="3" name="score[<?php echo $p->id ?>]" id="Radio-md_3_<?php echo $p->id ?>" <?php echo $score ? $score->score == 3 ? 'checked' : '' : '' ?>></td>
-                                                        <td style="text-align: center;"><input class="form-check-input" type="radio" value="2" name="score[<?php echo $p->id ?>]" id="Radio-md_2_<?php echo $p->id ?>" <?php echo $score ? $score->score == 2 ? 'checked' : '' : '' ?>></td>
-                                                        <td style="text-align: center;"><input class="form-check-input" type="radio" value="1" name="score[<?php echo $p->id ?>]" id="Radio-md_1_<?php echo $p->id ?>" <?php echo $score ? $score->score == 1 ? 'checked' : '' : '' ?>></td>
-                                                        <td style="text-align: center;">
-                                                            <div class="form-check d-inline-block">
-                                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked_<?php echo $p->id ?>">
-                                                            </div>
-                                                        </td>
+                                                        <td style="text-align: center;"><input class="form-check-input custom-checkbox" type="checkbox" value="4" name="score[<?php echo $p->id ?>]" id="Checkbox-md_4_<?php echo $p->id ?>" <?php echo $score ? $score->score == 4 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input custom-checkbox" type="checkbox" value="3" name="score[<?php echo $p->id ?>]" id="Checkbox-md_3_<?php echo $p->id ?>" <?php echo $score ? $score->score == 3 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input custom-checkbox" type="checkbox" value="2" name="score[<?php echo $p->id ?>]" id="Checkbox-md_2_<?php echo $p->id ?>" <?php echo $score ? $score->score == 2 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input custom-checkbox" type="checkbox" value="1" name="score[<?php echo $p->id ?>]" id="Checkbox-md_1_<?php echo $p->id ?>" <?php echo $score ? $score->score == 1 ? 'checked' : '' : '' ?>></td>
+
+
                                                     <?php endif; ?>
                                                 </tr>
                                         <?php $index++;
@@ -193,7 +173,7 @@ if ($exam_type->type == 1) {
             </div>
             <div class="card-footer">
                 <div class="form-check d-inline-block">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                    <input class="form-check-input custom-checkbox" type="checkbox" value="" id="flexCheckChecked">
                     <label class="form-check-label" for="flexCheckChecked">
                         Confirm
                     </label>
@@ -401,4 +381,69 @@ if ($exam_type->type == 1) {
     .alert {
         position: relative;
     }
+
+    .custom-checkbox {
+        width: 1.3em;
+        /* Set the width of the checkbox */
+        height: 1.3em;
+        /* Set the height of the checkbox */
+    }
+
+    .custom-checkbox:checked {
+        transform: scale(1.2);
+        
+    }
 </style>
+
+<script>
+    // Get all checkboxes with the class "form-check-input"
+    var checkboxes = document.querySelectorAll('.form-check-input');
+
+    // Add an event listener to each checkbox
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('click', function() {
+            // If the checkbox is checked, uncheck all other checkboxes in the same group
+            if (this.checked) {
+                checkboxes.forEach(function(otherCheckbox) {
+                    if (otherCheckbox !== checkbox && otherCheckbox.name === checkbox.name) {
+                        otherCheckbox.checked = false;
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<?php if ($this->session->flashdata('updated_message')) : ?>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Retrieve the inserted message text
+        var insertedMessage = "<?php echo $this->session->flashdata('updated_message')['text']; ?>";
+
+        // Show toast notification
+        Toastify({
+            text: insertedMessage,
+            duration: 3000, // Duration in milliseconds
+            gravity: "top", // Position of the toast on the screen (top, bottom, left, right)
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Background color
+            stopOnFocus: true // Stop auto-hide on toast hover
+        }).showToast();
+    </script>
+<?php endif; ?>
+
+<?php if ($this->session->flashdata('inserted_message')) : ?>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Retrieve the inserted message text
+        var insertedMessage = "<?php echo $this->session->flashdata('inserted_message')['text']; ?>";
+
+        // Show toast notification
+        Toastify({
+            text: insertedMessage,
+            duration: 3000, // Duration in milliseconds
+            gravity: "top", // Position of the toast on the screen (top, bottom, left, right)
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Background color
+            stopOnFocus: true // Stop auto-hide on toast hover
+        }).showToast();
+    </script>
+<?php endif; ?>
