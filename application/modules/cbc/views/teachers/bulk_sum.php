@@ -184,7 +184,7 @@ $this->load->model('cbc_tr');
           </table>
 
           <hr>
-          <div class="col-xl-12">
+          <div class="col-xl-12 mt-2">
             <?php
             $updated_value = $this->cbc_tr->get_field($ky, $exam);
             $teacher_comment = $this->cbc_tr->get_tr_remarks($ky, $exam);
@@ -192,7 +192,9 @@ $this->load->model('cbc_tr');
             <div class="row">
               <div class="col-xl-7">
                 <h6 style="font-size:13px;"><strong>GENERAL REMARKS ON SUMMATIVE ASSESSMENT</strong></h6>
-                <p><input type="text" class="inputField dotted-underline" data-ky="<?php echo $ky; ?>" value="<?php echo $updated_value ?>" placeholder="Type remarks here..."> </p>
+                <p>
+                  <textarea class="inputField dotted-underline" data-ky="<?php echo $ky; ?>" placeholder="Type remarks here..." style="max-width: 400px; width: 100%; overflow: hidden; resize: none; height: auto; line-height: 1.5;"><?php echo $updated_value ?></textarea>
+                </p>
               </div>
               <div class="col-xl-5">
                 <h6 style="font-size:13px;"><strong>Signiture</strong></h6>
@@ -204,7 +206,9 @@ $this->load->model('cbc_tr');
 
           <div class="col-xl-12">
             <h6 style="font-size:13px;"><strong>Class teacher’s comments:</strong></h6>
-            <p><input type="text" class="commentField dotted-underline" data-ky="<?php echo $ky; ?>" value="<?php echo $teacher_comment ?>" placeholder="Type your comment..."> </p>
+            <p>
+              <textarea class="commentField dotted-underline" data-ky="<?php echo $ky; ?>" placeholder="Type your comment..." style="max-width: 400px; width: 100%; overflow: hidden; resize: none; height: auto; line-height: 1.5;"><?php echo $teacher_comment ?></textarea>
+            </p>
           </div>
 
         </div>
@@ -426,21 +430,24 @@ $this->load->model('cbc_tr');
 
 
           <hr>
-          <div class="col-xl-12">
+          <div class="col-xl-12 mt-2">
             <?php
             $updated_value = $this->cbc_tr->get_field($ky, $exam);
 
             $teacher_comment = $this->cbc_tr->get_tr_remarks($ky, $exam);
             ?>
             <h6 style="font-size:13px;"><strong>GENERAL REMARKS ON SUMMATIVE ASSESSMENT</strong></h6>
-            <p><input type="text" class="inputField dotted-underline" data-ky="<?php echo $ky; ?>" value="<?php echo $updated_value ?>" placeholder="Type remarks here..."> </p>
+            <p>
+            <div contenteditable="true" class="inputField dotted-underline" data-ky="<?php echo $ky; ?>" placeholder="Type remarks here..." style="max-width: 400px; width: 100%; overflow: hidden; height: auto; line-height: 1.5; border: 1px solid #ccc; padding: 5px; min-height: 24px;"></div>
+            </p>
           </div>
 
           <div class="col-xl-12">
             <h6 style="font-size:13px;"><strong>Class teacher’s comments:</strong></h6>
-            <p><input type="text" class="commentField dotted-underline" data-ky="<?php echo $ky; ?>" value="<?php echo $teacher_comment ?>" placeholder="Type your comment..."> </p>
+            <p>
+              <textarea class="commentField dotted-underline" data-ky="<?php echo $ky; ?>" placeholder="Type your comment..." style="max-width: 400px; width: 100%; overflow: hidden; resize: none; height: auto; line-height: 1.5;"><?php echo $teacher_comment ?></textarea>
+            </p>
           </div>
-
         </div>
 
       <?php
@@ -578,18 +585,15 @@ $this->load->model('cbc_tr');
   .dotted-underline {
     border: none;
     border-bottom: 1px dotted black;
-    /* Change 'black' to any color you prefer */
     outline: none;
-    /* Removes the default outline on focus */
     padding-bottom: 2px;
-    /* Adjust padding to align with your design */
     background: transparent;
     /* Ensures no background color */
   }
 
   .dotted-underline:focus {
     border-bottom: 1px solid black;
-    /* Optional: change the border style when the input is focused */
+    
   }
 
 
@@ -713,5 +717,71 @@ $this->load->model('cbc_tr');
 
       updateColumnInDatabase(input, ky, exam, term, year, fieldType);
     }, 0)); // Set delay to 0 for no delay
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const textareas = document.querySelectorAll('textarea.commentField');
+
+    textareas.forEach(textarea => {
+      // Adjust the height of the textarea based on its content
+      function adjustHeight() {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
+
+      // Initial adjustment on page load
+      adjustHeight();
+
+      // Adjust height on input
+      textarea.addEventListener('input', adjustHeight);
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const textareas = document.querySelectorAll('textarea.inputField');
+
+    textareas.forEach(textarea => {
+      // Adjust the height of the textarea based on its content
+      function adjustHeight() {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
+
+      adjustHeight();
+
+      // Adjust height on input
+      textarea.addEventListener('input', adjustHeight);
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const editableDivs = document.querySelectorAll('div.inputField');
+
+    editableDivs.forEach(div => {
+      // Function to adjust the height of the div based on its content
+      function adjustHeight() {
+        div.style.height = 'auto';
+        div.style.height = div.scrollHeight + 'px';
+      }
+
+      // Initial adjustment on page load
+      adjustHeight();
+
+      // Adjust height on input
+      div.addEventListener('input', adjustHeight);
+
+      // Add underline styling on input
+      div.addEventListener('input', function() {
+        // Wrap the text with underline styling
+        const text = div.innerText;
+        div.innerHTML = text.replace(/(.)/g, '<span style="text-decoration: underline;">$1</span>');
+      });
+    });
   });
 </script>

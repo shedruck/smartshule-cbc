@@ -66,7 +66,7 @@ class Trs extends Trs_Controller
         $data['class'] = isset($this->streams[$class]) ? $this->streams[$class] : '';
 
 
-        $data['exam_type'] = $this->cbc_tr->get_exam($exam);
+        $data['exam_type'] = $this->cbc_tr->get_exam_perclass($exam, $class);
 
         if ($exam) {
             $students = $this->cbc_tr->get_students($class);
@@ -646,7 +646,7 @@ class Trs extends Trs_Controller
         // die;
 
         $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
-        $this->template->title('Edit Settings')->build('teachers/bulk_sum', $data);
+        $this->template->title('Generate Reports')->build('teachers/bulk_sum', $data);
     }
 
     public function fetch_students()

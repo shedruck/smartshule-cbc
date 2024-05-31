@@ -381,6 +381,11 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $id)->order_by('id', 'DESC')->get('cbc_threads')->row();
     }
 
+    function get_exam_perclass($id, $cls)
+    {
+        return $this->db->where('id', $id)->where('class', $cls)->order_by('id', 'DESC')->get('cbc_settings')->row();
+    }
+
     function check_grading($id)
     {
         return $this->db->where('id', $id)->get('cbc_settings')->row();
