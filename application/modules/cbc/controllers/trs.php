@@ -44,6 +44,14 @@ class Trs extends Trs_Controller
         echo json_encode(['load' => $payload, 'class' => $cls]);
     }
 
+    function get_subjects_for_summ($c)
+    {
+        $payload = $this->cbc_tr->find_allocation2($c);
+
+        $cls = isset($this->streams[$c]) ? $this->streams[$c]  : '';
+        echo json_encode(['load' => $payload, 'class' => $cls]);
+    }
+
     //Function to Summative
     function do_summative($class, $subject, $exam = false)
     {
