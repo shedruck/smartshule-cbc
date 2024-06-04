@@ -21,6 +21,38 @@ class Cbc_tr extends MY_Model
         return $this->db->insert_id();
     }
 
+    //Check if Combined Marks is already there
+    function check_marks($tid,$stu,$sub) {
+        return $this->db
+                    ->where('tid',$tid)
+                    ->where('student',$stu)
+                    ->where('subject',$sub)
+                    ->get('cbc_subs_included')
+                    ->row();
+    }
+
+    //Check Grade
+    function get_grade($gid,$marks) {
+        $gradingsystem = $this->db
+                              ->where('grade_id',$gid)
+                              ->get('gs_grades')
+                              ->result();
+
+        foreach ($gradingsystem as $gs) {
+            if ($marks >= $gs->minimum_marks && $marks <= $gs->maximum_marks) {
+                $grade = $gs->grade;
+                $points = $gs->points;
+                $comment = $gs->comment;
+            }
+        }
+
+        return array(
+            'grade' => $grade,
+            'points' => $points,
+            'comment' => $comment
+        );
+    }
+
     function add_social($data, $table)
     {
         $this->db->insert($table, $data);
@@ -31,6 +63,57 @@ class Cbc_tr extends MY_Model
     function my_classes()
     {
         $list =  $this->db->where('teacher', $this->profile->id)->where(['term' => $this->school->term, 'year' => $this->school->year, 'type' => 2])->group_by('class')->get('subjects_assign')->result();
+
+        $fn = [];
+        $pop =  $this->count_students();
+        foreach ($list as $p) {
+            $cls = isset($this->streams[$p->class]) ? $this->streams[$p->class] : 'Unknown Class';
+            $tt = isset($pop[$p->class]) ? $pop[$p->class]  : 0;
+            $fn[$p->class] = [
+                'id' => $p->class,
+                'name' => $cls,
+                'total' => $tt
+            ];
+        }
+
+        return $fn;
+    }
+
+    function my_classes2() {
+        if ($this->profile->special == 1) {
+            return $this->get_all_classes();
+        } else {
+            return $this->get_assigned_classes_only();
+        }
+        
+    }
+
+    //Function to get all classes
+    function get_all_classes() {
+        $list = $this->db
+                     ->get('classes')
+                     ->result();
+
+        $pop =  $this->count_students();
+        $out = [];
+
+        foreach ($list as $key => $l) {
+            $cls = isset($this->streams[$l->id]) ? $this->streams[$l->id] : 'Unknown Class';
+            $tt = isset($pop[$l->id]) ? $pop[$l->id]  : 0;
+
+            $out[$l->id] = [
+                'id' => $l->id,
+                'name' => $cls,
+                'total' => $tt
+            ];
+        }
+
+        return $out;
+    }
+
+    //Function to get only assigned Classes
+    function get_assigned_classes_only() {
+        $list =  $this->db->where('teacher', $this->profile->id)->where(['term' => $this->school->term, 'year' => $this->school->year, 'type' => 1])->group_by('class')->get('subjects_assign')->result();
 
         $fn = [];
         $pop =  $this->count_students();
@@ -64,6 +147,19 @@ class Cbc_tr extends MY_Model
         }
 
         return $fn;
+    }
+
+    //function to get level marks
+    function get_marks($level,$exams) {
+        if (count($exams) == 0) {
+            return [];
+        }
+
+        return $this->db
+                    ->where('class_grp',$level)
+                    ->where_in('exam',$exams)
+                    ->get('cbc_marks')
+                    ->result();
     }
 
     function populate($table, $id, $name)
@@ -314,6 +410,38 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $id)->where('status', 1)->get('cbc_tasks')->row();
     }
 
+    function find($id,$table)
+    {
+        return $this->db->where('id', $id)->get($table)->row();
+    }
+
+    //Get Term Exams
+    function find_exams($term = false, $year = false) {
+        if ($term) {
+            $this->db->where('term',$term);
+        }
+
+        if ($year) {
+            $this->db->where('year',$year);
+        }
+
+        return $this->db
+                    ->get('cbc_threads')
+                    ->result();
+    }
+
+    //Get Class Group Streams
+    function class_group_streams($class) {
+        $list = $this->db
+                     ->where('class',$class)
+                     ->get('classes')
+                     ->result();
+
+        $out = [];
+
+        return $list;
+    }
+
     //Get Class Students
     function get_stu_marks($sub, $exam, $stu)
     {
@@ -374,6 +502,19 @@ class Cbc_tr extends MY_Model
         return $ex;
     }
 
+    function exam_threads()
+    {
+        $list = $this->db->where('status',1)->order_by('id', 'DESC')->get('cbc_exam_threads')->result();
+        // $ex = array(); // Initialize the array
+
+        // foreach ($list as $l) {
+        //     $ex[$l->id] = $l->name . ' Term ' . $l->term . ' ' . $l->year; // Append each element to the array
+        // }
+
+        // return $ex;
+
+        return $list;
+    }
 
 
     function get_exam($id)

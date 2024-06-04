@@ -363,7 +363,7 @@ class Trs extends Trs_Controller
 
     function begin_summative_form()
     {
-        $data['classes'] = $this->cbc_tr->my_classes();
+        $data['classes'] = $this->cbc_tr->my_classes2();
         $cls = $this->cbc_tr->my_classes();
         $this->template->title('Summative Assessment')->build('teachers/summative', $data);
     }
@@ -467,16 +467,14 @@ class Trs extends Trs_Controller
                 $md = $this->cbc_tr->exam_update($exam, $form1, 'cbc_threads');
             }
 
-            
-                if ($md) {
-                    $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
-                    redirect("cbc/trs/manage_exams/" . $exam);
-                } else {
-                    $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
-                    redirect("cbc/trs/manage_exams/" . $exam);
-                }
 
-             
+            if ($md) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect("cbc/trs/manage_exams/" . $exam);
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                redirect("cbc/trs/manage_exams/" . $exam);
+            }
         }
     }
 
@@ -520,7 +518,7 @@ class Trs extends Trs_Controller
                 $md = $this->cbc_tr->exam_update($exam, $form1, 'cbc_threads');
             }
 
-        
+
             if ($md) {
                 $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
                 redirect("cbc/trs/manage_exams/" . $exam);
@@ -613,7 +611,7 @@ class Trs extends Trs_Controller
             $class = $this->input->post('class');
             $exam = $this->input->post('exam');
             $student = $this->input->post('student');
-          
+
             $ex = $this->cbc_tr->get_exam($exam);
 
             $data['ex'] = $this->cbc_tr->get_exam($exam);
@@ -626,18 +624,18 @@ class Trs extends Trs_Controller
             $data['class'] = $class;
             $data['term'] = $ex->term;
             $data['year'] = $ex->year;
-                      
-           if ($this->input->post('student')) {
+
+            if ($this->input->post('student')) {
                 $data['grouped_marks'] = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
 
                 $data['reports'] = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
                 $data['class'] = $st->cl->id;
-           } else{
+            } else {
                 $data['grouped_marks'] = $this->cbc_tr->fetch_marks($exam, $class);
 
                 $data['reports'] = $this->cbc_tr->fetch_marks($exam, $class);
-           }
-           
+            }
+
             $pivot_data = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
         }
 
@@ -654,13 +652,13 @@ class Trs extends Trs_Controller
     {
         $class = $this->input->post('class');
         if ($class) {
-           
+
             $students = $this->cbc_tr->get_students_by_class($class);
 
             // Prepare data to be returned as JSON
             $data = array();
             foreach ($students as $student) {
-                $data[$student->id] = $student->first_name.' '. $student->last_name; 
+                $data[$student->id] = $student->first_name . ' ' . $student->last_name;
             }
 
             echo json_encode($data);
@@ -675,7 +673,7 @@ class Trs extends Trs_Controller
         if ($class) {
 
             $cls = $this->cbc_tr->get_clsgroup($class);
-            
+
             $subids =   $this->cbc_tr->get_subids($cls->class);
 
             $ids = [];
@@ -956,7 +954,7 @@ class Trs extends Trs_Controller
             }
 
             if ($pp || $ok) {
-                redirect('cbc/trs/social_report/' .$cls);
+                redirect('cbc/trs/social_report/' . $cls);
             }
         }
     }
@@ -982,7 +980,8 @@ class Trs extends Trs_Controller
         echo json_encode($responseData);
     }
 
-    function social_print($class){
+    function social_print($class)
+    {
 
         $groups = $this->cbc_m->populate('class_groups', 'id', 'name');
         $streams = $this->cbc_m->populate('class_stream', 'id', 'name');
@@ -1010,15 +1009,14 @@ class Trs extends Trs_Controller
             $search = 1;
 
             $recs = $this->cbc_tr->check_social($student, $term, $year);
-            
         }
 
         $data['stu'] = $student;
         $data['term'] = $term;
         $data['year'] = $year;
- 
+
         $data['rec'] =  $this->cbc_tr->check_social($student, $term, $year);
- 
+
         $data['status'] = $search;
 
         $data['students'] = $this->cbc_m->get_students($class);
@@ -1028,10 +1026,9 @@ class Trs extends Trs_Controller
         $assigned = isset($this->teacher->profile->id) ? $this->trs_m->list_assigned_classes($this->teacher->profile->id) : [];
 
         $data['classes'] = $classes + $assigned;
-        
+
 
         $this->template->title('Social Behavior Report')->build('teachers/social_print', $data);
-
     }
 
 
@@ -1057,7 +1054,428 @@ class Trs extends Trs_Controller
         }
     }
 
+    //Function to generate joint reports
+    public function joint_reports()
+    {
+        $data['stud'] = $this->cbc_tr->find_student();
+        $data["exams"] = $this->cbc_tr->exams();
+        $data['threads'] = $this->cbc_tr->exam_threads();
 
-   
-   
+        if ($this->input->post()) {
+            $post = (object) $this->input->post();
+
+            $form_data = array(
+                'name' => $post->exam,
+                'term' => $post->term,
+                'year' => $post->year,
+                'created_by' => $this->user->id,
+                'created_on' => time()
+            );
+
+            $ok = $this->cbc_tr->create('cbc_exam_threads', $form_data);
+
+            if ($ok) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect("cbc/trs/joint_reports");
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                redirect("cbc/trs/joint_reports");
+            }
+        }
+
+        // $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
+        $data['subjects'] = $this->cbc_tr->populate('subjects', 'id', 'name');
+        $this->template->title('Edit Settings')->build('teachers/joint', $data);
+    }
+
+    //Function to generate Results
+    public function results($id)
+    {
+        $thread = $this->cbc_tr->find($id, 'cbc_exam_threads');
+        $exams = $this->cbc_tr->find_exams($thread->term, $thread->year);
+
+        // echo $id;
+        // echo "<pre>";
+        //     print_r($thread);
+        //     print_r($exams);
+        // echo "</pre>";
+
+        $data['thread'] = $thread;
+        $data['exams'] = $exams;
+
+        $this->template->title('View Exam Results')->build('teachers/results', $data);
+    }
+
+    //Function to Compute Marks
+    public function sync($level, $thread)
+    {
+        $exams = $this->cbc_tr->find_exams($thread->term, $thread->year);
+        $thread = $this->cbc_tr->find($thread, 'cbc_exam_threads');
+        $classtreams = $this->cbc_tr->class_group_streams($level);
+
+        //Prepare Streams 
+        $streams = [];
+
+        foreach ($classtreams as $cls) {
+            $streams[$cls->id] = $this->streams[$cls->id];
+        }
+
+
+        //Receive Send
+        if ($this->input->post()) {
+            $post = (object) $this->input->post();
+            //Get all marks
+            $marks = $this->cbc_tr->get_marks($post->level, $post->exams);
+
+            $weights = [];
+
+            foreach ($post->exams as $exkey => $ex) {
+                $weights[$ex] = $post->weight[$exkey];
+            }
+
+            $preparedmarks = $this->prepare_marks($marks, $post->exams, $weights, $post->grading, $post->operation, $post->level);
+
+            //Pass the Prepared marks for further operations
+            $furtheroperations = $this->further_operations($preparedmarks, $post->grading, $post->operation, $post->level, $thread->id);
+
+            echo "<pre>";
+            print_r($furtheroperations);
+            echo "</pre>";
+            die;
+        }
+
+        $data['streams'] = $streams;
+        $data['thread'] = $thread;
+        $data['exams'] = $exams;
+        $data['level'] = $level;
+        $data['gradings'] = $this->cbc_tr->populate('grading_system', 'id', 'title');
+
+        $this->template->title('Compute Results')->build('teachers/sync', $data);
+    }
+
+    //Function for further Operations
+    public function further_operations($preparedmarks, $grading, $operation, $level, $tid)
+    {
+        $studentresults = [];
+        $updates = 0;
+        $insertions = 0;
+
+        foreach ($preparedmarks as $st => $subjects) {
+            $subjectstotal = 0;
+            $subjectscount = 0;
+            $class = 0;
+
+            foreach ($subjects as $sbkey => $marks) {
+                $mk = (object) $marks;
+                $subjectstotal += $mk->marks;
+                $class = $mk->class;
+                $subjectscount++;
+
+                //Check Grade
+                $grade = (object) $this->cbc_tr->get_grade($grading, $mk->marks);
+
+                $form_data = array(
+                    'tid' => $tid,
+                    'combinedmarks' => $mk->marks,
+                    'involvedmarkids' => $mk->involvedmarkids,
+                    'involvedscores' => $mk->involvedscores,
+                    'involvedexams' => $mk->involvedexams,
+                    'involvedweights' => $mk->involvedweights,
+                    'operation' => $operation,
+                    'class' => $mk->class,
+                    'classgrp' => $mk->classgrp,
+                    'subject' => $sbkey,
+                    'student' => $st,
+                    'type' => $mk->type,
+                    'grade' => $grade->grade,
+                    'points' => $grade->points,
+                    'remarks' => $grade->comment
+                );
+
+                //Check marks
+                $checkmarko = $this->cbc_tr->check_marks($tid, $st, $sbkey);
+
+                if ($checkmarko) {
+                    $form_data['modified_by'] = $this->user->id;
+                    $form_data['modified_on'] = time();
+
+                    $done = $this->cbc_tr->update_with($checkmarko->id, $form_data, 'cbc_subs_included');
+
+                    if ($done) {
+                        $updates++;
+                    }
+                } else {
+                    $form_data['created_by'] = $this->user->id;
+                    $form_data['created_on'] = time();
+
+                    $ok = $this->cbc_tr->create('cbc_subs_included', $form_data);
+
+                    if ($ok) {
+                        $insertions++;
+                    }
+                }
+
+                // echo "<pre>";
+                //     print_r($preparedmarks);
+                // echo "</pre>";
+
+            }
+
+            //Prepare Students Total Marks and Averages
+
+            $studentresults[$st] = array(
+                'subjectstotal' => $subjectstotal,
+                'subjectscount' => $subjectscount,
+                'classgrp' => $level,
+                'class' => $class
+            );
+        }
+
+        //Rank Students
+        $rankedStudents = $this->rank_students($studentresults);
+
+        echo "<pre>";
+        print_r($rankedStudents);
+        echo "</pre>";
+
+        die;
+    }
+
+    //Function to Assign Group and Class Positions
+    function rank_students($students)
+    {
+        $students = $students;
+        // Step 1: Sort students by total marks in descending order
+        usort($students, function ($a, $b) {
+            return $b['subjectstotal'] <=> $a['subjectstotal'];
+        });
+
+        // Step 2: Calculate classrank for all students
+        $totalStudentsInClassGrp = count($students);
+        $lastTotal = null;
+        $classRank = 0;
+        $rankCounter = 0;
+
+        foreach ($students as &$student) {
+            $rankCounter++;
+            if ($student['subjectstotal'] !== $lastTotal) {
+                $classRank = $rankCounter;
+                $lastTotal = $student['subjectstotal'];
+            }
+            $student['classrank'] = $classRank . '/' . $totalStudentsInClassGrp;
+        }
+
+        // Step 3: Group students by class and calculate streamrank
+        $classes = [];
+
+        foreach ($students as &$student) {
+            $classes[$student['class']][] = &$student;
+        }
+
+        foreach ($classes as &$classStudents) {
+            $totalStudentsInClass = count($classStudents);
+            usort($classStudents, function ($a, $b) {
+                return $b['subjectstotal'] <=> $a['subjectstotal'];
+            });
+
+            $lastTotal = null;
+            $streamRank = 0;
+            $rankCounter = 0;
+
+            foreach ($classStudents as &$student) {
+                $rankCounter++;
+                if ($student['subjectstotal'] !== $lastTotal) {
+                    $streamRank = $rankCounter;
+                    $lastTotal = $student['subjectstotal'];
+                }
+                $student['streamrank'] = $streamRank . '/' . $totalStudentsInClass;
+            }
+        }
+
+        return $students;
+    }
+
+    //Function to compute marks
+    public function compute()
+    {
+        $post = (object) $this->input->post();
+
+        //Get all marks
+        $marks = $this->cbc_tr->get_marks($post->level, $post->exams);
+
+        $preparedmarks = $this->prepare_marks($marks, $post->exams, $post->weight, $post->grading, $post->operation, $post->level);
+
+        return $preparedmarks;
+    }
+
+
+    //Function to filter students marks
+    public function prepare_marks($marks, $exams, $weight, $grading, $operation, $level)
+    {
+        //Filter Students
+        $students = [];
+        $subjects = [];
+
+        foreach ($marks as $mark) {
+            $students[] = $mark->student;
+            $subjects[] = $mark->sub;
+        }
+
+        $filteredstudents = array_unique($students);
+        $filteredsubjects = array_unique($subjects);
+
+        //Prepare Student marks for each subject
+        $studentsubs = [];
+
+        foreach ($filteredstudents as $skey => $student) {
+            $sbs = [];
+
+            foreach ($filteredsubjects as $subject) {
+                $sbs[] = $subject;
+            }
+
+            $studentsubs[$student] = $sbs;
+        }
+
+        //Now Populate the Marks 
+        $studentmarks = [];
+
+        foreach ($studentsubs as $stu => $subs) {
+            $submarks = [];
+            $subjects = $subs;
+
+            foreach ($marks as $mk) {
+                foreach ($subjects as $subj) {
+                    if ($subj == $mk->sub && $stu == $mk->student) {
+                        $submarks[$subj][$mk->exam] = [
+                            'markid' => $mk->id,
+                            'class' => $mk->class,
+                            'classgrp' => $mk->class_grp,
+                            'exam' => $mk->exam,
+                            'type' => $mk->type,
+                            'mark' => $mk->score,
+                            'outof' => $mk->outof,
+                        ];
+                    }
+                }
+            }
+
+            $studentmarks[$stu] = $submarks;
+        }
+
+        //Combine the marks and Log
+        $combinedmarks = $this->combine_marks($studentmarks, $exams, $weight, $grading, $operation, $level);
+
+        return $combinedmarks;
+    }
+
+    //Function to calculate marks
+    public function combine_marks($marks, $exams, $weight, $grading, $operation, $level)
+    {
+        $combinedmarks = [];
+
+        foreach ($marks as $stu => $subjects) {
+            $subs = $subjects;
+            $subscores = [];
+
+            foreach ($subs as $sub => $exs) {
+                $finalscore = 0;
+                $involvedexams = [];
+                $involvedscores = [];
+                $involvedmarkids = [];
+                $involvedweights = [];
+                $class = 0;
+                $classgrp = 0;
+                $type = 0;
+                foreach ($exs as $exkey => $score) {
+                    $scr = (object) $score;
+
+                    $uzito = $weight[$exkey];
+                    $outof = $scr->outof;
+                    $marko = $scr->mark;
+
+                    //Capture Classes and Class Groups
+                    $class = $scr->class;
+                    $classgrp = $scr->classgrp;
+                    $type = $scr->type;
+
+                    //Capture Involved Marks
+                    $involvedexams[] = $scr->exam;
+                    $involvedscores[] = $scr->mark;
+                    $involvedmarkids[] = $scr->markid;
+                    $involvedweights[] = $weight[$exkey];
+
+                    $convertedmarko = round(($marko * $uzito) / $outof, 0);
+                    $finalscore += $convertedmarko;
+                }
+
+                //Determine Final Score Based on Operation
+                if ($operation == 1) {
+                    $computedscore = round($finalscore / count($exams), 0);
+                } elseif ($operation == 2) {
+                    $computedscore = $finalscore;
+                }
+
+                //Push Final Score to Marks Array for Subjects
+                $subscores[$sub] = array(
+                    'marks' => $computedscore,
+                    'involvedexams' => implode(',', $involvedexams),
+                    'involvedscores' => implode(',', $involvedscores),
+                    'involvedmarkids' => implode(',', $involvedmarkids),
+                    'involvedweights' => implode(',', $involvedweights),
+                    'class' => $class,
+                    'classgrp' => $classgrp,
+                    'type' => $type
+                );
+            }
+
+            //Push Combined Marks for subjects to Student array
+            $combinedmarks[$stu] = $subscores;
+        }
+
+
+        return $combinedmarks;
+    }
+
+
+    //Function to Edit Thread
+    public function edit_thread()
+    {
+        $post = (object) $this->input->post();
+
+        $form_data = array(
+            'name' => $post->exam,
+            'term' => $post->term,
+            'year' => $post->year
+        );
+
+        $done = $this->cbc_tr->update_with($post->tid, $form_data, 'cbc_exam_threads');
+
+        if ($done) {
+            $this->session->set_flashdata('message', array('type' => 'success', 'text' => 'Updated Successfully'));
+            redirect("cbc/trs/joint_reports");
+        } else {
+            $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+            redirect("cbc/trs/joint_reports");
+        }
+    }
+
+    public function delete_thread($id = false)
+    {
+        // $post = (object) $this->input->post();
+
+        $form_data = array(
+            'status' => 2,
+        );
+
+        $done = $this->cbc_tr->update_with($id, $form_data, 'cbc_exam_threads');
+
+        if ($done) {
+            $this->session->set_flashdata('message', array('type' => 'success', 'text' => 'Deleted Successfully'));
+            redirect("cbc/trs/joint_reports");
+        } else {
+            $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+            redirect("cbc/trs/joint_reports");
+        }
+    }
 }
