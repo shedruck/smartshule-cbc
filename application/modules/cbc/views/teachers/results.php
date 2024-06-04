@@ -28,7 +28,7 @@
                                     <td><?php echo $level ?></td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <a type="button" class="btn btn-info">Reports Forms</a>
+                                            <a type="button" href="<?php echo base_url('cbc/trs/reports/'.$key.'/'.$thread->id) ?>" class="btn btn-info">Reports Forms</a>
                                             <a type="button" class="btn btn-primary">Analyze</a>
                                             <a type="button" href="<?php echo base_url('cbc/trs/sync/'.$key.'/'.$thread->id) ?>" class="btn btn-success">Synchronize</a>
                                         </div>

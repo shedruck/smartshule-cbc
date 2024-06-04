@@ -44,7 +44,7 @@ echo   form_open_multipart(current_url(), $attributes);
                             <input type="text" name="exams[]" value="<?php echo $ex->id ?>" class="form-control d-none" id="exam_<?php echo $ex->id ?>" disabled>
                             
                             <label class="form-label">Subjects Weight <b>(<?php echo $ex->exam ?>)</b></label>
-                            <input type="text" name="weight[]" class="form-control" id="weight_<?php echo $ex->id ?>" id="input" disabled required>
+                            <input type="text" name="weight[]" class="form-control" id="weight_<?php echo $ex->id ?>" id="input" disabled >
                         </div>
                         <?php } ?>
                     </div>
@@ -52,7 +52,7 @@ echo   form_open_multipart(current_url(), $attributes);
                         <h6>Select Grading System</h6>
                         <hr>
                         <?php
-                            echo form_dropdown('grading', array('' => 'Select Grading System') + $gradings, '', ' class="form-control select" id="grading" data-placeholder="" required');
+                            echo form_dropdown('grading', array('' => 'Select Grading System') + $gradings, '', ' class="form-control select" id="grading" data-placeholder="" ');
                         ?>
                     </div>
                     <div class="col-lg-3 col-md-3 col-xl-3">
@@ -64,7 +64,7 @@ echo   form_open_multipart(current_url(), $attributes);
                                 2 => 'Summation'
                             );
 
-                            echo form_dropdown('operation', array('' => 'Select Computation') + $arithmetics, '', ' class="form-control select" id="operation" data-placeholder="" required');
+                            echo form_dropdown('operation', array('' => 'Select Computation') + $arithmetics, '', ' class="form-control select" id="operation" data-placeholder="" ');
                         ?>
                     </div>
                 </div>
