@@ -73,6 +73,9 @@
     <link href="<?php echo base_url() ?>assets/themes/teachers/toast-master/css/jquery.toast.css" rel="stylesheet">
     <script src="<?php echo base_url() ?>assets/themes/teachers/toast-master/js/jquery.toast.js"></script>
 
+    <link href="<?php echo base_url('assets/themes/admin/plugins/font-awesome/css/font-awesome.min.css'); ?>" type="text/css" rel="stylesheet" />
+    <link href="<?php echo base_url('assets/themes/admin/plugins/apexcharts/dist/apexcharts.css'); ?>" type="text/css" rel="stylesheet" />
+
     <style>
         .popover-content.note-children-container {
             display: none;
@@ -704,6 +707,9 @@
 
     <script src="<?php echo base_url() ?>assets/themes/teachers/fullcalendar/fullcalendar/dist/index.global.js"></script>
 
+    <script src="<?php echo base_url('assets/themes/admin/plugins/apexcharts/dist/apexcharts.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/themes/admin/plugins/qrcodejs/qrcode.min.js'); ?>"></script>
+
 
 </body>
 
@@ -802,6 +808,7 @@
 
         #schoolretmheader {
             display: none;
+            visibility: hidden;
         }
     }
 </style>
