@@ -42,6 +42,13 @@ $settings = $this->ion_auth->settings();
                 <!-- Report Cards Start Here -->
                 <?php 
                     if (isset($results)) {
+                        $types = array(
+                            1 => 'RUBRICS',
+                            2 => 'MARKS'
+                        );
+
+                        $exams = $this->cbc_tr->populate('cbc_threads','id','exam');
+
                         foreach ($results as $key => $result) {
                             $stu = $this->worker->get_student($result->student);
                             $paro = $this->portal_m->get_parent($stu->parent_id);
@@ -55,8 +62,7 @@ $settings = $this->ion_auth->settings();
 
 
                             $subscount = 0;
-                            $scoreoutof = 0;
-                        
+                            $scoreoutof = 0;                        
                 ?>
                 <div class="row page-break" id="SingleReportForm">
                     <div class="col-md-12">
@@ -66,21 +72,16 @@ $settings = $this->ion_auth->settings();
                             </div> -->
                             <div class="card-body p-10">
                                 <div class="row" id="headerdiv">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-xl-6">
+                                    <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4">
                                         <img src="<?php echo base_url('uploads/files/' . $settings->document); ?>" width="80" height="80" />
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-xl-6 text-right">
-                                        <h5 class="blue-text"><b><?php echo strtoupper($this->school->school) ?></b></h5>
-                                        <h6><?php echo strtoupper($this->school->postal_addr) ?></b></h6>
-                                        <h6><?php echo $this->school->tel ?></h6>
-                                        <h6><?php echo $this->school->email ?></h6>
+                                    <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4">
+                                        <h5 class="blue-text text-center"><b><?php echo strtoupper($this->school->school) ?></b></h5>
+                                        <h6 class="text-center"><?php echo strtoupper($this->school->postal_addr) ?></b></h6>
+                                        <h6 class="text-center"><?php echo $this->school->tel ?></h6>
+                                        <h6 class="text-center"><?php echo $this->school->email ?></h6>
                                     </div>
-                                </div>
-
-                                <h6 class="text-center blue-bg">ACADEMIC TRANSCRIPT FOR - <?php echo $this->classes[$result->classgrp] ?> - <?php echo $thread->name ?> - (<?php echo $thread->year ?>/Term <?php echo $thread->term ?>)</h6>
-
-                                <div class="row" id="studentsdiv">
-                                    <div class="col-md-3 col-lg-3 col-sm-3 col-xl-3">
+                                    <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4 text-right">
                                         <?php
                                         $passport = $this->admission_m->passport($stu->photo);
                                         $fake = base_url('uploads/files/member.png');
@@ -92,12 +93,17 @@ $settings = $this->ion_auth->settings();
                                         ?>
                                         <img src="<?php echo $fake ?>" alt="Student Profile" class="img-fluid img-thumbnail">
                                     </div>
+                                </div>
+
+                                <h6 class="text-center blue-bg">ACADEMIC TRANSCRIPT FOR - <?php echo $this->classes[$result->classgrp] ?> - <?php echo $thread->name ?> - (<?php echo $thread->year ?>/Term <?php echo $thread->term ?>) - <?php echo $types[$result->type] ?></h6>
+
+                                <div class="row" id="studentsdiv">
                                     <div class="col-md-3 col-lg-3 col-sm-3 col-xl-3">
                                         <h6>Name : <?php echo ucwords($stu->first_name . ' ' . $stu->last_name) ?></h6>
                                         <h6>ADM NO : <?php echo $stu->admission_number ?></h6>
                                         <h6>CLASS : <?php echo $this->streams[$stu->class] ?></h6>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-xl-6">
+                                    <div class="col-md-9 col-lg-9 col-sm-9 col-xl-9 text-right">
                                         <div id="performance_<?php echo $result->id ?>" class="graphdiv">
 
                                         </div>
@@ -127,7 +133,11 @@ $settings = $this->ion_auth->settings();
                                                     foreach ($subscores as $key => $score) {
                                                         
                                                         $subscount++;
-                                                        $scoreoutof += $score->total;
+                                                        $scoreoutof += $score->combinedmarks;
+
+                                                        echo "<pre>";
+                                                            print_r($score);
+                                                        echo "</pre>";
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $subjects[$score->subject] ?></td>
