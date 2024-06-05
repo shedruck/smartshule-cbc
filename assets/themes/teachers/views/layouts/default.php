@@ -503,7 +503,7 @@
             <div class="main-content app-content mt-0">
 
                 <!-- PAGE-HEADER -->
-                <div id="schoolretmheader" class="page-header d-flex align-items-center justify-content-between border-bottom mb-4">
+                <div id="schoolretmheader" class="page-header d-flex align-items-center justify-content-between border-bottom mb-4 hidden-print">
                     <h1 class="page-title"><?php echo $this->school->school ?></h1>
                     <div>
                         <ol class="breadcrumb">
@@ -612,7 +612,7 @@
 
 
     <!-- Scroll To Top -->
-    <div class="scrollToTop">
+    <div class="scrollToTop hidden-print">
         <span class="arrow"><i class="fa fa-angle-up fs-20"></i></span>
     </div>
     <!-- Scroll To Top -->
@@ -858,7 +858,7 @@
 
 <?php if ($message = $this->session->flashdata('message')) : ?>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $.toast({
                 heading: '<?php echo ucfirst($message['type']); ?>',
                 text: '<?php echo $message['text']; ?>',
@@ -874,3 +874,17 @@
 
 
 </html>
+
+<style>
+    @media print {
+        .hidden-print {
+            display: none !important;
+        }
+    }
+</style>
+
+<script>
+    function printPage() {
+        window.print(); // This triggers the print dialog
+    }
+</script>

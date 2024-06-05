@@ -36,9 +36,13 @@
                  <!-- End::header-link -->
              </div>
              <!-- End::header-element -->
-
-
+             
              <div class="main-header-center  d-none d-lg-block  header-link">
+                 <!-- search student -->
+
+               
+
+
                  <input type="text" class="form-control" id="typehead" placeholder="Search for results..." autocomplete="off">
                  <button class="btn pe-1"><i class="fe fe-search" aria-hidden="true"></i></button>
                  <div id="headersearch" class="header-search">
@@ -101,7 +105,7 @@
                      <div class="d-flex align-items-center">
                          <!-- Start::header-element -->
                          <!-- Start::country select collapse -->
-                         
+
                          <!-- End::country select collapse -->
 
                          <!-- Start::header-element -->
@@ -151,11 +155,11 @@
                          <!-- End::header-element -->
 
                          <!-- Start::header-element -->
-                        
+
                          <!-- End::header-element -->
 
                          <!-- Start::header-element -->
-                         
+
                          <!-- End::header-element -->
 
                          <!-- Start::header-element -->
@@ -169,7 +173,7 @@
                              </a>
                              <!-- End::header-link|dropdown-toggle -->
                              <!-- Start::main-header-dropdown -->
-                             
+
                              <!-- End::main-header-dropdown -->
                          </div>
                          <!-- End::header-element -->

@@ -1,5 +1,7 @@
 <?php
+
 $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
+
 ?>
 
 <div class="row hidden-print">
@@ -14,21 +16,21 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
         echo form_open(current_url());
 
         $selected_term = isset($term) ? $term : '';
-        $selected_class = isset($class) ? $class : '';
+        $selected_student = isset($student) ? $student : '';
         $selected_year = isset($year) ? $year : '';
         $selected_subject = isset($subject) ? $subject : '';
         ?>
         <div class="row">
           <div class="col-xl-4">
             <div class="row m-2">
-              <label class="col-md-3 form-label" for='title'>Class <span class='required'>*</span></label>
+              <label class="col-md-3 form-label" for='title'>Student <span class='required'>*</span></label>
               <div class="col-md-9">
                 <?php
-                $options = array('' => 'Select Class') + $this->streams;
+                $options = array('' => 'Select Student') + $stud;
                 $attributes = 'class="form-control js-example-basic-single" id="classDropdown"';
-                echo form_dropdown('class', $options, $selected_class, $attributes);
+                echo form_dropdown('student', $options, $selected_student, $attributes);
                 ?>
-                <?php echo form_error('class'); ?>
+                <?php echo form_error('student'); ?>
 
               </div>
             </div>
@@ -76,7 +78,7 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
                   <label class="col-md-3 form-label" for='title'>Subject <span class='required'>*</span></label>
                   <div class="col-md-9">
                     <?php
-                    $options = array('' => 'Select Subject');
+                    $options = array('' => 'Select Subject') + $subs;
                     $attributes = 'class="form-control js-example-basic-single" id="subjectDropdown"';
                     echo form_dropdown('subject', $options, $selected_subject, $attributes);
                     ?>
@@ -116,10 +118,8 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
 if ($this->input->post()) {
 
   if ($report) {
-    $total_students = count($report);
-    $current_student = 0;
     foreach ($report as $ky => $st) {
-      $current_student++;
+
 ?>
       <div class="invoice-box">
         <table cellpadding="0" cellspacing="0">
@@ -253,9 +253,6 @@ if ($this->input->post()) {
 
       </div>
 
-      <?php if ($current_student < $total_students) { ?>
-        <p class="page-break"></p>
-      <?php } ?>
 
     <?php
     }
@@ -287,14 +284,7 @@ if ($this->input->post()) {
     padding: 12px;
   }
 
-  .bg-primary {
-    background-color: #007bff;
-    color: white;
-  }
 
-  .tx-fixed-white {
-    color: white;
-  }
 
   .table-success {
     background-color: #d4edda;
@@ -326,7 +316,7 @@ if ($this->input->post()) {
   }
 
   .invoice-box {
-    max-width: 900px;
+    max-width: 850px;
     margin: auto;
     padding: 30px;
     border: 1px solid #eee;
@@ -424,10 +414,8 @@ if ($this->input->post()) {
 
   }
 
-  .page-break {
-    page-break-before: always;
-  }
 
+  /* Define a media query to show elements only on print */
   @media print {
 
     .invoice-box {
@@ -440,44 +428,10 @@ if ($this->input->post()) {
 
 
     }
-  }
+
+     }
 </style>
 
-<script>
-  $(document).ready(function() {
-    $('.js-example-basic-single').select2();
-
-    $('#classDropdown').change(function() {
-      var selectedClass = $(this).val();
-
-      if (selectedClass) {
-        $.ajax({
-          url: '<?php echo site_url('cbc/trs/fetch_subjects'); ?>',
-          type: 'POST',
-          data: {
-            class: selectedClass
-          },
-          dataType: 'json',
-          success: function(data) {
-            console.log(data);
-            var subjectDropdown = $('#subjectDropdown');
-            subjectDropdown.empty();
-            subjectDropdown.append('<option value="">Select Subject</option>');
-            $.each(data, function(key, value) {
-              subjectDropdown.append('<option value="' + key + '">' + value + '</option>');
-            });
-            subjectDropdown.trigger('change'); // Update the dropdown
-          },
-          error: function() {
-            alert('No subjects Found for the selected class.');
-          }
-        });
-      } else {
-        $('#subjectDropdown').empty().append('<option value="">Select Subject</option>').trigger('change');
-      }
-    });
-  });
-</script>
 
 
 

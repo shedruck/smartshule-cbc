@@ -9,7 +9,7 @@ $this->load->model('cbc_tr');
 
 ?>
 
-<div class="row">
+<div class="row hidden-print">
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
@@ -81,7 +81,9 @@ $this->load->model('cbc_tr');
                   <i class="fas fa-filter me-1 lh-base"></i>
                   <?php echo ($updType == 'edit') ? 'Update' : 'Filter'; ?>
                 </button>
-                <button class="btn btn-info" onclick="printInvoice(event)"> <i class=" fas fa-print"></i> Print </button>
+                <button class="btn btn-info" onclick="printPage()">
+                  <i class=" fas fa-print"></i> Print
+                </button>
               </div>
             </div>
           </div>
@@ -99,9 +101,14 @@ $this->load->model('cbc_tr');
 <?php if ($ex->type == 1) {
   if ($this->input->post()) {
     if ($grouped_marks) {
-      foreach ($grouped_marks as $ky => $st) { ?>
 
-        <div class="invoice-box">
+      $total_students = count($grouped_marks); // Count the total number of students
+      $current_student = 0; // Initialize the current student counter
+
+      foreach ($grouped_marks as $ky => $st) {
+        $current_student++; // Increment the current student counter
+?>
+        <div class="invoice-box main-content app-content mt-0">
           <table cellpadding="0" cellspacing="0">
             <tr class="top">
               <td colspan="2">
@@ -212,6 +219,9 @@ $this->load->model('cbc_tr');
           </div>
 
         </div>
+        <?php if ($current_student < $total_students) { ?>
+          <p class="page-break"></p>
+        <?php } ?>
 
       <?php }
     } else { ?>
@@ -223,11 +233,15 @@ $this->load->model('cbc_tr');
 } else {
   if ($this->input->post()) {
     if ($reports) {
-      foreach ($reports as $ky => $st) {
 
+      $total_students = count($reports);
+      $current_student = 0;
+
+      foreach ($reports as $ky => $st) {
+        $current_student++;
       ?>
         <!-- Marks report -->
-        <div class="invoice-box">
+        <div class="invoice-box main-content app-content mt-0">
           <table cellpadding="0" cellspacing="0">
             <tr class="top">
               <td colspan="2">
@@ -436,10 +450,18 @@ $this->load->model('cbc_tr');
 
             $teacher_comment = $this->cbc_tr->get_tr_remarks($ky, $exam);
             ?>
-            <h6 style="font-size:13px;"><strong>GENERAL REMARKS ON SUMMATIVE ASSESSMENT</strong></h6>
-            <p>
-            <div contenteditable="true" class="inputField dotted-underline" data-ky="<?php echo $ky; ?>" placeholder="Type remarks here..." style="max-width: 400px; width: 100%; overflow: hidden; height: auto; line-height: 1.5; border: 1px solid #ccc; padding: 5px; min-height: 24px;"></div>
-            </p>
+            <div class="row">
+              <div class="col-xl-7">
+                <h6 style="font-size:13px;"><strong>GENERAL REMARKS ON SUMMATIVE ASSESSMENT</strong></h6>
+                <p>
+                  <textarea class="inputField dotted-underline" data-ky="<?php echo $ky; ?>" placeholder="Type remarks here..." style="max-width: 400px; width: 100%; overflow: hidden; resize: none; height: auto; line-height: 1.5;"><?php echo $updated_value ?></textarea>
+                </p>
+              </div>
+              <div class="col-xl-5">
+                <h6 style="font-size:13px;"><strong>Signiture</strong></h6>
+              </div>
+
+            </div>
           </div>
 
           <div class="col-xl-12">
@@ -449,7 +471,9 @@ $this->load->model('cbc_tr');
             </p>
           </div>
         </div>
-
+        <?php if ($current_student < $total_students) { ?>
+          <p class="page-break"></p>
+        <?php } ?>
       <?php
       }
     } else {
@@ -471,7 +495,7 @@ $this->load->model('cbc_tr');
   }
 
   .invoice-box {
-    max-width: 850px;
+    max-width: 900px;
     margin: auto;
     padding: 30px;
     border: 1px solid #eee;
@@ -593,31 +617,88 @@ $this->load->model('cbc_tr');
 
   .dotted-underline:focus {
     border-bottom: 1px solid black;
-    
+
   }
 
 
   @media print {
-    body * {
-      visibility: hidden;
+    .hidden-print {
+      display: none !important;
     }
 
-    .invoice-box,
-    .invoice-box * {
-      visibility: visible;
+    .bg-primary {
+      background-color: #007bff !important;
+      color: white !important;
+    }
+
+    .tx-fixed-white {
+      color: white !important;
+      font-size: 50px;
+    }
+
+    body {
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;
+      /* Firefox */
     }
 
     .invoice-box {
-      position: relative;
+      box-shadow: none;
+      margin: 0;
+      border: none;
+      page-break-inside: avoid;
+      margin: auto;
+      min-width: 1000px;
+
+    }
+
+    .invoice-box:last-child {
+      page-break-after: auto;
+    }
+
+    .invoice-box table {
+      width: 100%;
+    }
+
+    .invoice-box .top img {
+      height: auto;
+    }
+
+    .invoice-box h4,
+    .invoice-box h6 {
+      margin: 0;
+    }
+
+    .row {
+      display: flex;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .col-xl-7 {
+      width: 70%;
+      padding-right: 10px;
+    }
+
+    .col-xl-5 {
+      width: 30%;
+      padding-left: 10px;
+    }
+
+    .page-break {
       page-break-before: always;
     }
 
-    /* Optional: Ensure the first invoice does not break before */
-    .invoice-box:first-of-type {
-      page-break-before: auto;
+    .key-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 4px double #00A5A3;
+      padding: 10px 50px;
+      width: fit-content;
+      margin: 20px auto;
+      background-color: #f9f9f9;
     }
-
-
 
   }
 </style>

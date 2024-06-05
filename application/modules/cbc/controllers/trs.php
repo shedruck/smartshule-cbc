@@ -57,8 +57,7 @@ class Trs extends Trs_Controller
     {
         $this->load->helper('form');
         $args = func_get_args();
-        // $subjects = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
-        $subjects = $this->cbc_tr->populate('subjects', 'id', 'name');
+        $subjects = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
         $su =  isset($subjects[$subject]) ? $subjects[$subject] : 'Subject';
         $data['strands'] =  $this->cbc->fetch_strands($subject);
 
@@ -355,7 +354,13 @@ class Trs extends Trs_Controller
                 }
             }
 
+
+
             if ($ok || $done) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect('cbc/trs/begin_form');
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
                 redirect('cbc/trs/begin_form');
             }
         }
@@ -467,16 +472,14 @@ class Trs extends Trs_Controller
                 $md = $this->cbc_tr->exam_update($exam, $form1, 'cbc_threads');
             }
 
-            
-                if ($md) {
-                    $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
-                    redirect("cbc/trs/manage_exams/" . $exam);
-                } else {
-                    $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
-                    redirect("cbc/trs/manage_exams/" . $exam);
-                }
 
-             
+            if ($md) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect("cbc/trs/manage_exams/" . $exam);
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                redirect("cbc/trs/manage_exams/" . $exam);
+            }
         }
     }
 
@@ -520,7 +523,7 @@ class Trs extends Trs_Controller
                 $md = $this->cbc_tr->exam_update($exam, $form1, 'cbc_threads');
             }
 
-        
+
             if ($md) {
                 $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
                 redirect("cbc/trs/manage_exams/" . $exam);
@@ -613,7 +616,7 @@ class Trs extends Trs_Controller
             $class = $this->input->post('class');
             $exam = $this->input->post('exam');
             $student = $this->input->post('student');
-          
+
             $ex = $this->cbc_tr->get_exam($exam);
 
             $data['ex'] = $this->cbc_tr->get_exam($exam);
@@ -626,18 +629,18 @@ class Trs extends Trs_Controller
             $data['class'] = $class;
             $data['term'] = $ex->term;
             $data['year'] = $ex->year;
-                      
-           if ($this->input->post('student')) {
+
+            if ($this->input->post('student')) {
                 $data['grouped_marks'] = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
 
                 $data['reports'] = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
                 $data['class'] = $st->cl->id;
-           } else{
+            } else {
                 $data['grouped_marks'] = $this->cbc_tr->fetch_marks($exam, $class);
 
                 $data['reports'] = $this->cbc_tr->fetch_marks($exam, $class);
-           }
-           
+            }
+
             $pivot_data = $this->cbc_tr->fetch_marks_by_stud($exam, $student);
         }
 
@@ -654,13 +657,13 @@ class Trs extends Trs_Controller
     {
         $class = $this->input->post('class');
         if ($class) {
-           
+
             $students = $this->cbc_tr->get_students_by_class($class);
 
             // Prepare data to be returned as JSON
             $data = array();
             foreach ($students as $student) {
-                $data[$student->id] = $student->first_name.' '. $student->last_name; 
+                $data[$student->id] = $student->first_name . ' ' . $student->last_name;
             }
 
             echo json_encode($data);
@@ -675,7 +678,7 @@ class Trs extends Trs_Controller
         if ($class) {
 
             $cls = $this->cbc_tr->get_clsgroup($class);
-            
+
             $subids =   $this->cbc_tr->get_subids($cls->class);
 
             $ids = [];
@@ -697,6 +700,33 @@ class Trs extends Trs_Controller
         }
     }
 
+
+    function get_subs($class){
+
+        if ($class) {
+
+            $cls = $this->cbc_tr->get_clsgroup($class);
+
+            $subids =   $this->cbc_tr->get_subids($cls->class);
+
+            $ids = [];
+            foreach ($subids as $key => $sub) {
+                $ids[] = $sub->subject_id;
+            }
+
+            $subjects = $this->cbc_tr->get_subjects_by_class($ids);
+
+            // Prepare data to be returned as JSON
+            $data = array();
+            foreach ($subjects as $subject) {
+                $data[$subject->id] = $subject->name;
+            }
+
+
+            return $data;
+
+    }
+    }
 
     function summ_single()
     {
@@ -777,10 +807,10 @@ class Trs extends Trs_Controller
         $data['subz'] =  $this->cbc->fetch_substrands_by_sub();
 
 
-
-        // $subids = $this->cbc_tr->get_subjects($class);
+        $data['task'] = $this->cbc_tr->get_task();
+        // $subids = $this->cbc_tr->get_formative($ass_id);
         // echo "<pre>";
-        // print_r($subids);
+        // print_r($tasks);
         // echo "<pre>";
         // die;
 
@@ -956,7 +986,7 @@ class Trs extends Trs_Controller
             }
 
             if ($pp || $ok) {
-                redirect('cbc/trs/social_report/' .$cls);
+                redirect('cbc/trs/social_report/' . $cls);
             }
         }
     }
@@ -982,7 +1012,8 @@ class Trs extends Trs_Controller
         echo json_encode($responseData);
     }
 
-    function social_print($class){
+    function social_print($class)
+    {
 
         $groups = $this->cbc_m->populate('class_groups', 'id', 'name');
         $streams = $this->cbc_m->populate('class_stream', 'id', 'name');
@@ -1010,15 +1041,14 @@ class Trs extends Trs_Controller
             $search = 1;
 
             $recs = $this->cbc_tr->check_social($student, $term, $year);
-            
         }
 
         $data['stu'] = $student;
         $data['term'] = $term;
         $data['year'] = $year;
- 
+
         $data['rec'] =  $this->cbc_tr->check_social($student, $term, $year);
- 
+
         $data['status'] = $search;
 
         $data['students'] = $this->cbc_m->get_students($class);
@@ -1028,10 +1058,9 @@ class Trs extends Trs_Controller
         $assigned = isset($this->teacher->profile->id) ? $this->trs_m->list_assigned_classes($this->teacher->profile->id) : [];
 
         $data['classes'] = $classes + $assigned;
-        
+
 
         $this->template->title('Social Behavior Report')->build('teachers/social_print', $data);
-
     }
 
 
@@ -1058,6 +1087,110 @@ class Trs extends Trs_Controller
     }
 
 
-   
-   
+    public function save_comments()
+    {
+        $input = $this->input->post('input');
+        $st = $this->input->post('ky');
+        $subject = $this->input->post('subject');
+        $assess = $this->input->post('assess');
+        $term = $this->input->post('term');
+        $year = $this->input->post('year');
+        $field = $this->input->post('field');
+
+        if ($input) {
+            if ($field === 'input') {
+                $this->cbc_tr->insert_formative_comment($input, $assess, $st, $subject);
+                $updated_value = $this->cbc_tr->get_rmk($assess, $st, $subject);
+            } else if ($field === 'comment') {
+                $this->cbc_tr->insert_tr_rmks($input, $assess, $st, $subject);
+                $updated_value = $this->cbc_tr->get_tr_rmks($assess, $st, $subject);
+            }
+
+            echo json_encode(array('updated_value' => $updated_value));
+        } else {
+            echo json_encode(array('error' => 'Missing required parameters'));
+        }
+    }
+
+
+    function single_formative($class)
+    {
+
+        $data['stud'] = $this->cbc_tr->find_student1($class);
+
+        $data['subs'] = $this->get_subs($class);
+
+       
+        if ($this->input->post()) {
+
+
+            $student = $this->input->post('student');
+            $term = $this->input->post('term');
+            $year = $this->input->post('year');
+            $subject = $this->input->post('subject');
+
+            $data['student'] = $student;
+            $data['term'] = $term;
+            $data['year'] = $year;
+            $data['subject'] = $subject;
+
+            $assess = $this->cbc_tr->get_assessp($class, $student, $term, $year, $subject);
+
+            $ass_id = [];
+
+            foreach ($assess as $kk => $ass) {
+                $ass_id[] = $ass->id;
+            }
+
+            $data['report'] = $this->cbc_tr->get_formative($ass_id);
+        }
+
+        $data['strandz'] =  $this->cbc->fetch_strands_by_sub($subject);
+
+        $data['subz'] =  $this->cbc->fetch_substrands_by_sub();
+
+
+        $data['task'] = $this->cbc_tr->get_task();
+        // $subids = $this->cbc_tr->get_formative($ass_id);
+        // echo "<pre>";
+        // print_r($tasks);
+        // echo "<pre>";
+        // die;
+
+
+        $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
+
+        $this->template->title('Formative Report')->build('teachers/single_formative', $data);
+    }
+
+
+    function formative_perstudent(){
+
+        $act = 0;
+        $this->session->unset_userdata('extrra');
+        if ($this->input->get('extras')) {
+            $act = $this->input->get('extras');
+            if ($act) {
+                $this->session->set_userdata('extrra', $act);
+            }
+        }
+
+        $data['students'] = $this->trs_m->list_my_classes($act);
+
+        $this->template->title('Formative Report')->build('teachers/formative_perstudent', $data);
+        
+    }
+
+    public function fetch()
+    {
+        $query = $this->input->post('query');
+        $data = $this->cbc_tr->search_students($query);
+        echo json_encode($data);
+    }
+
+
+    function student_view($id){
+        
+    }
+
 }

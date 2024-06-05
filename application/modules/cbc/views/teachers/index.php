@@ -1,3 +1,33 @@
+                 <style>
+                     .display-card {
+                         display: none;
+                         border: 1px solid #ccc;
+                         padding: 10px;
+                         margin-top: 20px;
+                     }
+
+                     .student-row {
+                         cursor: pointer;
+                         
+                     }
+                 </style>
+
+                 <h1>Search Students</h1>
+                 <input type="text" id="search1" placeholder="Search for students...">
+                 <button id="search-button">Search</button>
+                 <div class="card display-card" id="search-results-card">
+                     <h5>Search Results</h5>
+                     <table id="results">
+
+                         <tbody>
+                         </tbody>
+                     </table>
+                 </div>
+
+
+
+
+
                  <div class="sptb section features bg-white" id="features">
                      <div class="container">
                          <div class="row">
@@ -126,4 +156,38 @@
                              }
                          }, 1000);
                      }
+                 </script>
+
+                 <script>
+                     $(document).ready(function() {
+                         $('#search-button').click(function() {
+                             var query = $('#search1').val();
+                             $.ajax({
+                                 url: "<?php echo site_url('cbc/trs/fetch'); ?>",
+                                 method: "POST",
+                                 data: {
+                                     query: query
+                                 },
+                                 dataType: "json",
+                                 success: function(data) {
+                                     var html = '';
+                                     $.each(data, function(key, value) {
+                                         html += '<tr class="student-row" data-id="' + value.id + '">';
+                                         html += '<td>' + value.first_name + '</td>';
+                                         html += '<td>' + value.last_name + '</td>';
+                                         html += '<td>' + value.admission_number + '</td>';
+                                         html += '</tr>';
+                                     });
+                                     $('#results tbody').html(html);
+                                     $('#search-results-card').show(); // Show the card after getting results
+                                 }
+                             });
+                         });
+
+                         // Click event listener for student rows
+                         $(document).on('click', '.student-row', function() {
+                             var studentId = $(this).data('id');
+                             window.location.href = "<?php echo site_url('cbc/trs/student_view'); ?>/" + studentId; // Redirect to new controller method with student ID
+                         });
+                     });
                  </script>
