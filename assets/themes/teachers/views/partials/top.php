@@ -42,7 +42,6 @@
 
                
 
-
                  <input type="text" class="form-control" id="typehead" placeholder="Search for results..." autocomplete="off">
                  <button class="btn pe-1"><i class="fe fe-search" aria-hidden="true"></i></button>
                  <div id="headersearch" class="header-search">
