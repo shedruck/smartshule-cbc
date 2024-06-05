@@ -25,7 +25,7 @@
   exit();
   } */
 
-define('ENVIRONMENT', 'development');
+define('ENVIRONMENT', 'production');
 // define('ENVIRONMENT',($_SERVER["REMOTE_ADDR"] == '62.8.68.235') ? 'development': 'production');
 
 
