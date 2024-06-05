@@ -10,6 +10,7 @@ if ($this->input->get()) {
     $get = [];
 }
 
+
 if ($exam_type->type == 1) {
     $extype = 2;
 } else if ($exam_type->type == 2) {

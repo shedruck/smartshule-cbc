@@ -128,7 +128,7 @@ if ($this->input->get()) {
                             </div>
                             <div class="float-end d-inline-block btn-list">
                                 <button type="button" class="btn btn-secondary mb-1 d-inline-flex go_back" onclick="return confirm('Are you sure?')"><i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel</button>
-                                <button type="submit" class="btn btn-info mb-1 d-inline-flex" id="auto-disappear-save" onclick="return confirm('Are you sure?')"><i class="fe fe-check-square me-1 lh-base"></i> Save</button>
+                                <button type="submit" class="btn btn-info mb-1 d-inline-flex" id="" onclick="return confirm('Are you sure?')"><i class="fe fe-check-square me-1 lh-base"></i> Save</button>
                             </div>
                         </div>
 

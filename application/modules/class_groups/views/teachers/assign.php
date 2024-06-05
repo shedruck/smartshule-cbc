@@ -15,7 +15,7 @@
                 <thead>
                   <tr class="bg-primary">
                     <th class="tx-fixed-white">#</th>
-                    <th class="tx-fixed-white">Teacher</th>
+                    <th class="tx-fixed-white">Class</th>
                     <th class="tx-fixed-white">Class Teacher</th>
                     <th class="tx-fixed-white"> Action</th>
                   </tr>

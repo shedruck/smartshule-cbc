@@ -247,3 +247,4 @@ if ($this->input->get()) {
         width: 100%;
     }
 </style>
+

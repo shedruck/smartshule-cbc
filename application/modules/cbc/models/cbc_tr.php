@@ -191,13 +191,14 @@ class Cbc_tr extends MY_Model
                     'term' => $this->school->term,
                     'year' => $this->school->year,
                     'class' => $clas,
-                    'type' => 1
+                    'type' => 2
                 ]
             )
             ->get('subjects_assign')->result();
 
-        // $sub =  $this->populate('cbc_subjects', 'id', 'name');
-        $sub =  $this->populate('subjects', 'id', 'name');
+        $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        // $sub =  $this->populate('subjects', 'id', 'name');
+
 
         $out = [];
         foreach ($list as $p) {
@@ -238,8 +239,8 @@ class Cbc_tr extends MY_Model
             ->get('subjects_classes')
             ->result();
 
-        // $sub =  $this->populate('cbc_subjects', 'id', 'name');
-        $sub =  $this->populate('subjects', 'id', 'name');
+        $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        // $sub =  $this->populate('subjects', 'id', 'name');
 
         $out = [];
         foreach ($list as $p) {
@@ -492,6 +493,21 @@ class Cbc_tr extends MY_Model
         return $fn;
     }
 
+    function get_task()
+    {
+        $list = $this->db->get('cbc_tasks')->result();
+
+        $tasks = [];
+
+        foreach ($list as $y => $li) {
+           
+            $tasks[$li->id] = $li->name;
+        }
+        return $tasks;
+    }
+
+
+
     function wrapWords($text)
     {
         $words = explode(' ', $text);
@@ -684,6 +700,11 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $id)->order_by('id', 'DESC')->get('cbc_threads')->row();
     }
 
+    function get_exam_perclass($id, $cls)
+    {
+        return $this->db->where('id', $id)->where('class', $cls)->order_by('id', 'DESC')->get('cbc_settings')->row();
+    }
+
     function check_grading($id)
     {
         return $this->db->where('id', $id)->get('cbc_settings')->row();
@@ -857,9 +878,28 @@ class Cbc_tr extends MY_Model
         return  $myst;
     }
 
+    function find_student1($cls)
+    {
+        $this->select_all_key('admission');
+        
+        $list = $this->db->where($this->dx('class') . " ='" . $cls . "'", NULL, FALSE)->get('admission')->result();
+
+        $myst = [];
+        foreach ($list as $key => $l) {
+            $myst[$l->id] =  $l->first_name . ' ' . $l->last_name;
+        }
+
+        return  $myst;
+    }
+
     function get_assess($cls, $term, $year, $sb)
     {
         return $this->db->where('class', $cls)->where('term', $term)->where('year', $year)->where('subject', $sb)->get('cbc_assess')->result();
+    }
+
+    function get_assessp($cls, $st, $term, $year, $sb)
+    {
+        return $this->db->where('student', $st)->where('class', $cls)->where('term', $term)->where('year', $year)->where('subject', $sb)->get('cbc_assess')->result();
     }
 
     function get_formative($ids)
@@ -869,7 +909,7 @@ class Cbc_tr extends MY_Model
             return [];
         }
 
-        $query = $this->db->where_in('assess_id', $ids)->where('status', 1)->get('cbc_assess_tasks');
+        $query = $this->db->where_in('assess_id', $ids)->where('status', 1)->order_by('strand', 'ASC')->order_by('sub_strand', 'ASC')->get('cbc_assess_tasks');
 
         if ($query->num_rows() > 0) {
             $results = $query->result();
@@ -1055,5 +1095,74 @@ class Cbc_tr extends MY_Model
         return $result ? $result->tr_remarks : null;
     }
 
+
+    public function insert_formative_comment($input, $ass, $st, $sub)
+    {
+
+        $data = array(
+            'gn_remarks' => $input
+        );
+        $this->db->where('assess_id', $ass);
+        $this->db->where('student', $st);
+        $this->db->where('subject', $sub);
+        $result = $this->db->update('cbc_assess_tasks', $data);
+        return $result;
+    }
+
+    public function get_rmk($ass, $st, $sub)
+    {
+        $this->db->select('gn_remarks');
+        $this->db->where('student', $st);
+        $this->db->where('assess_id', $ass);
+        $this->db->where('subject', $sub);
+        $query = $this->db->get('cbc_assess_tasks');
+        $result = $query->row();
+
+        return $result ? $result->gn_remarks : null;
+    }
+
+    public function insert_tr_rmks($input, $ass, $st, $sub)
+    {
+
+        $data = array(
+            'tr_remarks' => $input
+        );
+        $this->db->where('assess_id', $ass);
+        $this->db->where('student', $st);
+        $this->db->where('subject', $sub);
+        $result = $this->db->update('cbc_assess_tasks', $data);
+        return $result;
+    }
+    public function get_tr_rmks($ass, $st, $sub)
+    {
+        $this->db->select('tr_remarks');
+        $this->db->where('student', $st);
+        $this->db->where('assess_id', $ass);
+        $this->db->where('subject', $sub);
+        $query = $this->db->get('cbc_assess_tasks');
+        $result = $query->row();
+
+        return $result ? $result->tr_remarks : null;
+    }
+
+
+    // search for students
+
+
+    public function search_students($query)
+    {
+        $this->select_all_key('admission');
+
+        $this->db->like('CONVERT(' . $this->dx('admission.first_name') . " USING 'latin1') ", $query, 'both', FALSE);
+        $this->db->or_like('CONVERT(' . $this->dx('admission.last_name') . " USING 'latin1') ", $query, 'both', FALSE);
+        $this->db->or_like('CONVERT(' . $this->dx('admission.admission_number') . " USING 'latin1') ", $query, 'both', FALSE);
+        $this->db->or_like('CONVERT(CONCAT(' . $this->dx('admission.first_name') . '," ",' . $this->dx('admission.last_name') . ')' . " USING 'latin1') ", $query, 'both', FALSE);
+        $query = $this->db->get('admission');
+        return $query->result_array();
+    }
+    
+
+   
+   
 
 }

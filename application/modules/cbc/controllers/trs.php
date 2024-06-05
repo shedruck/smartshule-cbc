@@ -59,8 +59,7 @@ class Trs extends Trs_Controller
     {
         $this->load->helper('form');
         $args = func_get_args();
-        // $subjects = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
-        $subjects = $this->cbc_tr->populate('subjects', 'id', 'name');
+        $subjects = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
         $su =  isset($subjects[$subject]) ? $subjects[$subject] : 'Subject';
         $data['strands'] =  $this->cbc->fetch_strands($subject);
 
@@ -69,7 +68,7 @@ class Trs extends Trs_Controller
         $data['class'] = isset($this->streams[$class]) ? $this->streams[$class] : '';
 
 
-        $data['exam_type'] = $this->cbc_tr->get_exam($exam);
+        $data['exam_type'] = $this->cbc_tr->get_exam_perclass($exam, $class);
 
         if ($exam) {
             $students = $this->cbc_tr->get_students($class);
@@ -357,7 +356,13 @@ class Trs extends Trs_Controller
                 }
             }
 
+
+
             if ($ok || $done) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect('cbc/trs/begin_form');
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
                 redirect('cbc/trs/begin_form');
             }
         }
@@ -469,14 +474,16 @@ class Trs extends Trs_Controller
                 $md = $this->cbc_tr->exam_update($exam, $form1, 'cbc_threads');
             }
 
+            
+                if ($md) {
+                    $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                    redirect("cbc/trs/manage_exams/" . $exam);
+                } else {
+                    $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                    redirect("cbc/trs/manage_exams/" . $exam);
+                }
 
-            if ($md) {
-                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
-                redirect("cbc/trs/manage_exams/" . $exam);
-            } else {
-                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
-                redirect("cbc/trs/manage_exams/" . $exam);
-            }
+             
         }
     }
 
@@ -647,7 +654,7 @@ class Trs extends Trs_Controller
         // die;
 
         $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
-        $this->template->title('Edit Settings')->build('teachers/bulk_sum', $data);
+        $this->template->title('Generate Reports')->build('teachers/bulk_sum', $data);
     }
 
     public function fetch_students()
@@ -697,6 +704,33 @@ class Trs extends Trs_Controller
         }
     }
 
+
+    function get_subs($class){
+
+        if ($class) {
+
+            $cls = $this->cbc_tr->get_clsgroup($class);
+
+            $subids =   $this->cbc_tr->get_subids($cls->class);
+
+            $ids = [];
+            foreach ($subids as $key => $sub) {
+                $ids[] = $sub->subject_id;
+            }
+
+            $subjects = $this->cbc_tr->get_subjects_by_class($ids);
+
+            // Prepare data to be returned as JSON
+            $data = array();
+            foreach ($subjects as $subject) {
+                $data[$subject->id] = $subject->name;
+            }
+
+
+            return $data;
+
+    }
+    }
 
     function summ_single()
     {
@@ -777,10 +811,10 @@ class Trs extends Trs_Controller
         $data['subz'] =  $this->cbc->fetch_substrands_by_sub();
 
 
-
-        // $subids = $this->cbc_tr->get_subjects($class);
+        $data['task'] = $this->cbc_tr->get_task();
+        // $subids = $this->cbc_tr->get_formative($ass_id);
         // echo "<pre>";
-        // print_r($subids);
+        // print_r($tasks);
         // echo "<pre>";
         // die;
 

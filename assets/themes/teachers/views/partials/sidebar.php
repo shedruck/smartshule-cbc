@@ -191,7 +191,11 @@
                                     <li class="slide <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">
                                         <a href="<?php echo base_url('cbc/trs/bulk_formative') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">Formative Reports Per Class</a>
                                     </li>
-                                   
+
+                                    <li class="slide <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">
+                                        <a href="<?php echo base_url('cbc/trs/formative_perstudent') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">Formative Reports Per Student</a>
+                                    </li>
+
                                     <li class="slide <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">
                                         <a href="<?php echo base_url('cbc/trs/generate_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">Summative Reports Per Exam</a>
                                     </li>
