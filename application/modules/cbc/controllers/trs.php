@@ -11,6 +11,7 @@ class Trs extends Trs_Controller
         $this->load->model('cbc_m');
         $this->load->model('cbc_tr');
         $this->load->model('teachers/teachers_m');
+        $this->load->model('exams/exams_m');
         if (!$this->ion_auth->logged_in()) {
             redirect('/login');
         }

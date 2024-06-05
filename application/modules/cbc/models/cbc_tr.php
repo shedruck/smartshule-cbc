@@ -386,6 +386,16 @@ class Cbc_tr extends MY_Model
                 ->row();
      }
 
+     //The last four performances
+     function last_four_scores($student) {
+        return $this->db
+                    ->where('student',$student)
+                    ->order_by('tid','ASC')
+                    ->limit(4)
+                    ->get('cbc_final_results')
+                    ->result();
+     }
+
      function teacher_assigned($class,$sub) {
         return $this->db
                     ->where('class',$class)
@@ -393,6 +403,16 @@ class Cbc_tr extends MY_Model
                     ->get('subjects_assign')
                     ->row();
      }
+
+     function subscores($tid,$classgrp,$sub) {
+        return $this->db
+                    ->where(array('tid' => $tid))
+                    ->where(array('classgrp' => $classgrp))
+                    ->where(array('subject' => $sub))
+                    ->get('cbc_subs_included')
+                    ->result();
+     }
+
 
 
     function fetch_strands($subject)
