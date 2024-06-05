@@ -1,4 +1,4 @@
-                 <style>
+                 <!-- <style>
                      .display-card {
                          display: none;
                          border: 1px solid #ccc;
@@ -22,7 +22,7 @@
                          <tbody>
                          </tbody>
                      </table>
-                 </div>
+                 </div> -->
 
 
 
