@@ -51,6 +51,9 @@ $settings = $this->ion_auth->settings();
 
                             $subscores = $this->cbc_tr->student_scores($thread->id,$result->student);
 
+                            $clssubjects = $this->exams_m->get_subjects($result->class,$thread->term);
+
+
                             $subscount = 0;
                             $scoreoutof = 0;
                         
@@ -107,8 +110,8 @@ $settings = $this->ion_auth->settings();
 
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="col-lg-12 col-md-12">
-                                        <table class="table" cellpadding="0" cellspacing="0" width="100%">
-                                            <thead class="bg-light">
+                                        <table class="table border table-bordered" cellpadding="0" cellspacing="0" width="100%">
+                                            <thead class="table-success">
                                                 <th>SUBJECTS</th>
                                                 <th>SCORE</th>
                                                 <th>DEV.</th>
@@ -339,4 +342,195 @@ $(document).ready(function(){
 
     <?php } ?>
 });
+</script>
+<script>
+    $(document).ready(function(){
+        <?php 
+            foreach ($results as $key => $result) {
+                $stu = $this->worker->get_student($result->student);
+                //Prepare Class Means
+                $submeans = [];
+                foreach ($clssubjects as $subkey => $subdetails) {
+                    $submarks = $this->cbc_tr->subscores($thread->id,$result->classgrp,$subkey); //Whole Class
+                    $stusubscore = $this->cbc_tr->compare_score($thread->id,$result->student,$subkey); //Student Score
+
+                    $scoredmarks = [];
+
+                    foreach ($submarks as $submark) {
+                        $scoredmarks[] = $submark->combinedmarks;
+                    }
+
+                    $submeans[$subkey] = array(
+                        'title' => $subdetails['title'],
+                        'meanscores' => !empty($scoredmarks) ? round(array_sum($scoredmarks) / count($submarks)) : 0,
+                        'studentscore' => $stusubscore->combinedmarks ? $stusubscore->combinedmarks : 0
+                    );
+                }
+
+                
+        ?>
+
+        var container = document.querySelector("#performance_<?php echo $result->id ?>");
+        var containerWidth = container.clientWidth;
+        var containerHeight = container.offsetHeight;
+
+        var options = {
+          series: [{
+          name: "<?php echo $this->classes[$result->classgrp] ?>",
+          type: 'column',
+          data: [
+            <?php foreach ($submeans as $sub => $details) { 
+                echo $details['meanscores'].','    
+            ?>
+
+            <?php } ?>
+            ]
+        }, {
+          name: "<?php echo $stu->first_name ?>",
+          type: "line",
+          data: [
+            <?php foreach ($submeans as $sub => $details) { 
+                echo $details['studentscore'].','    
+            ?>
+
+            <?php } ?>
+        ]
+        }],
+          chart: {
+            height: 200,
+            width: '80%',
+            type: "line",
+            zoom : {
+                enabled: false
+            }
+        },
+        stroke: {
+          width: [0, 2]
+        },
+        title: {
+          text: "<?php echo $stu->first_name ?> vs <?php echo $this->classes[$result->class_group] ?> Perfomance subjectwise"
+        },
+        dataLabels: {
+          enabled: true,
+          enabledOnSeries: [1]
+        },
+        // labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
+        labels: [
+            <?php foreach ($submeans as $sub => $details) { 
+                echo '"'.$details['title'].'",'    
+            ?>
+
+            <?php } ?>
+        ],
+        xaxis: {
+          type: 'category',
+        },
+        yaxis: [{
+          title: {
+            text: "<?php echo $this->classes[$result->classgrp] ?> Means",
+          },
+         
+        }, 
+            {
+            opposite: true,
+            title: {
+                text: "<?php echo $stu->first_name ?> Scores"
+            }
+            }
+        ]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#performance_<?php echo $result->id ?>"), options);
+        chart.render();
+
+        //Area Chart
+        <?php } ?>
+
+        //Plot Periodic Performance
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        <?php
+        foreach ($results as $key => $result) {
+            $perfomances = $this->cbc_tr->last_four_scores($result->student);
+
+            $perfdata = [];
+            foreach ($perfomances as $perf) {
+                // $term = $this->igcse_m->find($perf->tid);
+                $perfdata[] = array(
+                    'mean_mark' => $perf->average_marks,
+                    'class' => $this->classes[$perf->classgrp] . ' T' . $thread->term . ', ' . $thread->year
+                );
+            }
+        ?>
+
+            var options = {
+                series: [{
+                    name: 'Mean Score',
+                    data: [
+                        <?php
+                        foreach ($perfdata as $yk => $pdata) {
+                            echo $pdata['mean_mark'] . ','
+                        ?>
+
+                        <?php } ?>
+                    ]
+                }, ],
+                chart: {
+                    type: 'bar',
+                    height: 150,
+                    width: '65%',
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: [
+                        <?php
+                        foreach ($perfdata as $yk => $pdata) {
+                            echo '"' . $pdata['class'] . '",'
+                        ?>
+
+                        <?php } ?>
+                    ],
+                },
+                yaxis: {
+                    title: {
+                        text: ''
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return "" + val + ""
+                        }
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#performancewithtime_<?php echo $result->id ?>"), options);
+            chart.render();
+
+            //Area Chart
+        <?php } ?>
+
+        //Plot Periodic Performance
+    });
 </script>
