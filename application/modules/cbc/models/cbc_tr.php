@@ -1146,23 +1146,7 @@ class Cbc_tr extends MY_Model
     }
 
 
-    // search for students
-
-
-    public function search_students($query)
-    {
-        $this->select_all_key('admission');
-
-        $this->db->like('CONVERT(' . $this->dx('admission.first_name') . " USING 'latin1') ", $query, 'both', FALSE);
-        $this->db->or_like('CONVERT(' . $this->dx('admission.last_name') . " USING 'latin1') ", $query, 'both', FALSE);
-        $this->db->or_like('CONVERT(' . $this->dx('admission.admission_number') . " USING 'latin1') ", $query, 'both', FALSE);
-        $this->db->or_like('CONVERT(CONCAT(' . $this->dx('admission.first_name') . '," ",' . $this->dx('admission.last_name') . ')' . " USING 'latin1') ", $query, 'both', FALSE);
-        $query = $this->db->get('admission');
-        return $query->result_array();
-    }
     
-
-   
    
 
 }

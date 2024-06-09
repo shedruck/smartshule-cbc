@@ -121,6 +121,8 @@ class Trs extends Trs_Controller
                           ->build('teachers/view', $data);
     }
 
+   
+
     private function _rep_validation()
     {
         $config = array(

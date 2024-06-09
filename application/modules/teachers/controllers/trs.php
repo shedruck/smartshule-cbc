@@ -231,5 +231,38 @@ class Trs extends Trs_Controller
   }
 
 
+  public function fetch()
+  {
+    $query = $this->input->post('query');
+    $data = $this->trs_m->search_students($query);
+    echo json_encode($data);
+  }
+
+  function student_view($id)
+  {
+
+    $data['stu'] = $this->worker->get_student($id);
+    $stu = $this->worker->get_student($id);
+
+    $data['sibling'] = $this->trs_m->fetch_sibling($stu->parent_id);
+
+    $sibling = $this->trs_m->fetch_sibling($stu->parent_id);
+
+    $data['projects'] = $this->trs_m->get_projects($id);
+
+    $data['subjects'] = $this->trs_m->populate('cbc_subjects', 'id', 'name');
+
+    $att = $this->trs_m->get_attendance($stu->cl->id);
+
+    $data['att_total'] = $this->trs_m->get_atte_totals($att, $id);
+
+    // echo "<pre>";
+    // print_r($att_total);
+    // echo "<pre>";
+    // die;
+
+    $this->template->title('Student View')->build('trs/student', $data);
+  }
+
 
 }

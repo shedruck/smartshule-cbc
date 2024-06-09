@@ -7,8 +7,12 @@ $rankings = array('1' => 'BE', '2' => 'AE', '3' => 'ME', '4' => 'EE');
 <div class="row hidden-print">
   <div class="col-md-12">
     <div class="card">
-      <div class="card-header">
+      
+      <div class="card-header d-flex justify-content-between align-items-center">
         <h6><b>CBC Formative Report</b></h6>
+        <div>
+          <a class="btn btn-sm btn-secondary mr-2" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
+        </div>
       </div>
       <div class="card-body">
         <?php
@@ -429,7 +433,7 @@ if ($this->input->post()) {
 
     }
 
-     }
+  }
 </style>
 
 

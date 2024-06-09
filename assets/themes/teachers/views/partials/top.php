@@ -1,3 +1,48 @@
+ <style>
+     .main-header-center {
+         position: relative;
+         padding: 10px;
+     }
+
+     .form-control,
+     .btn {
+         display: inline-block;
+         vertical-align: middle;
+     }
+
+     .display-card {
+         display: none;
+         border: 1px solid #ccc;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         /* Add a subtle shadow */
+         padding: 10px;
+         position: absolute;
+         top: 60px;
+         /* Adjust based on your design */
+         z-index: 1000;
+         /* Ensure the card stays on top */
+         background-color: white;
+         /* Ensure the card has a background */
+         width: calc(100% - 20px);
+         /* Ensure the card has the same width as the input field */
+     }
+
+     .student-row {
+         cursor: pointer;
+         /* Change cursor to pointer on hover */
+     }
+
+
+     .card-header {
+         font-weight: bold;
+         margin-bottom: 10px;
+     }
+
+     #results td {
+         padding: 3px 4px;
+     }
+ </style>
+
  <header class="app-header header sticky">
 
      <!-- Start::main-header-container -->
@@ -36,55 +81,18 @@
                  <!-- End::header-link -->
              </div>
              <!-- End::header-element -->
-             
-             <div class="main-header-center  d-none d-lg-block  header-link">
+
+             <div class="main-header-center d-none d-lg-block header-link">
                  <!-- search student -->
+                 <input type="text" class="form-control" id="search1" placeholder="Search for students..." autocomplete="off">
+                 <button class="btn pe-1" id="search-button"><i class="fe fe-search" aria-hidden="true"></i></button>
 
-               
-
-                 <input type="text" class="form-control" id="typehead" placeholder="Search for results..." autocomplete="off">
-                 <button class="btn pe-1"><i class="fe fe-search" aria-hidden="true"></i></button>
-                 <div id="headersearch" class="header-search">
-                     <div class="p-3">
-                         <div class="">
-                             <p class="fw-semibold text-muted mb-2 fs-13">Recent Searches</p>
-                             <div class="ps-2">
-                                 <a href="javascript:void(0);" class="search-tags"><i class="fe fe-search me-2"></i>People<span></span></a>
-                                 <a href="javascript:void(0);" class="search-tags"><i class="fe fe-search me-2"></i>Pages<span></span></a>
-                                 <a href="javascript:void(0);" class="search-tags"><i class="fe fe-search me-2"></i>Articles<span></span></a>
-                             </div>
-                         </div>
-                         <div class="mt-3">
-                             <p class="fw-semibold text-muted mb-2 fs-13">Apps and pages</p>
-                             <ul class="ps-2">
-                                 <li class="p-1 d-flex align-items-center text-muted mb-2 search-app">
-                                     <a href="calendar2.html"><span><i class='bi bi-calendar me-2 fs-14 bg-primary-transparent avatar rounded-circle '></i>Calendar</span></a>
-                                 </li>
-                                 <li class="p-1 d-flex align-items-center text-muted mb-2 search-app">
-                                     <a href="email-inbox.html"><span><i class='bi bi-envelope me-2 fs-14 bg-primary-transparent avatar rounded-circle'></i>Mail</span></a>
-                                 </li>
-                                 <li class="p-1 d-flex align-items-center text-muted mb-2 search-app">
-                                     <a href="buttons.html"><span><i class='bi bi-dice-1 me-2 fs-14 bg-primary-transparent avatar rounded-circle '></i>Buttons</span></a>
-                                 </li>
-                             </ul>
-                         </div>
-                         <div class="mt-3">
-                             <p class="fw-semibold text-muted mb-2 fs-13">Links</p>
-                             <ul class="ps-2">
-                                 <li class="p-1 align-items-center text-muted mb-1 search-app">
-                                     <a href="javascript:void(0);" class="text-primary"><u>http://spruko/html/spruko.com</u></a>
-                                 </li>
-                                 <li class="p-1 align-items-center text-muted mb-1 search-app">
-                                     <a href="javascript:void(0);" class="text-primary"><u>http://spruko/demo/spruko.com</u></a>
-                                 </li>
-                             </ul>
-                         </div>
-                     </div>
-                     <div class="py-3 border-top px-0">
-                         <div class="text-center">
-                             <a href="javascript:void(0);" class="text-primary text-decoration-underline fs-15">View all</a>
-                         </div>
-                     </div>
+                 <div class="card display-card" id="search-results-card">
+                     <h6><span class="text-primary">Search Results</span></h6>
+                     <table id="results">
+                         <tbody>
+                         </tbody>
+                     </table>
                  </div>
              </div>
              <!-- header search -->
@@ -255,3 +263,38 @@
      <!-- End::main-header-container -->
 
  </header>
+
+ <script>
+     $(document).ready(function() {
+         $('#search-button').click(function() {
+             var query = $('#search1').val();
+             $.ajax({
+                 url: "<?php echo site_url('teachers/trs/fetch'); ?>",
+                 method: "POST",
+                 data: {
+                     query: query
+                 },
+                 dataType: "json",
+                 success: function(data) {
+                     var html = '';
+                     $.each(data, function(key, value) {
+                         html += '<tr class="student-row" data-id="' + value.id + '">';
+                         html += '<td>' + value.first_name + '</td>';
+                         html += '<td>' + value.last_name + '</td>';
+                         html += '<td>' + value.admission_number + '</td>';
+                         html += '</tr>';
+                     });
+                     $('#results tbody').html(html);
+                     $('#search-results-card').width($('#search1').outerWidth()); // Set the card width to match the input field
+                     $('#search-results-card').show(); // Show the card after getting results
+                 }
+             });
+         });
+
+         // Click event listener for student rows
+         $(document).on('click', '.student-row', function() {
+             var studentId = $(this).data('id');
+             window.location.href = "<?php echo site_url('teachers/trs/student_view'); ?>/" + studentId; // Redirect to new controller method with student ID
+         });
+     });
+ </script>

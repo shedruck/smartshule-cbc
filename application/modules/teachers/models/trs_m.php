@@ -143,4 +143,103 @@ class Trs_m extends MY_Model
       ->result();
   }
 
+  // search for students
+
+
+  public function search_students($query)
+  {
+    $this->select_all_key('admission');
+
+    $this->db->like('CONVERT(' . $this->dx('admission.first_name') . " USING 'latin1') ", $query, 'both', FALSE);
+    $this->db->or_like('CONVERT(' . $this->dx('admission.last_name') . " USING 'latin1') ", $query, 'both', FALSE);
+    $this->db->or_like('CONVERT(' . $this->dx('admission.admission_number') . " USING 'latin1') ", $query, 'both', FALSE);
+    $this->db->or_like('CONVERT(CONCAT(' . $this->dx('admission.first_name') . '," ",' . $this->dx('admission.last_name') . ')' . " USING 'latin1') ", $query, 'both', FALSE);
+    $query = $this->db->get('admission');
+    return $query->result_array();
+  }
+
+
+  function findtr($id)
+  {
+    $this->select_all_key('users');
+    $query = $this->db->get_where('users', array('id' => $id));
+    return $query->row();
+  }
+
+  function get_stpassport($ph){
+    $this->db->where('id', $ph);
+    $query = $this->db->get('passports');
+    return $query->row();
+  }
+
+
+  function get_prpassport($ph)
+  {
+    $this->db->where('id', $ph);
+    $query = $this->db->get('parents_passports');
+    return $query->row();
+  }
+
+  function fetch_sibling($id){
+
+    $this->select_all_key('admission');
+    $this->db->where($this->dx('status') . ' = 1', NULL, FALSE);
+    $this->db->where($this->dx('parent_id') .' =' . $id, NULL, FALSE);
+    $query = $this->db->get('admission');
+    return $query->result();
+  }
+  
+
+  function get_projects($st){
+    $this->db->where('student', $st);
+    $query = $this->db->get('students_projects');
+    return $query->result();
+  }
+
+  function populate($table, $id, $name)
+  {
+    $rs = $this->db->select('*')->order_by($id)->get($table)->result();
+
+    $options = [];
+    foreach ($rs as $r) {
+      $options[$r->{$id}] = $r->{$name};
+    }
+    return $options;
+  }
+
+  function get_attendance($cls){
+    $this->db->where('class_id', $cls);
+    $this->db->where('term', $this->school->term);
+    $this->db->where('year', $this->school->year);
+    $query = $this->db->get('class_attendance')->result();
+
+    $myids=[];
+
+    foreach ($query as $key => $q) {
+      $myids[] = $q->id;
+    }
+   
+    return $myids;
+  }
+
+function get_atte_totals($ids, $stud) {
+    if (empty($ids)) {
+        return ['present_count' => 0, 'absent_count' => 0];
+    }
+
+    $this->db->select('
+        SUM(CASE WHEN status = "present" THEN 1 ELSE 0 END) as present_count,
+        SUM(CASE WHEN status = "absent" THEN 1 ELSE 0 END) as absent_count
+    ');
+    $this->db->where_in('attendance_id', $ids);
+    $this->db->where('student', $stud);
+    $query = $this->db->get('class_attendance_list')->row();
+
+    return [
+        'present_count' => $query->present_count,
+        'absent_count' => $query->absent_count
+    ];
+}
+
+
 }

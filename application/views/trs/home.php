@@ -255,7 +255,7 @@
         </div>
       </div>
 
-      <div class="col-xxl-2 col-xl-5 col-sm-4">
+      <div class="col-xxl-5 col-xl-5 col-sm-12">
         <div class="card">
           <div class="card-status bg-green br-te-7 br-ts-7"></div>
           <div class="card-header">

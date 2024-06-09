@@ -5,7 +5,6 @@
         <h6 class="mb-0"><b>SOCIAL BEHAVIOR REPORT</b></h6>
         <div>
           <a class="btn btn-sm btn-secondary mr-2" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
-
         </div>
       </div>
 

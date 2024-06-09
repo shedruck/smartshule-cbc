@@ -46,6 +46,15 @@ class Trs extends Trs_Controller
         echo json_encode(['load' => $payload, 'class' => $cls]);
     }
 
+    function get_subjects_form($c)
+    {
+        $payload = $this->cbc_tr->find_allocation($c);
+
+        $cls = isset($this->streams[$c]) ? $this->streams[$c]  : '';
+        echo json_encode(['load' => $payload, 'class' => $cls]);
+    }
+
+
     function get_subjects_for_summ($c)
     {
         $payload = $this->cbc_tr->find_allocation2($c);
@@ -67,8 +76,11 @@ class Trs extends Trs_Controller
         $data['subject'] = $su;
         $data['class'] = isset($this->streams[$class]) ? $this->streams[$class] : '';
 
+        $classgrp = $this->cbc_tr->get_cls_group($class);
 
-        $data['exam_type'] = $this->cbc_tr->get_exam_perclass($exam, $class);
+        $data['exam_type'] = $this->cbc_tr->get_exam_perclass($exam, $classgrp->class);
+
+      
 
         if ($exam) {
             $students = $this->cbc_tr->get_students($class);
@@ -780,6 +792,51 @@ class Trs extends Trs_Controller
 
 
     function bulk_formative()
+    {
+
+        if ($this->input->post()) {
+
+
+            $class = $this->input->post('class');
+            $term = $this->input->post('term');
+            $year = $this->input->post('year');
+            $subject = $this->input->post('subject');
+
+            $data['class'] = $class;
+            $data['term'] = $term;
+            $data['year'] = $year;
+            $data['subject'] = $subject;
+
+            $assess = $this->cbc_tr->get_assess($class, $term, $year, $subject);
+
+            $ass_id = [];
+
+            foreach ($assess as $kk => $ass) {
+                $ass_id[] = $ass->id;
+            }
+
+            $data['report'] = $this->cbc_tr->get_formative($ass_id);
+        }
+
+        $data['strandz'] =  $this->cbc->fetch_strands_by_sub($subject);
+
+        $data['subz'] =  $this->cbc->fetch_substrands_by_sub();
+
+
+        $data['task'] = $this->cbc_tr->get_task();
+        // $subids = $this->cbc_tr->get_formative($ass_id);
+        // echo "<pre>";
+        // print_r($tasks);
+        // echo "<pre>";
+        // die;
+
+
+        $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
+
+        $this->template->title('Formative Report')->build('teachers/bulk_formative', $data);
+    }
+
+    function formative_perstudent()
     {
 
         if ($this->input->post()) {
@@ -1672,4 +1729,7 @@ class Trs extends Trs_Controller
             redirect("cbc/trs/joint_reports");
         }
     }
+
+
+   
 }
