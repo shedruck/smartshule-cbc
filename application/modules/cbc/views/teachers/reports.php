@@ -1,5 +1,43 @@
 <?php 
 $settings = $this->ion_auth->settings(); 
+
+if (isset($results)) {
+$exs = [];
+foreach ($results as $res) {
+    $subscores = $this->cbc_tr->student_scores($thread->id,$res->student);
+    
+    $masomo = [];
+    foreach ($subscores as $key => $sub) {
+        $ex = explode(',',$sub->involvedexams);
+        $masomo[$sub->subject] = array(
+            'exams' => $ex,
+            'scores' => explode(',',$sub->involvedscores),
+            'weights' => explode(',',$sub->involvedweights) 
+        );
+    }
+
+    $exs[$res->student] = $masomo;
+}
+
+    $newresults = [];
+    $mitihani = $this->cbc_m->populate('cbc_exam_threads','id','name');
+
+    foreach ($exs as $studentId => $masomo) {
+        foreach ($masomo as $subjectId => $details) {
+            foreach ($details['exams'] as $examIndex => $examId) {
+                $newresults[$studentId][$examId] = isset($newresults[$studentId][$examId]) 
+                    ? $newresults[$studentId][$examId] + $details['scores'][$examIndex] 
+                    : $details['scores'][$examIndex];
+            }
+        }
+    }
+
+    // echo "<pre>";
+    //     print_r($newresults);
+    // echo "</pre>";
+}
+// die;
+
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -66,7 +104,7 @@ $settings = $this->ion_auth->settings();
                 ?>
                 <div class="row page-break" id="SingleReportForm">
                     <div class="col-md-12">
-                        <div class="card">
+                        <!-- <div class="card resultslip-card"> -->
                             <!-- <div class="card-header">
 
                             </div> -->
@@ -135,9 +173,9 @@ $settings = $this->ion_auth->settings();
                                                         $subscount++;
                                                         $scoreoutof += $score->combinedmarks;
 
-                                                        echo "<pre>";
-                                                            print_r($score);
-                                                        echo "</pre>";
+                                                        // echo "<pre>";
+                                                        //     print_r($score);
+                                                        // echo "</pre>";
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $subjects[$score->subject] ?></td>
@@ -191,18 +229,27 @@ $settings = $this->ion_auth->settings();
                                         <div id="performancewithtime_<?php echo $result->id ?>">
 
                                         </div>
-                                        
-                                        <div style="display: flex;">
-                                        <div style="width: 60%;">
-                                            <h6 class="text-center">Scan to Access your Smartshule Portal to view more details of your child.</h6>
-                                            <h6 class="text-center"><b>Username : <u><?php echo $userparo->email ?></u></b></h6>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
+                                        <h6><b>Exams Comparison</b></h6>
+                                        <div id="examscomparison_<?php echo $result->student ?>">
+
                                         </div>
-                                        <div style="width: 40%">
-                                            <input style="display: none;" type="text" name="loginlink" id="loginlink_<?php echo $result->id ?>" value="<?php echo base_url('login') ?>">
-                                            <div id="qrcode_<?php echo $result->id ?>" class="qrcode" style="width: 150px;">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
+                                        <div style="display: flex;">
+                                            <div style="width: 60%;">
+                                                <h6 class="text-center">Scan to Access your Smartshule Portal to view more details of your child.</h6>
+                                                <h6 class="text-center"><b>Username : <u><?php echo $userparo->email ?></u></b></h6>
+                                            </div>
+                                            <div style="width: 40%">
+                                                <input style="display: none;" type="text" name="loginlink" id="loginlink_<?php echo $result->id ?>" value="<?php echo base_url('login') ?>">
+                                                <div id="qrcode_<?php echo $result->id ?>" class="qrcode" style="width: 150px;">
                                                 
                                             </div>
-                                        </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
@@ -235,8 +282,9 @@ $settings = $this->ion_auth->settings();
                             <!-- <div class="card-footer text-end">
 
                             </div> -->
-                        </div>
+                        <!-- </div> -->
                     </div>
+                    <!-- <div class="page-break"></div> -->
                     <!-- COL-END -->
                 </div>
                 <?php } } ?>
@@ -266,6 +314,10 @@ $settings = $this->ion_auth->settings();
         height: auto;
     }
 
+    .resultslip-card {
+        /* margin: 10px; */
+    }
+
     .card-header {
         display: flex;
         justify-content: space-between;
@@ -285,7 +337,23 @@ $settings = $this->ion_auth->settings();
         padding: 8px;
     }
 
+    .page-break {
+        page-break-after: always;
+    }
+
+    #SingleReportForm {
+        box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+    }
+
     @media print {
+        /* .card {
+            padding: 10px;
+            width: 100%;
+            border: none !important;
+            box-shadow: none !important;
+        } */
+
         .text-right {
             text-align: right;
         }
@@ -542,5 +610,63 @@ $(document).ready(function(){
         <?php } ?>
 
         //Plot Periodic Performance
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        <?php 
+            foreach ($newresults as $stu => $examscores) { 
+                $exxs = [];
+                $scrss = [];
+                foreach ($examscores as $exa => $scr) {
+                    $scrss[] = $scr;
+                    // $exxs[] = $mitihani[$exa];
+                    $exxs[] = "'" . $mitihani[$exa] . "'";
+                }
+        ?>
+
+        // console.log();
+        // Prepare data for the chart for each student
+        let seriesData_<?php echo $stu ?> = [
+            {
+                name: "Scores",
+                // data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+                data: [<?php echo implode(',',$scrss); ?>]
+            }
+        ];
+
+        // Chart options for each student
+        let options_<?php echo $stu ?> = {
+            chart: {
+                type: 'line',
+                // height: 350,
+                zoom: {
+                    enabled: false
+                }
+            },
+            series: seriesData_<?php echo $stu ?>,
+            xaxis: {
+                // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+                categories: [<?php echo implode(',',$exxs) ?>]
+            },
+            title: {
+                // text: 'Monthly Sales Data',
+                align: 'left'
+            },
+            yaxis: {
+                title: {
+                    text: 'Totals'
+                }
+            },
+            tooltip: {
+                enabled: true
+            }
+        };
+
+        // Render the chart for each student
+        let chart_<?php echo $stu ?> = new ApexCharts(document.querySelector("#examscomparison_<?php echo $stu ?>"), options_<?php echo $stu ?>);
+        chart_<?php echo $stu ?>.render();
+
+    <?php } ?>
     });
 </script>
