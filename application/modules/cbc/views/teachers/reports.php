@@ -36,6 +36,59 @@ if (isset($results)) {
     // echo "<pre>";
     //     print_r($newresults);
     // echo "</pre>";
+
+    //Prepare Arrray for Plotting Comparison Graph Start
+    $studentmarks = [];
+    foreach ($results as $res) {
+        $subscores = $this->cbc_tr->student_scores($thread->id, $res->student);
+        $theexams = explode(',',$res->examsids);
+
+        $theexamsscores = [];
+
+        foreach ($theexams as $exkey => $theexam) {
+            $subsmarks = [];
+            $subjectstots = 0;
+
+            foreach ($subscores as $scorekey => $sub) {
+                $involvedmarkids = explode(',',$sub->involvedmarkids); 
+                $involvedweights = explode(',',$sub->involvedweights);
+                $involvedexams = explode(',',$sub->involvedexams);
+                $involvedscores = explode(',',$sub->involvedscores);
+
+                foreach ($involvedexams as $inexamkey => $inexam) {
+                    if ($theexam == $inexam) {
+                        $onescore = $involvedscores[$inexamkey];
+                        $examscore = $this->cbc_tr->find_mark($involvedmarkids[$inexamkey]);
+                                                                
+                        if ($sub->type == 1) {
+                                $convertedscore =  $examscore->score;
+                            } else {
+                                $convertedscore =  round(($examscore->score * $involvedweights[$inexamkey]) / $examscore->outof, 0);
+                        }
+
+                        $subjectstots += $convertedscore;
+                    }
+                }
+
+            }
+
+            //Check if its rubric or marks to assign total scores appropriately
+            $theexamsscores[$theexam] = $sub->type == 2 ? $subjectstots : round($subjectstots / count($subscores),0);
+
+        }
+
+        $studentmarks[$res->student] = $theexamsscores;
+    }
+
+//Prepare Arrray for Plotting Comparison Graph End
+
+    // echo "<pre>";
+    //     print_r($studentmarks);
+    // echo "</pre>";
+
+    // echo "<pre>";
+    //     print_r($newresults);
+    // echo "</pre>";
 }
 // die;
 
@@ -652,7 +705,7 @@ if (isset($results)) {
 <script>
     $(document).ready(function() {
         <?php
-        foreach ($newresults as $stu => $examscores) {
+        foreach ($studentmarks as $stu => $examscores) {
             $exxs = [];
             $scrss = [];
             foreach ($examscores as $exa => $scr) {
