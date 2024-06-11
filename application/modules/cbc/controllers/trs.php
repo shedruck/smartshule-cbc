@@ -1121,7 +1121,7 @@ class Trs extends Trs_Controller
 
         // $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
         $data['subjects'] = $this->cbc_tr->populate('subjects', 'id', 'name');
-        $this->template->title('Edit Settings')->build('teachers/joint', $data);
+        $this->template->title('Joint Exam Results')->build('teachers/joint', $data);
     }
 
     //Function to generate Results
@@ -1259,18 +1259,27 @@ class Trs extends Trs_Controller
         $updates = 0;
         $insertions = 0;
 
+        // echo "<pre>";
+        //     print_r($preparedmarks);
+        // echo "</pre>";
+        // die;
+
         foreach ($preparedmarks as $st => $subjects) {
             $subjectstotal = 0;
             $subjectscount = 0;
             $pointstotal = 0;
             $class = 0;
             $type = 0;
+            $subjectsweights = '';
+            $examsids = '';
 
             foreach ($subjects as $sbkey => $marks) {
                 $mk = (object) $marks;
                 $subjectstotal += $mk->marks;
                 $class = $mk->class;
                 $type = $mk->type;
+                $subjectsweights = $mk->involvedweights;
+                $examsids = $mk->involvedexams;
                 $subjectscount++;
 
                 //Check Grade
@@ -1353,11 +1362,18 @@ class Trs extends Trs_Controller
                 'subjectstotal' => $subjectstotal,
                 'pointstotal' => $pointstotal,
                 'subjectscount' => $subjectscount,
+                'subjectsweights' => $subjectsweights,
+                'examsids' => $examsids,
                 'type' => $type,
                 'classgrp' => $level,
                 'class' => $class
             );
         }
+
+        // echo "<pre>";
+        //     print_r($studentresults);
+        // echo "</pre>";
+        // die;
 
         $rankedStudents = $this->rank_students($studentresults);
 
@@ -1401,6 +1417,8 @@ class Trs extends Trs_Controller
                 'gid' => $grading,
                 'operation' => $operation,
                 'position' => $pos,
+                'examsids' => $examsids,
+                'subjectsweights' => $subjectsweights,
                 'type' => $mk->type
             );
 

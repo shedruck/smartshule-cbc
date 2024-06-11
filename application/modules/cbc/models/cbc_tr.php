@@ -21,6 +21,14 @@ class Cbc_tr extends MY_Model
         return $this->db->insert_id();
     }
 
+    //Get Mark by id
+    function find_mark($id) {
+        return $this->db
+                    ->where('id',$id)
+                    ->get('cbc_marks')
+                    ->row();
+    }
+
     //Check if Combined Marks is already there
     function check_marks($tid,$stu,$sub) {
         return $this->db
@@ -396,10 +404,12 @@ class Cbc_tr extends MY_Model
                     ->result();
      }
 
-     function teacher_assigned($class,$sub) {
+     function teacher_assigned($class,$sub,$term,$year) {
         return $this->db
                     ->where('class',$class)
                     ->where('subject',$sub)
+                    ->where('subject',$term)
+                    ->where('subject',$year)
                     ->get('subjects_assign')
                     ->row();
      }
