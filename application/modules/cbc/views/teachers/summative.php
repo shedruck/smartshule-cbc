@@ -40,6 +40,7 @@
                  </tr>
                  <tbody>
                    <?php
+                   
                     foreach ($classes as $cl => $row) {
                       $obj = (object) $row; ?>
                      <tr class="highlight-row">

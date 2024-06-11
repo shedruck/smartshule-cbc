@@ -78,8 +78,13 @@ class Trs extends Trs_Controller
 
         $classgrp = $this->cbc_tr->get_cls_group($class);
 
+        
         $data['exam_type'] = $this->cbc_tr->get_exam_perclass($exam, $classgrp->class);
 
+        // $exam = $this->cbc_tr->get_exam_perclass($exam, $classgrp->class);
+
+        // print_r($exam);
+        // die;
       
 
         if ($exam) {
