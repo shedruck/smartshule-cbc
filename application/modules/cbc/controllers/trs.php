@@ -717,6 +717,35 @@ class Trs extends Trs_Controller
     }
 
 
+    public function fetch_subs_perclass($class)
+    {
+      
+        if ($class) {
+
+            $cls = $this->cbc_tr->get_clsgroup($class);
+
+            $subids =   $this->cbc_tr->get_subids($cls->class);
+
+            $ids = [];
+            foreach ($subids as $key => $sub) {
+                $ids[] = $sub->subject_id;
+            }
+
+            $subjects = $this->cbc_tr->get_subjects_by_class($ids);
+
+            // Prepare data to be returned as JSON
+            $data = array();
+            foreach ($subjects as $subject) {
+                $data[$subject->id] = $subject->name;
+            }
+
+           return $data;
+        } else {
+           return []; 
+        }
+    }
+
+
     function get_subs($class){
 
         if ($class) {
@@ -836,16 +865,15 @@ class Trs extends Trs_Controller
         $this->template->title('Formative Report')->build('teachers/bulk_formative', $data);
     }
 
-    function formative_perstudent()
-    {
-
+    function single_formative($class){
         if ($this->input->post()) {
 
 
-            $class = $this->input->post('class');
+            $student = $this->input->post('student');
             $term = $this->input->post('term');
             $year = $this->input->post('year');
             $subject = $this->input->post('subject');
+
 
             $data['class'] = $class;
             $data['term'] = $term;
@@ -860,7 +888,7 @@ class Trs extends Trs_Controller
                 $ass_id[] = $ass->id;
             }
 
-            $data['report'] = $this->cbc_tr->get_formative($ass_id);
+            $data['report'] = $this->cbc_tr->get_formative_stu($ass_id, $student);
         }
 
         $data['strandz'] =  $this->cbc->fetch_strands_by_sub($subject);
@@ -874,22 +902,41 @@ class Trs extends Trs_Controller
         // print_r($tasks);
         // echo "<pre>";
         // die;
+        $data['stud'] = $this->cbc_tr->get_students_perstream($class);
 
 
-        $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
+        $data['subs'] = $this->fetch_subs_perclass($class);
 
-        $this->template->title('Formative Report')->build('teachers/bulk_formative', $data);
+        $this->template->title('Formative Report')->build('teachers/single_formative', $data);
+    }
+
+
+
+    function formative_perstudent()
+    {
+        $act = 0;
+        $this->session->unset_userdata('extrra');
+        if ($this->input->get('extras')) {
+            $act = $this->input->get('extras');
+            if ($act) {
+                $this->session->set_userdata('extrra', $act);
+            }
+        }
+
+        $data['students'] = $this->trs_m->list_my_classes($act);
+
+        $this->template->title('Formative Report')->build('teachers/formative_perstudent', $data);
     }
 
 
 
     function begin_social()
     {
-
         $data['classes'] = $this->cbc_tr->my_classes();
 
         $this->template->title('Social Behaviour')->build('teachers/social', $data);
     }
+
 
     public function social_report($class)
     {

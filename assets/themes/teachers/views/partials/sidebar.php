@@ -182,9 +182,7 @@
                                 <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>">Exams
                                     <i class="fe fe-chevron-right side-menu__angle <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>"></i></a>
                                 <ul class="slide-menu child2">
-                                    <li class="slide <?php echo $this->uri->segment(3) === "set_exam" ? 'active open' : '';  ?>">
-                                        <a href="<?php echo base_url('cbc/trs/set_exam') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "set_exam" ? 'active' : '';  ?>">Exam Setup</a>
-                                    </li>
+                                    
                                     <li class="slide <?php echo $this->uri->segment(3) === "all_exams" ? 'active' : '';  ?>">
                                         <a href="<?php echo base_url('cbc/trs/all_exams') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "all_exams" ? 'active' : '';  ?>">Manage Exams</a>
                                     </li>

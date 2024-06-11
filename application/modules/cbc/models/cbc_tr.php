@@ -40,6 +40,8 @@ class Cbc_tr extends MY_Model
                     ->row();
     }
 
+    
+
     //Check Grade
     function get_grade($gid,$marks) {
         $gradingsystem = $this->db
@@ -345,6 +347,21 @@ class Cbc_tr extends MY_Model
 
         return $stus;
      }
+
+    function get_students_perstream($class = false)
+    {
+        $this->select_all_key('admission');
+        $this->db->where($this->dx('class') . " ='" . $class . "'", NULL, FALSE);
+        $list = $this->db->get('admission')->result();
+
+        $stus = [];
+
+        foreach ($list as $key => $l) {
+            $stus[$l->id] = $l->first_name.'  '. $l->last_name;
+        }
+
+        return $stus;
+    }
 
      //Get final results by students 
      function results($tid,$students = array()) {
@@ -897,6 +914,8 @@ class Cbc_tr extends MY_Model
         return $this->db->where('class', $cls)->where('term', $term)->where('year', $year)->where('subject', $sb)->get('cbc_assess')->result();
     }
 
+
+
     function get_assessp($cls, $st, $term, $year, $sb)
     {
         return $this->db->where('student', $st)->where('class', $cls)->where('term', $term)->where('year', $year)->where('subject', $sb)->get('cbc_assess')->result();
@@ -910,6 +929,29 @@ class Cbc_tr extends MY_Model
         }
 
         $query = $this->db->where_in('assess_id', $ids)->where('status', 1)->order_by('strand', 'ASC')->order_by('sub_strand', 'ASC')->get('cbc_assess_tasks');
+
+        if ($query->num_rows() > 0) {
+            $results = $query->result();
+            $grouped_results = [];
+
+            foreach ($query->result() as $row) {
+                $grouped_results[$row->student][$row->strand][$row->sub_strand][] = (array) $row;
+            }
+            return $grouped_results;
+        } else {
+            // No results found
+            return [];
+        }
+    }
+
+    function get_formative_stu($ids, $stu)
+    {
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        $query = $this->db->where_in('assess_id', $ids)->where('status', 1)->where('student', $stu)->order_by('strand', 'ASC')->order_by('sub_strand', 'ASC')->get('cbc_assess_tasks');
 
         if ($query->num_rows() > 0) {
             $results = $query->result();

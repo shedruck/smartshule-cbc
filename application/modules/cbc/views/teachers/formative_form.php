@@ -9,17 +9,22 @@ if ($this->input->get()) {
     <div class="col-md-12">
         <?php if (isset($strands)) { ?>
             <div class="card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-center align-items-center m-2">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center m-2">
                         <img class="me-2 w-40p" src="../assets/images/icons/1.png" alt="">
                         <div>
                             <h5 class="mb-0"><b><?php echo $class ?></b></h5>
                             <p class="mb-0 text-muted"><?php echo $subject ?></p>
                         </div>
+                    </div>
 
-
+                    <div class="ms-auto">
+                        <a class="btn btn-sm btn-secondary" onclick="goBack()">
+                            <i class="fa fa-caret-left"></i> Go Back
+                        </a>
                     </div>
                 </div>
+
                 <div class="card-body p-0">
                     <div class="d-lg-flex d-block">
                         <div class="p-4 border-end w-100">
@@ -36,9 +41,6 @@ if ($this->input->get()) {
                                             $col = '';
                                         }
                                     }
-
-
-
 
                                 ?>
 
@@ -109,7 +111,8 @@ if ($this->input->get()) {
                                                     <td>
                                                         <p class="font-w600 mb-1"><?php echo $r->name ?> <br>
 
-                                                        <a style="float:" href="<?php echo base_url('cbc/trs/perform_assessment').'?arg='. $argss?>" onclick="return confirm('Are you sure to do assessment?')" class="btn btn-success mb-1 d-inline-flex"><i class="si si-paper-plane me-1 lh-base"></i> Begin Assessment</a></p>
+                                                            <a style="float:" href="<?php echo base_url('cbc/trs/perform_assessment') . '?arg=' . $argss ?>" onclick="return confirm('Are you sure to do assessment?')" class="btn btn-success mb-1 d-inline-flex"><i class="si si-paper-plane me-1 lh-base"></i> Begin Assessment</a>
+                                                        </p>
                                                         <table class="table table-bordered text-nowrap">
                                                             <thead>
                                                                 <tr>
@@ -172,7 +175,7 @@ if ($this->input->get()) {
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="form-check d-inline-block">
+                    <!-- <div class="form-check d-inline-block">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
                         <label class="form-check-label" for="flexCheckChecked">
                             Send a copy on my email
@@ -181,7 +184,7 @@ if ($this->input->get()) {
                     <div class="float-end d-inline-block btn-list">
                         <a class="btn btn-primary">Decline</a>
                         <a class="btn btn-secondary">Agree and Continue</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -247,4 +250,3 @@ if ($this->input->get()) {
         width: 100%;
     }
 </style>
-

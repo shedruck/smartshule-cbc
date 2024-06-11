@@ -3,10 +3,9 @@
      <?php
 
       if (count($classes)  > 0) {
-        foreach ($classes as $cl => $row) {
-          $obj = (object) $row;
+
       ?>
-         <div class="col-lg-6 col-md-6 col-sm-6 col-xl-3">
+       <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xl-3">
            <div class="card">
              <div class="card-body">
                <div class="d-flex align-items-start">
@@ -22,12 +21,41 @@
                      <i class="fe fe-user fs-18"></i>
                    </span>
                  </div>
+
+                 
                </div>
              </div>
            </div>
-         </div>
+         </div> -->
 
-       <?php }
+       <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+         <div class="card">
+           <div class="card-body">
+             <div class="table-responsive">
+               <table class="table table-bordered">
+                 <tr class="">
+                   <th>Class</th>
+                   <th>Count</th>
+                   <th>Action</th>
+                 </tr>
+                 <tbody>
+                   <?php
+                    foreach ($classes as $cl => $row) {
+                      $obj = (object) $row; ?>
+                     <tr class="highlight-row">
+                       <td><?php echo $obj->name ?></td>
+                       <td><?php echo $obj->total . ' Students' ?></td>
+                       <td><button class="btn btn-primary off-canvas mt-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" onclick="show_subjects(<?php echo $cl ?>)"><i class="fas fa-file-alt"></i> Begin Formative</button></td>
+                     </tr>
+                   <?php } ?>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+       </div>
+
+     <?php
       } else { ?>
        <div class="col-md-2 col-lg-3 col-xl-3"></div>
        <div class="col-md-8 col-lg-8 col-xl-5">
@@ -86,7 +114,7 @@
 
    <script>
      function show_subjects(k) {
-      // console.log(k);
+       // console.log(k);
 
        var endpoint = "<?php echo base_url('cbc/trs/get_subjects_for_summ') ?>/" + k;
        var BASE_URL = "<?php echo base_url() ?>";
@@ -125,3 +153,11 @@
        });
      }
    </script>
+
+   <style>
+     .highlight-row:hover {
+       background-color: #f1f1f1;
+       cursor: pointer;
+       
+     }
+   </style>
