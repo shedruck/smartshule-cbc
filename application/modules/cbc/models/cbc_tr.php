@@ -729,7 +729,7 @@ class Cbc_tr extends MY_Model
 
     function get_exam_perclass($id, $cls)
     {
-        return $this->db->where('id', $id)->where('class', $cls)->order_by('id', 'DESC')->get('cbc_settings')->row();
+        return $this->db->where('exam', $id)->where('class', $cls)->order_by('id', 'DESC')->get('cbc_settings')->row();
     }
 
     function check_grading($id)
