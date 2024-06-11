@@ -249,8 +249,8 @@ class Cbc_tr extends MY_Model
             ->get('subjects_classes')
             ->result();
 
-        $sub =  $this->populate('cbc_subjects', 'id', 'name');
-        // $sub =  $this->populate('subjects', 'id', 'name');
+        // $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        $sub =  $this->populate('subjects', 'id', 'name');
 
         $out = [];
         foreach ($list as $p) {
@@ -412,9 +412,10 @@ class Cbc_tr extends MY_Model
      }
 
      //The last four performances
-     function last_four_scores($student) {
+     function last_four_scores($student,$type) {
         return $this->db
                     ->where('student',$student)
+                    ->where('type',$type)
                     ->order_by('tid','ASC')
                     ->limit(4)
                     ->get('cbc_final_results')

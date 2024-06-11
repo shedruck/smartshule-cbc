@@ -157,7 +157,7 @@ if (isset($results)) {
                         $scoreoutof = 0;
 
                         // echo "<pre>";
-                        //     print_r($result->examsids);
+                        //     print_r($subscores);
                         // echo "</pre>";
                 ?>
                         <div class="row page-break" id="SingleReportForm">
@@ -622,7 +622,7 @@ if (isset($results)) {
     $(document).ready(function() {
         <?php
         foreach ($results as $key => $result) {
-            $perfomances = $this->cbc_tr->last_four_scores($result->student);
+            $perfomances = $this->cbc_tr->last_four_scores($result->student,$result->type);
 
             $perfdata = [];
             foreach ($perfomances as $perf) {
