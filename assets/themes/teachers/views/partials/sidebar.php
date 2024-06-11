@@ -40,6 +40,68 @@
                 <!-- End::slide -->
 
                 <li class="slide__category"><span class="category-name">CLASSES & STUDENTS</span></li>
+                <?php
+                $set = array('cbc');
+                $thirdsegsarr = array('begin_form', 'do_formative', 'begin_summative_form', 'do_summative', 'begin_social', 'social_report');
+                ?>
+                <li class="slide has-sub <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
+                    <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set) ? 'active' : ''; ?>">
+
+                        <i class="fa fa-graduation-cap side-menu__icon"></i>
+                        <span class="side-menu__label">CBC</span>
+                        <i class="fe fe-chevron-right side-menu__angle"></i>
+                    </a>
+                    <ul class="slide-menu child1 <?php echo in_array($this->uri->segment(1), $set) ? 'active' : ''; ?>">
+                        <li class="slide">
+                            <a href="<?php echo base_url('cbc/trs') ?>" class="side-menu__item <?php echo ($this->uri->segment(1) === "cbc" && $this->uri->segment(2) === "trs" && !$this->uri->segment(3) || in_array($this->uri->segment(3), $thirdsegsarr)) ? 'active' : ''; ?>">CBC Assessments</a>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item">CBC management
+                                <i class="fe fe-chevron-right side-menu__angle"></i></a>
+                            <ul class="slide-menu child2">
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">CBC content</a>
+                                </li>
+                                <li class="slide">
+                                    <a href="javascript:void(0);" class="side-menu__item">Approve Results</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="slide has-sub">
+                            <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>">Exams
+                                <i class="fe fe-chevron-right side-menu__angle <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>"></i></a>
+                            <ul class="slide-menu child2">
+                                <li class="slide <?php echo $this->uri->segment(3) === "set_exam" ? 'active open' : '';  ?>">
+                                    <a href="<?php echo base_url('cbc/trs/set_exam') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "set_exam" ? 'active' : '';  ?>">Exam Setup</a>
+                                </li>
+                                <li class="slide <?php echo $this->uri->segment(3) === "all_exams" ? 'active' : '';  ?>">
+                                    <a href="<?php echo base_url('cbc/trs/all_exams') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "all_exams" ? 'active' : '';  ?>">Manage Exams</a>
+                                </li>
+                                <li class="slide <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">
+                                    <a href="<?php echo base_url('cbc/trs/bulk_formative') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">Formative Reports Per Class</a>
+                                </li>
+
+                                <li class="slide <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">
+                                    <a href="<?php echo base_url('cbc/trs/formative_perstudent') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">Formative Reports Per Student</a>
+                                </li>
+
+                                <li class="slide <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">
+                                    <a href="<?php echo base_url('cbc/trs/generate_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">Summative Reports Per Exam</a>
+                                </li>
+
+                                <li class="slide <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">
+                                    <a href="<?php echo base_url('cbc/trs/joint_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">Joint Exam Reports</a>
+                                </li>
+                                
+                                <!-- <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
+                                        <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">Summative Reports Per Student</a>
+                                    </li> -->
+
+                            </ul>
+                        </li>
+
+                    </ul>
+                </li>
                 <li class="slide <?php echo $this->uri->segment(1) === "class_groups" ? 'active' : '';  ?>">
                     <a href="<?php echo base_url('class_groups/trs/myclasses') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "class_groups" ? 'active' : '';  ?>">
                         <!-- <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 -960 960 960" fill="#000000">
@@ -66,7 +128,7 @@
 
                 <!-- Start::slide -->
                 <?php
-                $set = array('assignments', 'qa', 'mc', 'cbc', 'students_projects', 'diary');
+                $set = array('assignments', 'qa', 'mc', 'students_projects', 'diary');
                 ?>
                 <li class="slide has-sub <?php echo in_array($this->uri->segment(1), $set) ? 'active open' : ''; ?>">
                     <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set) ? 'active' : ''; ?>">
@@ -76,9 +138,9 @@
                         <i class="fe fe-chevron-right side-menu__angle"></i>
                     </a>
                     <ul class="slide-menu child1 <?php echo in_array($this->uri->segment(1), $set) ? 'active' : ''; ?>">
-                        <li class="slide">
+                        <!-- <li class="slide">
                             <a href="<?php echo base_url('cbc/trs') ?>" class="side-menu__item <?php echo ($this->uri->segment(1) === "cbc" && $this->uri->segment(2) === "trs" && !$this->uri->segment(3)) ? 'active' : ''; ?>">CBC Assessments</a>
-                        </li>
+                        </li> -->
 
                         <li class="slide <?php echo $this->uri->segment(1) === "assignments" ? 'active' : '';  ?>">
                             <a href="<?php echo base_url('assignments/trs') ?>" class="side-menu__item <?php echo $this->uri->segment(1) === "assignments" ? 'active' : '';  ?>">Assignments</a>
@@ -162,7 +224,7 @@
                 <!-- Start::special menu -->
 
                 <?php
-                $set = array('cbc');
+                $set = array('teachers');
 
                 $set1 = array('cbc');
                 ?>
@@ -178,44 +240,6 @@
                             <i class="fe fe-chevron-right side-menu__angle"></i>
                         </a>
                         <ul class="slide-menu child1">
-                            <li class="slide has-sub">
-                                <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>">Exams
-                                    <i class="fe fe-chevron-right side-menu__angle <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>"></i></a>
-                                <ul class="slide-menu child2">
-                                    
-                                    <li class="slide <?php echo $this->uri->segment(3) === "all_exams" ? 'active' : '';  ?>">
-                                        <a href="<?php echo base_url('cbc/trs/all_exams') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "all_exams" ? 'active' : '';  ?>">Manage Exams</a>
-                                    </li>
-                                    <li class="slide <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">
-                                        <a href="<?php echo base_url('cbc/trs/bulk_formative') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">Formative Reports Per Class</a>
-                                    </li>
-
-                                    <li class="slide <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">
-                                        <a href="<?php echo base_url('cbc/trs/formative_perstudent') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "bulk_formative" ? 'active' : '';  ?>">Formative Reports Per Student</a>
-                                    </li>
-
-                                    <li class="slide <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">
-                                        <a href="<?php echo base_url('cbc/trs/generate_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "generate_reports" ? 'active' : '';  ?>">Summative Reports Per Exam</a>
-                                    </li>
-                                    <!-- <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
-                                        <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">Summative Reports Per Student</a>
-                                    </li> -->
-
-                                </ul>
-                            </li>
-                            <li class="slide has-sub">
-                                <a href="javascript:void(0);" class="side-menu__item">CBC management
-                                    <i class="fe fe-chevron-right side-menu__angle"></i></a>
-                                <ul class="slide-menu child2">
-                                    <li class="slide">
-                                        <a href="javascript:void(0);" class="side-menu__item">CBC content</a>
-                                    </li>
-                                    <li class="slide">
-                                        <a href="javascript:void(0);" class="side-menu__item">Approve Results</a>
-                                    </li>
-
-                                </ul>
-                            </li>
                             <li class="slide has-sub">
                                 <a href="javascript:void(0);" class="side-menu__item">Teacher Management
                                     <i class="fe fe-chevron-right side-menu__angle"></i></a>

@@ -31,7 +31,7 @@ echo   form_open_multipart(current_url(), $attributes);
                         <?php
                             }
                         ?>
-                        <button id="selectexambtn" class="btn btn-success">Select</button>
+                        <button id="selectexambtn" class="btn btn-success">Confirm</button>
                     </div>
                     <div class="col-lg-3 col-md-3 col-xl-3" id="selectedexams">
                         <h6>Selected Exams</h6>

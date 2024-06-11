@@ -1,5 +1,44 @@
-<?php 
-$settings = $this->ion_auth->settings(); 
+<?php
+$settings = $this->ion_auth->settings();
+
+if (isset($results)) {
+    $exs = [];
+    foreach ($results as $res) {
+        $subscores = $this->cbc_tr->student_scores($thread->id, $res->student);
+
+        $masomo = [];
+        foreach ($subscores as $key => $sub) {
+            $ex = explode(',', $sub->involvedexams);
+            $masomo[$sub->subject] = array(
+                'exams' => $ex,
+                'scores' => explode(',', $sub->involvedscores),
+                'weights' => explode(',', $sub->involvedweights)
+            );
+        }
+
+        $exs[$res->student] = $masomo;
+    }
+
+    $newresults = [];
+    $mitihani = $this->cbc_m->populate('cbc_exam_threads', 'id', 'name');
+    $actualexams = $this->cbc_m->populate('cbc_threads', 'id', 'exam');
+
+    foreach ($exs as $studentId => $masomo) {
+        foreach ($masomo as $subjectId => $details) {
+            foreach ($details['exams'] as $examIndex => $examId) {
+                $newresults[$studentId][$examId] = isset($newresults[$studentId][$examId])
+                    ? $newresults[$studentId][$examId] + $details['scores'][$examIndex]
+                    : $details['scores'][$examIndex];
+            }
+        }
+    }
+
+    // echo "<pre>";
+    //     print_r($newresults);
+    // echo "</pre>";
+}
+// die;
+
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -26,7 +65,7 @@ $settings = $this->ion_auth->settings();
                     </div>
                     <div class="col-lg-3 col-md-3 col-xl-3">
                         <?php
-                            echo form_dropdown('compare', array('' => 'Select Exam for Compare') + $threads, $this->input->post('compare'), ' class="form-control select" id="compare" data-placeholder="" ');
+                        echo form_dropdown('compare', array('' => 'Select Exam for Compare') + $threads, $this->input->post('compare'), ' class="form-control select" id="compare" data-placeholder="" ');
                         ?>
                     </div>
                     <div class="col-lg-3 col-md-3 col-xl-3">
@@ -40,101 +79,146 @@ $settings = $this->ion_auth->settings();
                 <!-- </div> -->
 
                 <!-- Report Cards Start Here -->
-                <?php 
-                    if (isset($results)) {
-                        foreach ($results as $key => $result) {
-                            $stu = $this->worker->get_student($result->student);
-                            $paro = $this->portal_m->get_parent($stu->parent_id);
-                            $userparo = $this->ion_auth->get_user($paro->user_id);
+                <?php
+                if (isset($results)) {
+                    $types = array(
+                        1 => 'RUBRICS',
+                        2 => 'MARKS'
+                    );
 
-                            $prevresults = $this->cbc_tr->prev_score($comparison,$result->student);
+                    $exams = $this->cbc_tr->populate('cbc_threads', 'id', 'exam');
 
-                            $subscores = $this->cbc_tr->student_scores($thread->id,$result->student);
+                    foreach ($results as $key => $result) {
+                        $stu = $this->worker->get_student($result->student);
+                        $paro = $this->portal_m->get_parent($stu->parent_id);
+                        $userparo = $this->ion_auth->get_user($paro->user_id);
 
-                            $clssubjects = $this->exams_m->get_subjects($result->class,$thread->term);
+                        $prevresults = $this->cbc_tr->prev_score($comparison, $result->student);
+
+                        $subscores = $this->cbc_tr->student_scores($thread->id, $result->student);
+
+                        $clssubjects = $this->exams_m->get_subjects($result->class, $thread->term);
 
 
-                            $subscount = 0;
-                            $scoreoutof = 0;
-                        
+                        $subscount = 0;
+                        $scoreoutof = 0;
+
+                        // echo "<pre>";
+                        //     print_r($result->examsids);
+                        // echo "</pre>";
                 ?>
-                <div class="row page-break" id="SingleReportForm">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <!-- <div class="card-header">
+                        <div class="row page-break" id="SingleReportForm">
+                            <div class="col-md-12">
+                                <!-- <div class="card resultslip-card"> -->
+                                <!-- <div class="card-header">
 
                             </div> -->
-                            <div class="card-body p-10">
-                                <div class="row" id="headerdiv">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-xl-6">
-                                        <img src="<?php echo base_url('uploads/files/' . $settings->document); ?>" width="80" height="80" />
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-xl-6 text-right">
-                                        <h5 class="blue-text"><b><?php echo strtoupper($this->school->school) ?></b></h5>
-                                        <h6><?php echo strtoupper($this->school->postal_addr) ?></b></h6>
-                                        <h6><?php echo $this->school->tel ?></h6>
-                                        <h6><?php echo $this->school->email ?></h6>
-                                    </div>
-                                </div>
+                                <div class="card-body p-10">
+                                    <div class="row" id="headerdiv">
+                                        <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4">
+                                            <img src="<?php echo base_url('uploads/files/' . $settings->document); ?>" width="80" height="80" />
+                                        </div>
+                                        <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4">
+                                            <h5 class="blue-text text-center"><b><?php echo strtoupper($this->school->school) ?></b></h5>
+                                            <h6 class="text-center"><?php echo strtoupper($this->school->postal_addr) ?></b></h6>
+                                            <h6 class="text-center"><?php echo $this->school->tel ?></h6>
+                                            <h6 class="text-center"><?php echo $this->school->email ?></h6>
+                                        </div>
+                                        <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4 text-right">
+                                            <?php
+                                            $passport = $this->admission_m->passport($stu->photo);
+                                            $fake = base_url('uploads/files/member.png');
 
-                                <h6 class="text-center blue-bg">ACADEMIC TRANSCRIPT FOR - <?php echo $this->classes[$result->classgrp] ?> - <?php echo $thread->name ?> - (<?php echo $thread->year ?>/Term <?php echo $thread->term ?>)</h6>
+                                            if (count($passport) !== 0) {
+                                                $path = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
+                                            }
 
-                                <div class="row" id="studentsdiv">
-                                    <div class="col-md-3 col-lg-3 col-sm-3 col-xl-3">
-                                        <?php
-                                        $passport = $this->admission_m->passport($stu->photo);
-                                        $fake = base_url('uploads/files/member.png');
-
-                                        if (count($passport) !== 0) {
-                                            $path = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
-                                        }
-
-                                        ?>
-                                        <img src="<?php echo $fake ?>" alt="Student Profile" class="img-fluid img-thumbnail">
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-3 col-xl-3">
-                                        <h6>Name : <?php echo ucwords($stu->first_name . ' ' . $stu->last_name) ?></h6>
-                                        <h6>ADM NO : <?php echo $stu->admission_number ?></h6>
-                                        <h6>CLASS : <?php echo $this->streams[$stu->class] ?></h6>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-xl-6">
-                                        <div id="performance_<?php echo $result->id ?>" class="graphdiv">
-
+                                            ?>
+                                            <img src="<?php echo $fake ?>" alt="Student Profile" class="img-fluid img-thumbnail">
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- Position Div Here -->
-                                            
-                                <!-- Position Div Here -->
+                                    <h6 class="text-center blue-bg">ACADEMIC TRANSCRIPT FOR - <?php echo $this->classes[$result->classgrp] ?> - <?php echo $thread->name ?> - (<?php echo $thread->year ?>/Term <?php echo $thread->term ?>) - <?php echo $types[$result->type] ?></h6>
 
-                                <div class="row" style="margin-top: 10px;">
-                                    <div class="col-lg-12 col-md-12">
-                                        <table class="table border table-bordered" cellpadding="0" cellspacing="0" width="100%">
-                                            <thead class="table-success">
-                                                <th>SUBJECTS</th>
-                                                <th>SCORE</th>
-                                                <th>DEV.</th>
-                                                <th>GRADE</th>
-                                                <!-- <th>CLASS RANK</th> -->
-                                                <!-- <th>STREAM RANK</th> -->
-                                                <th>COMMENT</th>
-                                                <th>TEACHER</th>
-                                            </thead>
-                                            <tbody>
-                                                <?php 
-                                                    
-                                                    foreach ($subscores as $key => $score) {
-                                                        
-                                                        $subscount++;
-                                                        $scoreoutof += $score->total;
-                                                ?>
+                                    <div class="row" id="studentsdiv">
+                                        <div class="col-md-3 col-lg-3 col-sm-3 col-xl-3">
+                                            <h6>Name : <?php echo ucwords($stu->first_name . ' ' . $stu->last_name) ?></h6>
+                                            <h6>ADM NO : <?php echo $stu->admission_number ?></h6>
+                                            <h6>CLASS : <?php echo $this->streams[$stu->class] ?></h6>
+                                        </div>
+                                        <div class="col-md-9 col-lg-9 col-sm-9 col-xl-9 text-right">
+                                            <div id="performance_<?php echo $result->id ?>" class="graphdiv">
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Position Div Here -->
+
+                                    <!-- Position Div Here -->
+
+                                    <div class="row" style="margin-top: 10px;">
+                                        <div class="col-lg-12 col-md-12">
+                                            <table class="table border table-bordered" cellpadding="0" cellspacing="0" width="100%">
+                                                <thead class="table-success">
                                                     <tr>
-                                                        <td><?php echo $subjects[$score->subject] ?></td>
-                                                        <td><?php echo $score->combinedmarks ?></td>
-                                                        <td>
+                                                        <th></th>
+                                                        <th class="text-center" colspan="<?php echo count(explode(',', $result->examsids)) ?>"><b>EXAMS INVOLVED</b></th>
+                                                        <th colspan="5"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>LEARNING AREAS</th>
+                                                        <?php
+                                                        $exids = explode(',', $result->examsids);
+                                                        foreach ($exids as $exkey => $mtihani) {
+                                                        ?>
+                                                            <th><?php echo $actualexams[$mtihani] ?></th>
+                                                        <?php } ?>
+                                                        <th>SCORE</th>
+                                                        <th>DEV.</th>
+                                                        <th>GRADE</th>
+                                                        <!-- <th>CLASS RANK</th> -->
+                                                        <!-- <th>STREAM RANK</th> -->
+                                                        <th>COMMENT</th>
+                                                        <th>TEACHER</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+
+                                                    foreach ($subscores as $key => $score) {
+
+                                                        $subscount++;
+                                                        $scoreoutof += $score->combinedmarks;
+
+                                                        // echo "<pre>";
+                                                        // print_r($score);
+                                                        // echo "</pre>";
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $subjects[$score->subject] ?></td>
                                                             <?php
-                                                                $compscore = $this->cbc_tr->compare_score($comparison,$result->student,$score->subject);
+                                                            $markids = explode(',', $score->involvedmarkids);
+                                                            $thescores = explode(',', $score->involvedscores);
+                                                            $theweights = explode(',', $score->involvedweights);
+                                                            $exids = explode(',', $result->examsids);
+
+                                                            foreach ($exids as $exkey => $mtihani) {
+                                                                $examscore = $this->cbc_tr->find_mark($markids[$exkey]);
+                                                                
+                                                                if ($score->type == 1) {
+                                                                    $convertedscore =  $examscore->score;
+                                                                } else {
+                                                                    $convertedscore =  round(($examscore->score * $theweights[$exkey]) / $examscore->outof, 0);
+                                                                }
+                                                                
+                                                            ?>
+                                                                <td><?php echo $convertedscore ?></td>
+                                                            <?php } ?>
+                                                            <td><?php echo $score->combinedmarks ?></td>
+                                                            <td>
+                                                                <?php
+                                                                $compscore = $this->cbc_tr->compare_score($comparison, $result->student, $score->subject);
 
                                                                 if ($compscore) {
                                                                     $diff = $score->combinedmarks - $compscore->combinedmarks;
@@ -146,90 +230,101 @@ $settings = $this->ion_auth->settings();
                                                                         $dig = 0;
                                                                     } elseif ($diff > 0) {
                                                                         $icon = '<span style="color: #00cc00;"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
-                                                                        $dig = '+'.$diff;
+                                                                        $dig = '+' . $diff;
                                                                     }
 
-                                                                    echo '<span><b>'.$dig.'</b></span> '.$icon;
+                                                                    echo '<span><b>' . $dig . '</b></span> ' . $icon;
                                                                 } else {
                                                                     echo "_";
                                                                 }
-                                                            ?>
-                                                        </td>
-                                                        <td><?php echo $score->grade ?></td>
-                                                        <!-- <td><?php echo $score->ovr_rank ?></td> -->
-                                                        <!-- <td><?php echo $score->stream_rank ?></td> -->
-                                                        <td><?php echo $score->remarks ?></td>
-                                                        <td>
-                                                            <?php 
-                                                                $teacherassigned = $this->cbc_tr->teacher_assigned($result->class,$score->subject);
+                                                                ?>
+                                                            </td>
+                                                            <td><?php echo $score->grade ?></td>
+                                                            <!-- <td><?php echo $score->ovr_rank ?></td> -->
+                                                            <!-- <td><?php echo $score->stream_rank ?></td> -->
+                                                            <td><?php echo $score->remarks ?></td>
+                                                            <td>
+                                                                <?php
+                                                                $teacherassigned = $this->cbc_tr->teacher_assigned($result->class, $score->subject,$thread->term,$thread->year);
                                                                 $teacher = $this->teachers_m->find($teacherassigned->teacher);
-                                                                
-                                                                echo ucwords($teacher->first_name.' '.$teacher->last_name);
-                                                            ?>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-                                            </tbody>
 
-                                        </table>
+                                                                echo ucwords($teacher->first_name . ' ' . $teacher->last_name);
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="row" id="footerdiv">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
-                                        <h6><b>Perfomance Over Time</b></h6>
-                                        <div id="performancewithtime_<?php echo $result->id ?>">
+                                    <div class="row" id="footerdiv">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
+                                            <h6><b>Perfomance Over Time</b></h6>
+                                            <div id="performancewithtime_<?php echo $result->id ?>">
 
-                                        </div>
-                                        
-                                        <div style="display: flex;">
-                                        <div style="width: 60%;">
-                                            <h6 class="text-center">Scan to Access your Smartshule Portal to view more details of your child.</h6>
-                                            <h6 class="text-center"><b>Username : <u><?php echo $userparo->email ?></u></b></h6>
-                                        </div>
-                                        <div style="width: 40%">
-                                            <input style="display: none;" type="text" name="loginlink" id="loginlink_<?php echo $result->id ?>" value="<?php echo base_url('login') ?>">
-                                            <div id="qrcode_<?php echo $result->id ?>" class="qrcode" style="width: 150px;">
-                                                
                                             </div>
                                         </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
+                                            <h6><b>Exams Comparison</b></h6>
+                                            <div id="examscomparison_<?php echo $result->student ?>">
+
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
-                                        <table style="width: 100%; border: none;">
-                                            <tr>
-                                                <th style="border: none; width: 70%;">Remarks</th>
-                                                <th style="border: none; width: 30%;">Signature</th>
-                                            </tr>
-                                            <tbody>
-                                                <tr>
-                                                    <td style="border: none; width: 70%;">
-                                                        <b>Class Teacher </b>
-                                                        <p><b><?php echo $result->trs_comment ?></b></p>
-                                                    </td>
-                                                    <td style="border-bottom: 1px solid black; width: 30%;"><u><span style="visibility: hidden;">Signature</span></u></td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="border: none; width: 70%;">
-                                                        <b>Principal</b>
-                                                        <p><b><?php echo $result->prin_comment ?></b></p>
-                                                    </td>
-                                                    <td style="border-bottom: 1px solid black; width: 30%;"><u><span style="visibility: hidden;">Signature</span></u></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
+                                            <div style="display: flex;">
+                                                <div style="width: 60%;">
+                                                    <h6 class="text-center">Scan to Access your Smartshule Portal to view more details of your child.</h6>
+                                                    <h6 class="text-center"><b>Username : <u><?php echo $userparo->email ?></u></b></h6>
+                                                </div>
+                                                <div style="width: 40%">
+                                                    <input style="display: none;" type="text" name="loginlink" id="loginlink_<?php echo $result->id ?>" value="<?php echo base_url('login') ?>">
+                                                    <div id="qrcode_<?php echo $result->id ?>" class="qrcode" style="width: 150px;">
 
-                            </div>
-                            <!-- <div class="card-footer text-end">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
+                                            <table style="width: 100%; border: none;">
+                                                <tr>
+                                                    <th style="border: none; width: 70%;">Remarks</th>
+                                                    <th style="border: none; width: 30%;">Signature</th>
+                                                </tr>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border: none; width: 70%;">
+                                                            <b>Class Teacher </b>
+                                                            <p><b><?php echo $result->trs_comment ?></b></p>
+                                                        </td>
+                                                        <td style="border-bottom: 1px solid black; width: 30%;"><u><span style="visibility: hidden;">Signature</span></u></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: none; width: 70%;">
+                                                            <b>Principal</b>
+                                                            <p><b><?php echo $result->prin_comment ?></b></p>
+                                                        </td>
+                                                        <td style="border-bottom: 1px solid black; width: 30%;"><u><span style="visibility: hidden;">Signature</span></u></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- <div class="card-footer text-end">
 
                             </div> -->
+                                <!-- </div> -->
+                            </div>
+                            <!-- <div class="page-break"></div> -->
+                            <!-- COL-END -->
                         </div>
-                    </div>
-                    <!-- COL-END -->
-                </div>
-                <?php } } ?>
+                <?php }
+                } ?>
                 <!-- Report Cards End Here -->
 
             </div>
@@ -256,6 +351,10 @@ $settings = $this->ion_auth->settings();
         height: auto;
     }
 
+    .resultslip-card {
+        /* margin: 10px; */
+    }
+
     .card-header {
         display: flex;
         justify-content: space-between;
@@ -275,7 +374,23 @@ $settings = $this->ion_auth->settings();
         padding: 8px;
     }
 
+    .page-break {
+        page-break-after: always;
+    }
+
+    #SingleReportForm {
+        box-shadow: 0px 4px 8px 2px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+    }
+
     @media print {
+        /* .card {
+            padding: 10px;
+            width: 100%;
+            border: none !important;
+            box-shadow: none !important;
+        } */
+
         .text-right {
             text-align: right;
         }
@@ -310,140 +425,140 @@ $settings = $this->ion_auth->settings();
     }
 </style>
 <script>
-$(document).ready(function(){
-    <?php 
+    $(document).ready(function() {
+        <?php
         foreach ($results as $key => $r) {
-    ?>
-        // Create QRCode instance for each element
-        var qrcode_<?php echo $r->id ?> = new QRCode("qrcode_<?php echo $r->id ?>", {
-            width: 100, // Default width
-            height: 100, // Default height
-            colorDark: "#80b3ff"
-        });
+        ?>
+            // Create QRCode instance for each element
+            var qrcode_<?php echo $r->id ?> = new QRCode("qrcode_<?php echo $r->id ?>", {
+                width: 100, // Default width
+                height: 100, // Default height
+                colorDark: "#80b3ff"
+            });
 
-        function makeCode_<?php echo $r->id ?>() {
-            var elText_<?php echo $r->id ?> = $("#loginlink_<?php echo $r->id ?>").val();
-            if (!elText_<?php echo $r->id ?>) {
-                alert("Input a text");
-                return;
+            function makeCode_<?php echo $r->id ?>() {
+                var elText_<?php echo $r->id ?> = $("#loginlink_<?php echo $r->id ?>").val();
+                if (!elText_<?php echo $r->id ?>) {
+                    alert("Input a text");
+                    return;
+                }
+                qrcode_<?php echo $r->id ?>.makeCode(elText_<?php echo $r->id ?>);
             }
-            qrcode_<?php echo $r->id ?>.makeCode(elText_<?php echo $r->id ?>);
-        }
 
-        // Initial QR code generation
-        makeCode_<?php echo $r->id ?>();
+            // Initial QR code generation
+            makeCode_<?php echo $r->id ?>();
 
-        // Update QR code on input blur or enter key press
-        $("#loginlink_<?php echo $r->id ?>").on("blur keydown", function (e) {
-            if (e.type === 'blur' || e.keyCode === 13) {
-                makeCode_<?php echo $r->id ?>();
-            }
-        });
+            // Update QR code on input blur or enter key press
+            $("#loginlink_<?php echo $r->id ?>").on("blur keydown", function(e) {
+                if (e.type === 'blur' || e.keyCode === 13) {
+                    makeCode_<?php echo $r->id ?>();
+                }
+            });
 
-    <?php } ?>
-});
+        <?php } ?>
+    });
 </script>
 <script>
-    $(document).ready(function(){
-        <?php 
-            foreach ($results as $key => $result) {
-                $stu = $this->worker->get_student($result->student);
-                //Prepare Class Means
-                $submeans = [];
-                foreach ($clssubjects as $subkey => $subdetails) {
-                    $submarks = $this->cbc_tr->subscores($thread->id,$result->classgrp,$subkey); //Whole Class
-                    $stusubscore = $this->cbc_tr->compare_score($thread->id,$result->student,$subkey); //Student Score
+    $(document).ready(function() {
+        <?php
+        foreach ($results as $key => $result) {
+            $stu = $this->worker->get_student($result->student);
+            //Prepare Class Means
+            $submeans = [];
+            foreach ($clssubjects as $subkey => $subdetails) {
+                $submarks = $this->cbc_tr->subscores($thread->id, $result->classgrp, $subkey); //Whole Class
+                $stusubscore = $this->cbc_tr->compare_score($thread->id, $result->student, $subkey); //Student Score
 
-                    $scoredmarks = [];
+                $scoredmarks = [];
 
-                    foreach ($submarks as $submark) {
-                        $scoredmarks[] = $submark->combinedmarks;
-                    }
-
-                    $submeans[$subkey] = array(
-                        'title' => $subdetails['title'],
-                        'meanscores' => !empty($scoredmarks) ? round(array_sum($scoredmarks) / count($submarks)) : 0,
-                        'studentscore' => $stusubscore->combinedmarks ? $stusubscore->combinedmarks : 0
-                    );
+                foreach ($submarks as $submark) {
+                    $scoredmarks[] = $submark->combinedmarks;
                 }
 
-                
+                $submeans[$subkey] = array(
+                    'title' => $subdetails['title'],
+                    'meanscores' => !empty($scoredmarks) ? round(array_sum($scoredmarks) / count($submarks)) : 0,
+                    'studentscore' => $stusubscore->combinedmarks ? $stusubscore->combinedmarks : 0
+                );
+            }
+
+
         ?>
 
-        var container = document.querySelector("#performance_<?php echo $result->id ?>");
-        var containerWidth = container.clientWidth;
-        var containerHeight = container.offsetHeight;
+            var container = document.querySelector("#performance_<?php echo $result->id ?>");
+            var containerWidth = container.clientWidth;
+            var containerHeight = container.offsetHeight;
 
-        var options = {
-          series: [{
-          name: "<?php echo $this->classes[$result->classgrp] ?>",
-          type: 'column',
-          data: [
-            <?php foreach ($submeans as $sub => $details) { 
-                echo $details['meanscores'].','    
-            ?>
+            var options = {
+                series: [{
+                    name: "<?php echo $this->classes[$result->classgrp] ?>",
+                    type: 'column',
+                    data: [
+                        <?php foreach ($submeans as $sub => $details) {
+                            echo $details['meanscores'] . ','
+                        ?>
 
-            <?php } ?>
-            ]
-        }, {
-          name: "<?php echo $stu->first_name ?>",
-          type: "line",
-          data: [
-            <?php foreach ($submeans as $sub => $details) { 
-                echo $details['studentscore'].','    
-            ?>
+                        <?php } ?>
+                    ]
+                }, {
+                    name: "<?php echo $stu->first_name ?>",
+                    type: "line",
+                    data: [
+                        <?php foreach ($submeans as $sub => $details) {
+                            echo $details['studentscore'] . ','
+                        ?>
 
-            <?php } ?>
-        ]
-        }],
-          chart: {
-            height: 200,
-            width: '80%',
-            type: "line",
-            zoom : {
-                enabled: false
-            }
-        },
-        stroke: {
-          width: [0, 2]
-        },
-        title: {
-          text: "<?php echo $stu->first_name ?> vs <?php echo $this->classes[$result->class_group] ?> Perfomance subjectwise"
-        },
-        dataLabels: {
-          enabled: true,
-          enabledOnSeries: [1]
-        },
-        // labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
-        labels: [
-            <?php foreach ($submeans as $sub => $details) { 
-                echo '"'.$details['title'].'",'    
-            ?>
+                        <?php } ?>
+                    ]
+                }],
+                chart: {
+                    height: 200,
+                    width: '80%',
+                    type: "line",
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                stroke: {
+                    width: [0, 2]
+                },
+                title: {
+                    text: "<?php echo $stu->first_name ?> vs <?php echo $this->classes[$result->class_group] ?> Perfomance subjectwise"
+                },
+                dataLabels: {
+                    enabled: true,
+                    enabledOnSeries: [1]
+                },
+                // labels: ['01 Jan 2001', '02 Jan 2001', '03 Jan 2001', '04 Jan 2001', '05 Jan 2001', '06 Jan 2001', '07 Jan 2001', '08 Jan 2001', '09 Jan 2001', '10 Jan 2001', '11 Jan 2001', '12 Jan 2001'],
+                labels: [
+                    <?php foreach ($submeans as $sub => $details) {
+                        echo '"' . $details['title'] . '",'
+                    ?>
 
-            <?php } ?>
-        ],
-        xaxis: {
-          type: 'category',
-        },
-        yaxis: [{
-          title: {
-            text: "<?php echo $this->classes[$result->classgrp] ?> Means",
-          },
-         
-        }, 
-            {
-            opposite: true,
-            title: {
-                text: "<?php echo $stu->first_name ?> Scores"
-            }
-            }
-        ]
-        };
+                    <?php } ?>
+                ],
+                xaxis: {
+                    type: 'category',
+                },
+                yaxis: [{
+                        title: {
+                            text: "<?php echo $this->classes[$result->classgrp] ?> Means",
+                        },
 
-        var chart = new ApexCharts(document.querySelector("#performance_<?php echo $result->id ?>"), options);
-        chart.render();
+                    },
+                    {
+                        opposite: true,
+                        title: {
+                            text: "<?php echo $stu->first_name ?> Scores"
+                        }
+                    }
+                ]
+            };
 
-        //Area Chart
+            var chart = new ApexCharts(document.querySelector("#performance_<?php echo $result->id ?>"), options);
+            chart.render();
+
+            //Area Chart
         <?php } ?>
 
         //Plot Periodic Performance
@@ -532,5 +647,61 @@ $(document).ready(function(){
         <?php } ?>
 
         //Plot Periodic Performance
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        <?php
+        foreach ($newresults as $stu => $examscores) {
+            $exxs = [];
+            $scrss = [];
+            foreach ($examscores as $exa => $scr) {
+                $scrss[] = $scr;
+                // $exxs[] = $mitihani[$exa];
+                $exxs[] = "'" . $actualexams[$exa] . "'";
+            }
+        ?>
+
+            // console.log();
+            // Prepare data for the chart for each student
+            let seriesData_<?php echo $stu ?> = [{
+                name: "Scores",
+                // data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
+                data: [<?php echo implode(',', $scrss); ?>]
+            }];
+
+            // Chart options for each student
+            let options_<?php echo $stu ?> = {
+                chart: {
+                    type: 'line',
+                    // height: 350,
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                series: seriesData_<?php echo $stu ?>,
+                xaxis: {
+                    // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+                    categories: [<?php echo implode(',', $exxs) ?>]
+                },
+                title: {
+                    // text: 'Monthly Sales Data',
+                    align: 'left'
+                },
+                yaxis: {
+                    title: {
+                        text: 'Totals'
+                    }
+                },
+                tooltip: {
+                    enabled: true
+                }
+            };
+
+            // Render the chart for each student
+            let chart_<?php echo $stu ?> = new ApexCharts(document.querySelector("#examscomparison_<?php echo $stu ?>"), options_<?php echo $stu ?>);
+            chart_<?php echo $stu ?>.render();
+
+        <?php } ?>
     });
 </script>

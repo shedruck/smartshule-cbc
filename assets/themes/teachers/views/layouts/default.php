@@ -13,7 +13,7 @@
 
     <!-- FAVICON -->
 
-    <!-- Main Theme Js -->
+    <!-- Main ThemeJs -->
     <script src="<?php echo base_url('assets/themes/teachers') ?>/js/main.js"></script>
 
     <!-- Choices JS -->
