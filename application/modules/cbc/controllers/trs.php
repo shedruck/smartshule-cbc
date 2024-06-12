@@ -1306,10 +1306,10 @@ class Trs extends Trs_Controller
     }
 
     //Function to Compute Marks
-    public function sync($level, $thread)
+    public function sync($level, $tid)
     {
+        $thread = $this->cbc_tr->find($tid,'cbc_exam_threads');
         $exams = $this->cbc_tr->find_exams($thread->term, $thread->year);
-        $thread = $this->cbc_tr->find($thread, 'cbc_exam_threads');
         $classtreams = $this->cbc_tr->class_group_streams($level);
 
         //Prepare Streams 
