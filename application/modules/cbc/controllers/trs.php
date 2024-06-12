@@ -1305,8 +1305,66 @@ class Trs extends Trs_Controller
         $this->template->title('View Exam Reports')->build('teachers/reports', $data);
     }
 
+    //Function to do Analysis
+    public function analysis($level,$tid) {
+        $data = [];
+
+        $this->template->title('View Exam Analysis')->build('teachers/analysis', $data);
+    }
+
+    //Function to do Analysis
+    public function marksheet($level,$tid) {
+        $thread = $this->cbc_tr->find($tid, 'cbc_exam_threads');
+        $classtreams = $this->cbc_tr->class_group_streams($level);
+        $subjects = $this->cbc_tr->get_all_class_subjects3($level);
+
+        //Prepare Streams 
+        $streams = [];
+
+        foreach ($classtreams as $cls) {
+            $streams[$cls->id] = $this->streams[$cls->id];
+        }
+
+        if ($this->input->post()) {
+            $post = (object) $this->input->post();
+
+            $class = $post->class;
+            $level = $post->level;
+            $comparewith = $post->compare;
+
+            if ($class == 0) {
+                $students = $this->cbc_tr->get_students_by_group($level);
+            } else {
+                $students = $this->cbc_tr->get_students_by_stream($class);
+            }
+            
+            if (empty($students)) {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => 'No marks found for students in this Class'));
+                redirect('cbc/trs/results/' . $thread->id);
+            } else {
+                $results = $this->cbc_tr->results($thread->id,$students);
+                $compareresults = $this->cbc_tr->results($comparewith,$students);
+
+                $data['results'] = $results;
+                $data['compareresults'] = $compareresults;
+                $data['comparison'] = $comparewith;
+            }
+            
+        }
+
+        $data['threads'] = $this->cbc_tr->populate('cbc_exam_threads','id','name');
+        $data['subjects'] = $subjects;
+        $data['streams'] = $streams;
+        $data['thread'] = $thread;
+        // $data['exams'] = $exams;
+        $data['level'] = $level;
+        $data['gradings'] = $this->cbc_tr->populate('grading_system', 'id', 'title');
+
+        $this->template->title('View Exam Analysis')->build('teachers/marksheet', $data);
+    }
+
     //Function to Compute Marks
-    public function sync($level, $tid)
+    public function sync($level,$tid)
     {
         $thread = $this->cbc_tr->find($tid,'cbc_exam_threads');
         $exams = $this->cbc_tr->find_exams($thread->term, $thread->year);
