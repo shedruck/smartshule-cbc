@@ -67,7 +67,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-
+    <!-- Excel Generation -->
+    <script src="<?php echo base_url() ?>assets/themes/teachers/js/xlsx.full.min.js"></script>
 
     <!-- Toasts -->
     <link href="<?php echo base_url() ?>assets/themes/teachers/toast-master/css/jquery.toast.css" rel="stylesheet">
@@ -710,6 +711,8 @@
     <script src="<?php echo base_url('assets/themes/admin/plugins/apexcharts/dist/apexcharts.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/themes/admin/plugins/qrcodejs/qrcode.min.js'); ?>"></script>
 
+    <!-- Excel Generation JS -->
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/xlsx.full.min.js"></script>
 
 </body>
 
@@ -765,6 +768,21 @@
             // Add any additional options you need
         });
     });
+
+    function ExportToExcel(title, type, fn, dl) {
+            let file_name = "<?php echo underscore($this->school->school) ?> " + title + " <?php echo date('Y_m_d_H:i:s'); ?>";
+            var elt = document.getElementById("xport");
+            var wb = XLSX.utils.table_to_book(elt, {
+                sheet: "sheet1"
+            });
+            return dl ?
+                XLSX.write(wb, {
+                    bookType: type,
+                    bookSST: true,
+                    type: "base64"
+                }) :
+                XLSX.writeFile(wb, fn || file_name + '.' + (type || "xlsx"));
+        }
 </script>
 
 
@@ -876,6 +894,21 @@
                 stack: 6
             });
         });
+
+        function ExportToExcel(title, type, fn, dl) {
+            let file_name = "<?php echo underscore($this->school->school) ?> " + title + " <?php echo date('Y_m_d_H:i:s'); ?>";
+            var elt = document.getElementById("xport");
+            var wb = XLSX.utils.table_to_book(elt, {
+                sheet: "sheet1"
+            });
+            return dl ?
+                XLSX.write(wb, {
+                    bookType: type,
+                    bookSST: true,
+                    type: "base64"
+                }) :
+                XLSX.writeFile(wb, fn || file_name + '.' + (type || "xlsx"));
+        }
     </script>
 <?php endif; ?>
 

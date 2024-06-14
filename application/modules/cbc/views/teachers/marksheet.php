@@ -31,7 +31,7 @@ $cls = $this->input->post('class');
                     </div> -->
                     <div class="col-lg-3 col-md-3 col-xl-3">
                         <button type="submit" class="btn btn-success">Show Results</button>
-                        <button type="button" class="btn btn-info mb-1 d-inline-flex" onclick=""><i class="si si-printer me-1 lh-base"></i> Export Excel</button>
+                        <button type="button" class="btn btn-info mb-1 d-inline-flex" onclick="ExportToExcel('<?php echo $cls == 0 ? $this->classes[$level] : $this->streams[$cls] ?> Mark Sheet for <?php echo $thread->name ?>', 'xlsx')"><i class="si si-printer me-1 lh-base"></i> Export Excel</button>
                     </div>
 
                 </div>
@@ -50,7 +50,7 @@ $cls = $this->input->post('class');
                     $exams = $this->cbc_tr->populate('cbc_threads', 'id', 'exam'); 
                 ?>
                 <div class="table-responsive">
-                    <table class="table border table-bordered">
+                    <table class="table border table-bordered" id="xport">
                         <thead class="table-success">
                             <tr>
                                 <th rowspan="3"></th>
@@ -87,7 +87,7 @@ $cls = $this->input->post('class');
                                         $sub = (object) $sdetails;
                                         ${'sub_' . $skey} = 0;
                                 ?>
-                                <th><?php echo $sub->short_name; ?></th>
+                                <th><b><?php echo $sub->short_name; ?></b></th>
                                 <?php } ?>
                                 <th>GRAND</th>
                                 <th>AVERAGE</th>
@@ -168,7 +168,12 @@ $cls = $this->input->post('class');
                                     ?>
                                     <td>
                                     <?php 
-                                        $submean = round(${'sub_' . $skey} / ${'subb_' . $skey},2);
+                                        if ($type = 1) {
+                                            $submean = round(${'sub_' . $skey} / ${'subb_' . $skey},0);
+                                        } else {
+                                            $submean = round(${'sub_' . $skey} / ${'subb_' . $skey},2);
+                                        }
+                                        
                                         $subjectsmeans[$skey] = $submean;
                                         echo $submean;
                                     ?>
@@ -237,7 +242,16 @@ $cls = $this->input->post('class');
                                         }   
                                         ?>
                                         </td>
-                                        <td colspan="3"></td>
+                                        <td colspan="3">
+                                            <?php 
+                                                if ($cls == 0) {
+                                                    $mwalimu = "_";
+                                                } else {
+                                                    $mwalimu = $this->cbc_tr->get_subject_teacher($cls,$skey,$thread->term,$thread->year);
+                                                }
+                                                echo $mwalimu;
+                                            ?>
+                                        </td>
                                     </tr>
                             <?php } ?>
                         </tbody>
