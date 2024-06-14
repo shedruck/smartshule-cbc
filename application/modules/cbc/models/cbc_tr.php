@@ -78,6 +78,8 @@ class Cbc_tr extends MY_Model
         );
     }
 
+    //Function to get Subject Teacher
+
     function add_social($data, $table)
     {
         $this->db->insert($table, $data);
@@ -255,8 +257,8 @@ class Cbc_tr extends MY_Model
             ->get('subjects_classes')
             ->result();
 
-        $sub =  $this->populate('cbc_subjects', 'id', 'name');
-        // $sub =  $this->populate('subjects', 'id', 'name');
+        // $sub =  $this->populate('cbc_subjects', 'id', 'name');
+        $sub =  $this->populate('subjects', 'id', 'name');
 
         $out = [];
         foreach ($list as $p) {
@@ -297,6 +299,48 @@ class Cbc_tr extends MY_Model
         return $out;
 
         // return $list;
+    }
+
+    //Function to get all class subjects
+    function get_all_class_subjects3($clas) {
+        $list =  $this->db
+                    ->where(
+                        [
+                            'class_id' => $clas,
+                        ]
+                    )
+                    ->get('subjects_classes')
+                    ->result();
+
+        $out = [];
+
+        foreach ($list as $l) {
+            $subject = $this->get_subject($l->subject_id);
+
+            $out[$l->subject_id] = array(
+                'name' => $subject->name,
+                'short_name' => $subject->short_name
+            );
+        }
+
+        return $out;
+    }
+
+    //Get Subject Marks
+    function get_subject_scores($tid,$student,$subject) {
+        return $this->db
+                    ->where('tid',$tid)
+                    ->where('student',$student)
+                    ->where('subject',$subject)
+                    ->get('cbc_subs_included')
+                    ->row();
+    }
+
+    function get_subject($id) {
+        return $this->db
+                    ->where('id',$id)
+                    ->get('subjects')
+                    ->row();
     }
 
     //Function to get Marks
@@ -418,9 +462,10 @@ class Cbc_tr extends MY_Model
      }
 
      //The last four performances
-     function last_four_scores($student) {
+     function last_four_scores($student,$type) {
         return $this->db
                     ->where('student',$student)
+                    ->where('type',$type)
                     ->order_by('tid','ASC')
                     ->limit(4)
                     ->get('cbc_final_results')
@@ -431,10 +476,40 @@ class Cbc_tr extends MY_Model
         return $this->db
                     ->where('class',$class)
                     ->where('subject',$sub)
-                    ->where('subject',$term)
-                    ->where('subject',$year)
+                    ->where('term',$term)
+                    ->where('year',$year)
                     ->get('subjects_assign')
                     ->row();
+     }
+
+     //Get Subject Teacher
+     function get_subject_teacher($class,$sub,$term,$year) {
+        return $this->db
+                    ->where('class',$class)
+                    ->where('subject',$sub)
+                    ->where('term',$term)
+                    ->where('year',$year)
+                    ->type('type',1)
+                    ->get('subjects_assign')
+                    ->row();
+     }
+
+     //Get Class Teacher 
+     function get_teacher($cls) {
+        $row = $this->db
+                    ->where('id',$cls)
+                    ->get('classes')
+                    ->row();
+
+        $user = $this->ion_auth->get_user($row->class_teacher);
+
+        if ($user) {
+            return "_";
+        } else {
+            return ucwords($user->first_name.' '.$user->last_name);
+        }
+        
+        
      }
 
      function subscores($tid,$classgrp,$sub) {

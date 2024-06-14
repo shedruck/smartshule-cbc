@@ -28,9 +28,10 @@
                                     <td><?php echo $level ?></td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <a type="button" href="<?php echo base_url('cbc/trs/reports/'.$key.'/'.$thread->id) ?>" class="btn btn-info">Reports Forms</a>
-                                            <a type="button" class="btn btn-primary">Analyze</a>
-                                            <a type="button" href="<?php echo base_url('cbc/trs/sync/'.$key.'/'.$thread->id) ?>" class="btn btn-success">Compute</a>
+                                            <a type="button" href="<?php echo base_url('cbc/trs/reports/'.$key.'/'.$thread->id) ?>" class="btn btn-info btn-sm">Reports Forms</a>
+                                            <a type="button" href="<?php echo base_url('cbc/trs/analysis/'.$key.'/'.$thread->id) ?>" class="btn btn-primary btn-sm">Analyze</a>
+                                            <a type="button" href="<?php echo base_url('cbc/trs/marksheet/'.$key.'/'.$thread->id) ?>" class="btn btn-danger btn-sm">Marks Sheet</a>
+                                            <a type="button" href="<?php echo base_url('cbc/trs/sync/'.$key.'/'.$thread->id) ?>" class="btn btn-success btn-sm">Compute</a>
                                         </div>
                                     </td>
                                 </tr>
