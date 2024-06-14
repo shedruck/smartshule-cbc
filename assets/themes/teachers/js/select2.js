@@ -9,7 +9,7 @@
 
     /* single select with placeholder */
     $(".js-example-placeholder-single").select2({
-        placeholder: "Select a state",
+        placeholder: "Select a class",
         allowClear: true,
     });
 
@@ -25,7 +25,7 @@
 
     /* multiple select with placeholder */
     $(".js-example-placeholder-multiple").select2({
-        placeholder: "Select a state"
+        placeholder: "Select a class"
     });
 
     /* templating */
@@ -83,7 +83,7 @@
     document.querySelector("#switcher-rtl").addEventListener("click",()=>{
         $('.js-example-basic-single').select2();
         $(".js-example-placeholder-single").select2({
-            placeholder: "Select a state",
+            placeholder: "Select a class",
             allowClear: true,
             dir: "rtl"
         });
@@ -101,14 +101,14 @@
 
     /* single select with placeholder */
     $(".js-example-placeholder-single").select2({
-        placeholder: "Select a state",
+        placeholder: "Select a class",
         allowClear: true,
         dir: "rtl"
     });
 
     /* multiple select with placeholder */
     $(".js-example-placeholder-multiple").select2({
-        placeholder: "Select a state",
+        placeholder: "Select a class",
         dir: "rtl"
     });
 
@@ -176,7 +176,7 @@
     document.querySelector("#reset-all").addEventListener("click",()=>{
         $('.js-example-basic-single').select2();
         $(".js-example-placeholder-single").select2({
-            placeholder: "Select a state",
+            placeholder: "Select a class",
             allowClear: true,
             dir: "ltr"
         });
@@ -194,14 +194,14 @@
 
     /* single select with placeholder */
     $(".js-example-placeholder-single").select2({
-        placeholder: "Select a state",
+        placeholder: "Select a class",
         allowClear: true,
         dir: "ltr"
     });
 
     /* multiple select with placeholder */
     $(".js-example-placeholder-multiple").select2({
-        placeholder: "Select a state",
+        placeholder: "Select a class",
         dir: "ltr"
     });
 
@@ -268,7 +268,7 @@
     document.querySelector("#switcher-ltr").addEventListener("click",()=>{
         $('.js-example-basic-single').select2();
         $(".js-example-placeholder-single").select2({
-            placeholder: "Select a state",
+            placeholder: "Select a class",
             allowClear: true,
             dir: "ltr"
         });
@@ -286,14 +286,14 @@
 
     /* single select with placeholder */
     $(".js-example-placeholder-single").select2({
-        placeholder: "Select a state",
+        placeholder: "Select a class",
         allowClear: true,
         dir: "ltr"
     });
 
     /* multiple select with placeholder */
     $(".js-example-placeholder-multiple").select2({
-        placeholder: "Select a state",
+        placeholder: "Select a class",
         dir: "ltr"
     });
 

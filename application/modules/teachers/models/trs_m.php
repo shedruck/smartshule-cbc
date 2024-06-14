@@ -196,6 +196,11 @@ class Trs_m extends MY_Model
     return $query->result();
   }
 
+  function create($data)
+  {
+    return $this->insert_key_data('teachers', $data);
+  }
+
   function populate($table, $id, $name)
   {
     $rs = $this->db->select('*')->order_by($id)->get($table)->result();
@@ -241,5 +246,25 @@ function get_atte_totals($ids, $stud) {
     ];
 }
 
+  public function all_teachers()
+  {
+    $this->select_all_key('teachers');
+    $query = $this->db->order_by('created_on', 'DESC')->get('teachers');
+    return $query->result_array();
+  }
+
+
+  public function get_teacher($id)
+  {
+    $this->select_all_key('teachers'); 
+    $this->db->where('id', $id); 
+    $query = $this->db->get('teachers'); 
+    return $query->row(); 
+  }
+  function find($id)
+  {
+    $this->select_all_key('teachers');
+    return $this->db->where(array('id' => $id))->get('teachers')->row();
+  }
 
 }

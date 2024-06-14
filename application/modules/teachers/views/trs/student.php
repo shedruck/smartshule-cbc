@@ -99,8 +99,9 @@
            <?php
                 }
               }
-            } ?>
-
+            }else { ?>
+              <div class="alert alert-warning">No siblings found</div>
+           <?php } ?>
          </div>
        </div>
      </div>

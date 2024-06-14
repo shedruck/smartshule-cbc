@@ -92,7 +92,7 @@
                                 <li class="slide <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">
                                     <a href="<?php echo base_url('cbc/trs/joint_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">Joint Exam Reports</a>
                                 </li>
-                                
+
                                 <!-- <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
                                         <a href="<?php echo base_url('cbc/trs/summ_single') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">Summative Reports Per Student</a>
                                     </li> -->
@@ -251,7 +251,7 @@
                                         <a href="<?php echo base_url('class_groups/trs/assign_ctr') ?>" class="side-menu__item">Assign ClassTeacher</a>
                                     </li>
                                     <li class="slide">
-                                        <a href="javascript:void(0);" class="side-menu__item">Manage Teachers</a>
+                                        <a href="<?php echo base_url('teachers/trs/view_teachers') ?>" class="side-menu__item">Manage Teachers</a>
                                     </li>
 
                                 </ul>

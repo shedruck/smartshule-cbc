@@ -29,6 +29,12 @@ class Cbc_tr extends MY_Model
                     ->row();
     }
 
+    function find1($id, $table = 'cbc')
+    {
+        return $this->db->where(['id' => $id])->get($table)->row();
+    }
+    
+
     //Check if Combined Marks is already there
     function check_marks($tid,$stu,$sub) {
         return $this->db
@@ -747,6 +753,36 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $id)->get('classes')->row();
     }
 
+    function get_topics($id, $sub = 0)
+    {
+        $topics = $sub ?
+            $this->db->select('id,name')->where('id', $sub)->get('cbc_topics')->result() :
+            $this->db->select('id,name')
+            ->where('strand', $id)
+            ->get('cbc_topics')
+            ->result();
+
+        foreach ($topics as $l) {
+            $l->rate = '';
+            $l->remarks = "";
+            $l->tasks = $this->get_tasks($l->id);
+        }
+
+        return $topics;
+    }
+    function get_la($subject)
+    {
+        $la = $this->db->select('id, name')
+        ->where('subject', $subject)
+            ->get('cbc_la')
+            ->result();
+        foreach ($la as $l) {
+            $l->subs = $this->get_topics($l->id);
+        }
+
+        return $la;
+    }
+
     function get_classes($clsgp)
     {
         return $this->db->where('id', $clsgp)->get('classes')->row();
@@ -1198,7 +1234,92 @@ class Cbc_tr extends MY_Model
     }
 
 
-    
+    function create_sub($data, $table)
+    {
+        $this->db->insert($table, $data);
+        return $this->db->insert_id();
+    }
    
+
+    function save_by_classes($data, $class = 0, $subject = 0)
+    {
+        $exix = $this->db->where(['class_id' => $class, 'subject_id' => $subject])->count_all_results('cbc') > 0;
+        if (!$exix) {
+            $this->db->insert('cbc', $data);
+            return $this->db->insert_id();
+        }
+    }
+
+    function remove_cbc($id)
+    {
+        return $this->db->delete('cbc', array('subject_id' => $id));
+    }
+
+    function remove($id)
+    {
+        return $this->db->delete('cbc_subjects', array('id' => $id));
+    }
+
+    function get_cbc_sub($limit = 0, $page = 0, $class = 0)
+    {
+        $offset = $limit * ($page - 1);
+
+        $this->db->select('cbc_subjects.*');
+        if ($class) {
+            $this->db->join('cbc', 'subject_id=cbc_subjects.id')->where('class_id', $class);
+        }
+        return $limit ?
+            $this->db->order_by('cbc_subjects.id', 'desc')->get('cbc_subjects', $limit, $offset)->result() :
+            $this->db->order_by('cbc_subjects.id', 'desc')->get('cbc_subjects')->result();
+    }
+
+    function fetch_classes($subject)
+    {
+        $list = $this->list_assigned_classes($subject);
+
+        $fn = [];
+        foreach ($list as $f) {
+            $fn[] = isset($this->classes[$f->class_id]) ? $this->classes[$f->class_id] : '  - ';
+        }
+
+        return $fn;
+    }
+
+    function list_assigned_classes($subject)
+    {
+        return $this->db->select('class_id')
+        ->where('subject_id', $subject)
+            ->group_by('class_id')
+            ->get('cbc')
+            ->result();
+    }
+
+    function remove_assigned($subject, $id)
+    {
+        return $this->db->delete('cbc', ['subject_id' => $subject, 'class_id' => $id]);
+    }
+
+    function get_tasks($topic)
+    {
+        $tasks = $this->db->select('id,name')
+        ->where('topic', $topic)
+            ->get('cbc_tasks')
+            ->result();
+        foreach ($tasks as $t) {
+            $t->rate = '';
+            $t->check = true;
+        }
+        return $tasks;
+    }
+
+    function exists($id, $table = 'cbc')
+    {
+        return $this->db->where(['id' => $id])->count_all_results($table) > 0;
+    }
+
+    function delete_row($id, $table)
+    {
+        return $this->db->delete($table, ['id' => $id]);
+    }
 
 }

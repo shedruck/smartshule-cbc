@@ -20,8 +20,6 @@
           </div>
           <div class="text-center m-1">
             <div class="text-success mb-0 mt-2">
-              <!-- <i class="fa fa-star fs-20"></i> -->
-              <!-- <i class="fa fa-star fs-20"></i> -->
               <i class="fa fa-star fs-20"></i>
               <i class="fa fa-star fs-20"></i>
               <i class="fa fa-star fs-20"></i>
@@ -208,6 +206,8 @@
     $myids[] = $at->id;
   }
 
+  $attc = count($att);
+
   $myids1 = [];
 
   foreach ($attnd  as $keyyy => $at) {
@@ -217,6 +217,7 @@
   $presentCounts = $this->cbc_tr->get_class_att($myids);
 
   $attendanceDateCount = [];
+
 
   foreach ($att as $detail) {
     $attendanceId = $detail->id;
@@ -249,8 +250,14 @@
             <div class="card-title"><span class="text-primary"><?php echo $this->streams[$cls->id] ?> </span> - Attendance Report</div>
           </div>
           <div class="card-body">
-            <!-- <canvas id="chart" ></canvas> -->
-            <div id="chart" class="chartjs-chart"></div>
+            <?php if ($attc > 0) { ?>
+              <div id="chart" class="chartjs-chart"></div>
+            <?php } else { ?>
+              <div class="alert alert-warning">
+                <p>No attendance records taken so far</p>
+              </div>
+            <?php } ?>
+
           </div>
         </div>
       </div>
@@ -269,40 +276,48 @@
               <table class="table table-hover card-table mb-0">
 
                 <tbody>
-                  <?php
 
-                  foreach ($stu as $keyy => $st) {
+                  <?php if ($attc > 0) { ?>
+                    <?php
 
-                    $stud = $this->worker->get_student($keyy);
+                    foreach ($stu as $keyy => $st) {
 
-                    $name = $stud->first_name . ' ' . $stud->last_name;
+                      $stud = $this->worker->get_student($keyy);
 
-                    $p = ($st / $count) * 100;
+                      $name = $stud->first_name . ' ' . $stud->last_name;
 
-                  ?>
-                    <tr>
-                      <td class="ps-3">
-                        <div class="d-flex align-items-center position-relative">
-                          <img class="avatar brround avatar-md me-3" alt="avatra-img" src="../assets/images/users/18.jpg">
-                          <div class="flex-grow-1">
-                            <p class="mb-0"> <?php echo ucwords($name) ?></p>
+                      $p = ($st / $count) * 100;
+
+                    ?>
+                      <tr>
+                        <td class="ps-3">
+                          <div class="d-flex align-items-center position-relative">
+                            <img class="avatar brround avatar-md me-3" alt="avatra-img" src="../assets/images/users/18.jpg">
+                            <div class="flex-grow-1">
+                              <p class="mb-0"> <?php echo ucwords($name) ?></p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td>
-                        <span class="badge rounded-pill bg-primary-transparent"><?php echo number_format($p, 1) ?> %</span>
-                      </td>
+                        <td>
+                          <span class="badge rounded-pill bg-primary-transparent"><?php echo number_format($p, 1) ?> %</span>
+                        </td>
 
-                      <td>
-                        <span><strong><?php echo $st ?></strong> days</span>
-                      </td>
-                    </tr>
+                        <td>
+                          <span><strong><?php echo $st ?></strong> days</span>
+                        </td>
+                      </tr>
 
-                  <?php
+                    <?php
 
-                  }
-                  ?>
+                    }
+                    ?>
+                  <?php } else { ?>
+                    <div class="alert alert-warning">
+                      <p>No attendance records taken so far</p>
+                    </div>
+                  <?php } ?>
+
 
                 </tbody>
               </table>
@@ -315,7 +330,7 @@
   <?php  } ?>
   <!-- ROW-1 -->
 
-  
+
 
   <script>
     // Get the PHP variable containing the JSON-encoded array

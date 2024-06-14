@@ -1801,5 +1801,296 @@ class Trs extends Trs_Controller
     }
 
 
+    function add_subject()
+    {
+        //create control variables
+        $data['updType'] = 'create';
+
+        //Rules for validation
+        $this->form_validation->set_rules($this->subject_validation());
+        //validate the fields of form
+        if ($this->form_validation->run()) {
+            $form = [
+                'name' => $this->input->post('name'),
+                'cat' => $this->input->post('cat'),
+                'created_by' => $this->user->id,
+                'created_on' => time()
+            ];
+
+            $sb_id = $this->cbc_tr->create_sub($form, 'cbc_subjects');
+            if ($sb_id) {
+                $classes = $this->input->post('class');
+
+                foreach ($classes as $cl) {
+                    $sbc = [
+                        'class_id' => $cl,
+                        'subject_id' => $sb_id,
+                        'created_on' => time(),
+                    ];
+                    $this->cbc_tr->save_by_classes($sbc);
+                }
+
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+            }
+
+            redirect('cbc/trs/subjects');
+        } else {
+            $get = new StdClass();
+            foreach ($this->subject_validation() as $field) {
+                $get->{$field['field']} = set_value($field['field']);
+            }
+
+            $data['result'] = $get;
+            //load the view and the layout
+            $this->template->title('CBC Subjects')->build('teachers/create', $data);
+        }
+    }
+
+    public function subjects()
+    {
+        
+        $class = 0;
+        if ($this->input->post('class')) {
+            $class = $this->input->post('class');
+        }
+        $subjects = $this->cbc_tr->get_cbc_sub($config['per_page'], $page, $class);
+        foreach ($subjects as $s) {
+            $s->classes = $this->cbc_tr->fetch_classes($s->id);
+        }
+
+        $data['subjects'] = $subjects;
+        $data['cats'] = [0 => "Regular Subject", 1 => "Optional Subject", 2 => "Elective Subject"];
+
+        if ($this->input->post()) {
+            
+            $items = $this->input->post('subjects');
+
+            foreach ($items as $key => $item) {
+                
+                $del = $this->cbc_tr->remove($item);
+
+                if ($del) {
+                    $re = $this->cbc_tr->remove_cbc($item);
+
+                }
+
+                if ($re) {
+                    $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_delete_success')));
+                } else {
+                    $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_delete_failed')));
+                }
+
+                redirect('cbc/trs/subjects');
+            }
+        }
+       
+        
+        //load view
+        $this->template->title('CBC Subjects')->build('teachers/subjects', $data);
+    }
+
+    function edit_subject($id = 0)
+    {
+        if (!$id) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('admin/cbc/subjects');
+        }
+
+        $row = $this->cbc_tr->find1($id, 'cbc_subjects');
+        if (empty($row)) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('admin/cbc/subjects');
+        }
+        $list = $this->cbc_tr->list_assigned_classes($id);
+        $fn = [];
+        foreach ($list as $f) {
+            $fn[] = $f->class_id;
+        }
+
+        if ($this->input->post()) {
+            $classes = $this->input->post('class');
+
+            $rm = [];
+            $add = [];
+            foreach ($fn as $n) {
+                if (!in_array($n, $classes)) {
+                    $rm[] = $n;
+                }
+            }
+
+            foreach ($classes as $n) {
+                if (!in_array($n, $fn)) {
+                    $add[] = $n;
+                }
+            }
+
+            foreach ($add as $cls) {
+                $sbc = [
+                    'class_id' => $cls,
+                    'subject_id' => $id,
+                    'created_on' => time(),
+                ];
+                $this->cbc_tr->save_by_classes($sbc);
+            }
+            foreach ($rm as $del) {
+                $this->cbc_tr->remove_assigned($id, $del);
+            }
+
+            $form = [
+                'name' => $this->input->post('name'),
+                'cat' => $this->input->post('cat'),
+                'modified_by' => $this->user->id,
+                'modified_on' => time()
+            ];
+
+            $sv = $this->cbc_tr->update_with($id, $form, 'cbc_subjects');
+
+            if ($sv) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_edit_success')));
+                redirect("cbc/trs/subjects");
+            }
+        }
+
+        $data['post'] = $row;
+        $data['assigned'] = $fn;
+        //load the view and the layout
+        $this->template->title('Edit Subject ')->build('teachers/form_sub', $data);
+    }
+
+    public function learning_areas($id)
+    {
+        if ($id && $this->input->post('name')) {
+            $post = $this->input->post('name');
+            $i = 0;
+            foreach ($post as $p) {
+                if (empty($p)) {
+                    continue;
+                }
+                $i++;
+                $form = [
+                    'subject' => $id,
+                    'name' => $p,
+                    'status' => 1,
+                    'created_by' => $this->user->id,
+                    'created_on' => time()
+                ];
+
+                $this->cbc_tr->create_sub($form, 'cbc_la');
+            }
+            if ($i) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect('cbc/trs/learning_areas/' . $id);
+            }
+        }
+
+        $post = $this->cbc_tr->get_la($id);
+
+        foreach ($post as $p) {
+            $p->topics = $this->cbc_tr->get_topics($p->id);
+        }
+
+        $data['post'] = $post;
+        $data['la'] = $this->cbc_tr->find1($id, 'cbc_subjects');
+
+        //load view
+        $this->template->title('Learning Areas ')->build('teachers/strands', $data);
+    }
+
+    private function subject_validation()
+    {
+        $config = array(
+            array(
+                'field' => 'name',
+                'label' => 'Name',
+                'rules' => 'required|trim|xss_clean|max_length[60]'
+            ),
+            array(
+                'field' => 'cat',
+                'label' => 'Subject Category',
+                'rules' => 'required'
+            )
+        );
+        $this->form_validation->set_error_delimiters("<br /><span class='error'>", '</span>');
+        return $config;
+    }
+
+    function delete_strand($id = 0, $la = 0)
+    {
+        if (!$id) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/learning_areas/' . $la);
+        }
+        if (!$this->cbc_tr->exists($id, 'cbc_topics')) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/learning_areas/' . $la);
+        }
+
+        if ($this->cbc_tr->delete_row($id, 'cbc_la')) {
+            $this->session->set_flashdata('message', array('type' => 'sucess', 'text' => lang('web_delete_success')));
+        } else {
+            $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_delete_failed')));
+        }
+        redirect('cbc/trs/learning_areas/' . $la);
+    }
+
+    function edit_strand($id = 0, $la = 0)
+    {
+        if (!$id) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/learning_areas/' . $la);
+        }
+        if (!$this->cbc_tr->exists($id, 'cbc_la')) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/learning_areas/' . $la);
+        }
+        //fetch item to show in edit form
+        $get = $this->cbc_tr->find1($id, 'cbc_la');
+
+        //create control variables
+        $data['updType'] = 'edit';
+
+        if ($this->input->post('name')) {
+            $form = [
+                'name' => $this->input->post('name'),
+                'modified_by' => $this->user->id,
+                'modified_on' => time()
+            ];
+
+            $done = $this->cbc_tr->update_with($id, $form, 'cbc_la');
+
+            if ($done) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_edit_success')));
+                redirect('cbc/trs/learning_areas/' . $la);
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => $done->errors->full_messages()));
+                redirect('cbc/trs/learning_areas/' . $la);
+            }
+        }
+
+        $data['result'] = $get;
+        //load the view and the layout
+        $this->template->title('Edit Strand ')->build('teachers/edit_st', $data);
+    }
+
+    function delete_substrand($id = 0, $la = 0)
+    {
+        if (!$id) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/learning_areas/' . $la);
+        }
+        if (!$this->cbc_tr->exists($id, 'cbc_topics')) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/learning_areas/' . $la);
+        }
+
+        if ($this->cbc_tr->delete_row($id, 'cbc_topics')) {
+            $this->session->set_flashdata('message', array('type' => 'sucess', 'text' => lang('web_delete_success')));
+        } else {
+            $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_delete_failed')));
+        }
+        redirect('cbc/trs/learning_areas/' . $la);
+    }
    
 }

@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
-        <h6 class="float-start">MY ASSIGNED CLASSES</h6>
+        <h6 class="float-start"><B>FORMATIVE REPORT PER STUDENT</B></h6>
         <div class="btn-group btn-group-sm float-end" role="group">
           <a class="btn btn-sm btn-secondary mr-2" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
         </div>
@@ -29,7 +29,7 @@
                   <td><?php echo strtoupper($s->name) . $classteachertxt; ?></td>
 
                   <td>
-                    <?php echo anchor('cbc/trs/single_formative/'.$s->id , '<i class="fas fa-file-pdf"></i>  Generate Report', array('class' => 'btn btn-primary')); ?>
+                    <?php echo anchor('cbc/trs/single_formative/' . $s->id, '<i class="fas fa-file-pdf"></i>  Generate Report', array('class' => 'btn btn-primary')); ?>
                   </td>
                 </tr>
               <?php } ?>
