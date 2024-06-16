@@ -51,6 +51,11 @@ class Diary_m extends MY_Model
 					->result();
     }
 
+    function insert_dairy_filenames($data)
+    {
+        $this->db->insert('diary_uploads', $data);
+        return $this->db->insert_id();
+    } 
 	function ex_diary($id)
     {
 		

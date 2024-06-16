@@ -107,9 +107,9 @@
                 </div>
                 <div class="col-sm-2 p-2">
                     <div class="">
-                        <input type="number" min="0" max="12" name="points[]" value="<?php echo isset($result->points) ? $result->points : '' ?>" class="form-control" id="">
+                        <input type="number" min="0" max="12" name="points[]" value="<?php echo isset($result->points) ? $result->points : '' ?>" class="form-control" placeholder="E.g 12" id="">
 
-                        <?php echo form_input('points[]' , isset($result->points) ? $result->points : '' , 'id="points_"  class="form-control" placeholder="E.g 12" ' );?>
+                        <!-- <?php echo form_input('points[]' , isset($result->points) ? $result->points : '' , 'id="points_"  class="form-control" placeholder="E.g 12" ' );?> -->
                         <?php echo form_error('points'); ?>
                     </div>
                 </div>

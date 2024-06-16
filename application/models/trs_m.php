@@ -535,12 +535,12 @@ class Trs_m extends MY_Model
 
             $passport = $this->portal_m->student_passport($iCol->photo);
             $fake = base_url('uploads/files/member.png');
-            $ppst = '<image src="' . $fake . '" width="80" height="80" class="thumb-sm img-circle" >';
+            $ppst = '<image src="' . $fake . '" width="50" height="50" class="thumb-sm img-circle" >';
 
             if ($passport)
             {
                 $path = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
-                $ppst = '<image src="' . $path . '" width="80" height="80" class="thumb-sm img-circle" >';
+                $ppst = '<image src="' . $path . '" width="50" height="50" class="thumb-sm img-circle" >';
             }
 
 
@@ -735,12 +735,12 @@ class Trs_m extends MY_Model
 
             $passport = $this->portal_m->student_passport($iCol->photo);
             $fake = base_url('uploads/files/member.png');
-            $ppst = '<image src="' . $fake . '" width="80" height="80" class="thumb-sm img-circle" >';
+            $ppst = '<image src="' . $fake . '" width="50" height="50" class="thumb-sm img-circle" >';
 
             if ($passport)
             {
                 $path = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
-                $ppst = '<image src="' . $path . '" width="80" height="80" class="thumb-sm img-circle" >';
+                $ppst = '<image src="' . $path . '" width="50" height="50" class="thumb-sm img-circle" >';
             }
 
 
@@ -944,21 +944,7 @@ class Trs_m extends MY_Model
                     ->result();
     }
 
-    public function get_assigned_subjects(){
-        $id=$this->ion_auth->get_user()->id;
-        $this->select_all_key('teachers');
-        $this->select('subjects.*');
-        $this->select('subjects_assign.*');
-        return $this->db   
-                    
-                    ->join('teachers','teachers.id=subjects_assign.teacher')
-                    ->join('subjects','subjects.id = subjects_assign.subject')
-                    ->where($this->dx('teachers.user_id') . '=' . $id, NULL, FALSE)
-                    // ->where('teachers.user_id',$id)
-                    ->get('subjects_assign')
-                    ->result();
-    }
-
+    
    
 
 }

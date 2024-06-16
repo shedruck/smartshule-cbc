@@ -13,7 +13,7 @@
 
     <!-- FAVICON -->
 
-    <!-- Main Theme Js -->
+    <!-- Main ThemeJs -->
     <script src="<?php echo base_url('assets/themes/teachers') ?>/js/main.js"></script>
 
     <!-- Choices JS -->
@@ -24,6 +24,8 @@
 
     <!-- BOOTSTRAP CSS -->
     <link id="style" href="<?php echo base_url('assets/themes/teachers') ?>/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!-- STYLE CSS -->
     <link href="<?php echo base_url('assets/themes/teachers') ?>/css/style.css" rel="stylesheet">
@@ -38,17 +40,48 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/flatpickr/flatpickr.min.css">
     <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/@simonwep/pickr/themes/nano.min.css">
 
+    <!-- Full Calendar CSS -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/fullcalendar/main.min.css">
+
+    <!-- Sweetalerts CSS -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/sweetalert2/sweetalert2.min.css">
+
     <!-- Choices Css -->
     <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/choices.js/public/assets/styles/choices.min.css">
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/quill/quill.snow.css"> -->
+    <!-- <link rel="stylesheet" href="<?php echo base_url('assets/themes/teachers') ?>/libs/quill/quill.bubble.css"> -->
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link href="<?php echo base_url('assets/themes/trs/js/sweet-alert/sweetalert.min.css'); ?>" type="text/css" rel="stylesheet" />
+
+    <link href="<?php echo base_url('assets/themes/trs/js/summernote/summernote.css'); ?>" type="text/css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+    <!-- Excel Generation -->
+    <script src="<?php echo base_url() ?>assets/themes/teachers/js/xlsx.full.min.js"></script>
 
+    <!-- Toasts -->
+    <link href="<?php echo base_url() ?>assets/themes/teachers/toast-master/css/jquery.toast.css" rel="stylesheet">
+    <script src="<?php echo base_url() ?>assets/themes/teachers/toast-master/js/jquery.toast.js"></script>
 
+    <link href="<?php echo base_url('assets/themes/admin/plugins/font-awesome/css/font-awesome.min.css'); ?>" type="text/css" rel="stylesheet" />
+    <link href="<?php echo base_url('assets/themes/admin/plugins/apexcharts/dist/apexcharts.css'); ?>" type="text/css" rel="stylesheet" />
+
+    <style>
+        .popover-content.note-children-container {
+            display: none;
+        }
+    </style>
 
 </head>
 
@@ -474,7 +507,7 @@
             <div class="main-content app-content mt-0">
 
                 <!-- PAGE-HEADER -->
-                <div class="page-header d-flex align-items-center justify-content-between border-bottom mb-4">
+                <div id="schoolretmheader" class="page-header d-flex align-items-center justify-content-between border-bottom mb-4 hidden-print">
                     <h1 class="page-title"><?php echo $this->school->school ?></h1>
                     <div>
                         <ol class="breadcrumb">
@@ -570,7 +603,7 @@
             <div class="container">
                 <div class="row align-items-center flex-row-reverse">
                     <div class="col-md-12 col-sm-12 text-center">
-                        Copyright © <span id="year"></span> <a href="javascript:void(0);">Vexel</a>. Designed with <span class="fa fa-heart text-danger"></span> by <a href="javascript:void(0);"> Spruko </a> All
+                        Copyright © <span id="year"></span> <a href="javascript:void(0);"> <a href="javascript:void(0);"> Smartshule</a> <span class="fa fa-heart text-danger"></span></a>. All
                         rights reserved.
                     </div>
                 </div>
@@ -583,7 +616,7 @@
 
 
     <!-- Scroll To Top -->
-    <div class="scrollToTop">
+    <div class="scrollToTop hidden-print">
         <span class="arrow"><i class="fa fa-angle-up fs-20"></i></span>
     </div>
     <!-- Scroll To Top -->
@@ -638,9 +671,119 @@
 
     <script src="<?php echo base_url('assets/themes/teachers') ?>/js/select2.js"></script>
 
+    <!-- Quill Editor JS -->
+    <!-- <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/quill/quill.min.js"></script> -->
 
+    <!-- Internal Quill JS -->
+    <!-- <script src="<?php echo base_url('assets/themes/teachers') ?>/js/quill-editor.js"></script> -->
+
+
+    <!-- Moment JS -->
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/moment/moment.js"></script>
+
+    <!-- Datatables Cdn -->
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/table-data.js"></script>
+
+    <script src="<?php echo base_url('assets/themes/trs/js/sweet-alert/sweetalert.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/themes/trs/js/summernote/summernote.min.js'); ?>"></script>
+
+    <!-- Sweetalerts JS -->
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/sweetalert2/sweetalert2.min.js"></script>
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/sweet-alert.js"></script>
+
+
+
+    <!-- <script src="<?php echo base_url('assets/themes/teachers') ?>/libs/fullcalendar/main.min.js"></script>
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/fullcalendar.js"></script> -->
+
+
+    <script src="<?php echo base_url() ?>assets/themes/teachers/fullcalendar/fullcalendar/dist/index.global.js"></script>
+
+    <script src="<?php echo base_url('assets/themes/admin/plugins/apexcharts/dist/apexcharts.min.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/themes/admin/plugins/qrcodejs/qrcode.min.js'); ?>"></script>
+
+    <!-- Excel Generation JS -->
+    <script src="<?php echo base_url('assets/themes/teachers') ?>/js/xlsx.full.min.js"></script>
 
 </body>
+
+<!-- function for save sweeet alert -->
+
+<script>
+    (function() {
+        'use strict';
+
+        function setOnClick(id, callback) {
+            var element = document.getElementById(id);
+            if (element) {
+                element.onclick = callback;
+            } else {
+                console.warn(`Element with id "${id}" not found.`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setOnClick('auto-disappear-save', function() {
+                let timerInterval;
+                Swal.fire({
+                    title: 'Saved!',
+                    text: 'Your changes have been saved.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        const b = Swal.getHtmlContainer().querySelector('b');
+                        timerInterval = setInterval(() => {
+                            if (b) b.textContent = Swal.getTimerLeft();
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                });
+            });
+
+            // Your existing SweetAlert functions here...
+
+        });
+    })();
+</script>
+
+<script>
+    $(function() {
+        $(".datepicker").datepicker({
+            dateFormat: 'dd M yy', // Date format
+            changeMonth: true,
+            changeYear: true,
+            // Add any additional options you need
+        });
+    });
+
+    function ExportToExcel(title, type, fn, dl) {
+            let file_name = "<?php echo underscore($this->school->school) ?> " + title + " <?php echo date('Y_m_d_H:i:s'); ?>";
+            var elt = document.getElementById("xport");
+            var wb = XLSX.utils.table_to_book(elt, {
+                sheet: "sheet1"
+            });
+            return dl ?
+                XLSX.write(wb, {
+                    bookType: type,
+                    bookSST: true,
+                    type: "base64"
+                }) :
+                XLSX.writeFile(wb, fn || file_name + '.' + (type || "xlsx"));
+        }
+</script>
 
 
 <style>
@@ -655,6 +798,35 @@
 
         100% {
             transform: rotate(360deg);
+        }
+    }
+
+    .error {
+        color: red;
+        font-weight: bold;
+    }
+
+    .required {
+        color: red;
+    }
+</style>
+<style>
+    @media print {
+        .app-sidebar {
+            display: none;
+        }
+
+        .app-header {
+            display: none;
+        }
+
+        #pagecardheader {
+            display: none;
+        }
+
+        #schoolretmheader {
+            display: none;
+            visibility: hidden;
         }
     }
 </style>
@@ -675,8 +847,84 @@
 
 
         });
+
+        //
+        $('#editor').summernote({
+            placeholder: 'Write description here...',
+            height: 100, // set editor height
+            minHeight: null, // set minimum height of editor
+            maxHeight: null,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline']],
+                ['font', ['strikethrough']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']]
+            ]
+        });
+
+        //
+        $('.editor').summernote({
+            placeholder: 'Write description here...',
+            height: 100, // set editor height
+            minHeight: null, // set minimum height of editor
+            maxHeight: null, // set maximum height of editor
+            focus: false // set focus to editable area after initializing summernote
+        });
+
     });
 </script>
 
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<?php if ($message = $this->session->flashdata('message')) : ?>
+    <script>
+        $(document).ready(function() {
+            $.toast({
+                heading: '<?php echo ucfirst($message['type']); ?>',
+                text: '<?php echo $message['text']; ?>',
+                position: 'top-right',
+                loaderBg: '#ff6849',
+                icon: '<?php echo $message['type']; ?>',
+                hideAfter: 3500,
+                stack: 6
+            });
+        });
+
+        function ExportToExcel(title, type, fn, dl) {
+            let file_name = "<?php echo underscore($this->school->school) ?> " + title + " <?php echo date('Y_m_d_H:i:s'); ?>";
+            var elt = document.getElementById("xport");
+            var wb = XLSX.utils.table_to_book(elt, {
+                sheet: "sheet1"
+            });
+            return dl ?
+                XLSX.write(wb, {
+                    bookType: type,
+                    bookSST: true,
+                    type: "base64"
+                }) :
+                XLSX.writeFile(wb, fn || file_name + '.' + (type || "xlsx"));
+        }
+    </script>
+<?php endif; ?>
+
 
 </html>
+
+<style>
+    @media print {
+        .hidden-print {
+            display: none !important;
+        }
+    }
+</style>
+
+<script>
+    function printPage() {
+        window.print(); // This triggers the print dialog
+    }
+</script>

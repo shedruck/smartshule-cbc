@@ -36,52 +36,83 @@ class Diary extends Trs_Controller
         //validate the fields of form
         if ($this->form_validation->run())
         {
-            
+            //new file upload
+
+            $uploadDir = FCPATH . 'assets/uploads/';
+
+            $uploadedFiles = $_FILES['file'];
+
+            $fileCount = count($uploadedFiles['name']);
 			
 			$user = $this->ion_auth->get_user();
           
-		     $fids = [];
-            $filestr = $this->input->post('fids');
-            if (!empty($filestr))
-            {
-                $filestr = rtrim($filestr, '|');
-                $fids = explode('|', $filestr);
-            }
+		    //  $fids = [];
+            // $filestr = $this->input->post('fids');
+            // if (!empty($filestr))
+            // {
+            //     $filestr = rtrim($filestr, '|');
+            //     $fids = explode('|', $filestr);
+            // }
 			
             $teacher_comment = $this->input->post('teacher_comment');
-			
-			//print_r($teacher_comment);die;
-            foreach ($teacher_comment as $st => $comm)
-            {
-				
-				if(isset($comm) && !empty($comm)){
-					
-				
-                   $form = [
-						'student' => $st,
-						'activity' => $this->input->post('activity'),
-						'date_' => strtotime($this->input->post('date_')),
-						'status' => 1,
-						'verified' => 1,
-						'teacher_comment' => $comm,
-						'created_by' => $this->user->id,
-						'created_on' => time()
-					];
 
-					$id = $this->diary_m->create($form);
-					
-					foreach ($fids as $fid)
-						{
-							$upform = [
-								'diary_id' => $id,
-								'modified_by' => $this->user->id,
-								'modified_on' => time()
-							];
+            // print_r($teacher_comment);
+            // die;
 
-							$this->diary_m->update_files($fid, $upform);
-						}
-				}
+            foreach ($teacher_comment as $st => $comm) {
+                if (isset($comm) && !empty($comm)) {
+                    $form = [
+                        'student' => $st,
+                        'activity' => $this->input->post('activity'),
+                        'date_' => strtotime($this->input->post('date_')),
+                        'status' => 1,
+                        'verified' => 1,
+                        'teacher_comment' => $comm,
+                        'created_by' => $this->user->id,
+                        'created_on' => time()
+                    ];
+
+                    $id = $this->diary_m->create($form);
+
+                    if ($fileCount > 0) {
+                        for ($i = 0; $i < $fileCount; $i++) {
+                            $fileName = $_FILES['file']['name'][$i];
+                            $fileTmpName = $_FILES['file']['tmp_name'][$i];
+                            $fileSize = $_FILES['file']['size'][$i];
+                            $fileError = $_FILES['file']['error'][$i];
+
+                            $destination = $uploadDir . $fileName;
+
+                            if (!file_exists($destination)) {
+                                // If the file doesn't exist, move it
+                                if (move_uploaded_file($fileTmpName, $destination)) {
+                                    $upform = [
+                                        'student' => $st,
+                                        'diary_id' => $id,
+                                        'filename' => $fileName,
+                                        'created_by' => $this->user->id,
+                                        'modified_on' => time()
+                                    ];
+
+                                    $this->diary_m->insert_dairy_filenames($upform);
+                                }
+                            } else {
+                                $upform = [
+                                        'student' => $st,
+                                        'diary_id' => $id,
+                                        'filename' => $fileName,
+                                        'created_by' => $this->user->id,
+                                        'modified_on' => time()
+                                    ];
+
+                                    $this->diary_m->insert_dairy_filenames($upform);
+                            }
+                        }
+                    }
+                }
             }
+
+
 
             if ($id)
             {
@@ -143,9 +174,10 @@ class Diary extends Trs_Controller
         $data['per'] = $config['per_page'];
 		 $data['classes'] = $this->trs_m->list_my_classes();
 
-        //load view
+         //load view
         $this->template->title(' Diary ')->build('trs/list', $data);
     }
+    
 
     public function extra()
     {
@@ -166,6 +198,77 @@ class Diary extends Trs_Controller
     }
 
     function create($page = 0)
+    {
+        $data['updType'] = 'create';
+        $data['page'] = ($this->uri->segment(4)) ? $this->uri->segment(4) : $page;
+
+        //Rules for validation
+        $this->form_validation->set_rules($this->validation());
+
+        //validate the fields of form
+        if ($this->form_validation->run()) {
+            $uploadDir = FCPATH . 'assets/uploads/';
+
+            $uploadedFiles = $_FILES['file'];
+
+            $fileCount = count($uploadedFiles['name']);
+
+            $form = [
+                'student' => $this->input->post('student'),
+                'activity' => $this->input->post('activity'),
+                'date_' => strtotime($this->input->post('date_')),
+                'status' => 0,
+                'verified' => 1,
+                'teacher_comment' => $this->input->post('teacher_comment'),
+                'created_by' => $this->user->id,
+                'created_on' => time()
+            ];
+
+            $id = $this->diary_m->create($form);
+
+            if ($id) {
+                if ($fileCount > 0) {
+                    for ($i = 0; $i < $fileCount; $i++) {
+                        $fileName = $_FILES['file']['name'][$i];
+                        $fileTmpName = $_FILES['file']['tmp_name'][$i];
+                        $fileSize = $_FILES['file']['size'][$i];
+                        $fileError = $_FILES['file']['error'][$i];
+
+                        $destination = $uploadDir . $fileName;
+
+                        if (move_uploaded_file($fileTmpName, $destination)) {
+                            $upform = [
+                                'student' => $this->input->post('student'),
+                                'diary_id' => $id,
+                                'filename' => $fileName,
+                                'created_by' => $this->user->id,
+                                'modified_on' => time()
+                            ];
+
+                            $this->diary_m->insert_dairy_filenames($upform);
+                        }
+                    }
+                }
+
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+            }
+
+            redirect('trs/diary');
+        } else {
+            $get = new StdClass();
+            foreach ($this->validation() as $field) {
+                $get->{$field['field']} = set_value($field['field']);
+            }
+            $data['students'] = $this->trs_m->my_students();
+            $data['result'] = $get;
+            //load the view and the layout
+            $this->template->title('Add Diary Entry')->build('trs/create', $data);
+        }
+    }
+
+    function create2($page = 0)
     {
         $data['updType'] = 'create';
         $data['page'] = ( $this->uri->segment(4) ) ? $this->uri->segment(4) : $page;
@@ -194,6 +297,11 @@ class Diary extends Trs_Controller
                 'created_by' => $this->user->id,
                 'created_on' => time()
             ];
+
+            echo "<pre>";
+            print_r($form);
+            echo "<pre>";
+            die;
 
             $id = $this->diary_m->create($form);
 
@@ -244,13 +352,11 @@ class Diary extends Trs_Controller
         //validate the fields of form
         if ($this->form_validation->run())
         {
-            $fids = [];
-            $filestr = $this->input->post('fids');
-            if (!empty($filestr))
-            {
-                $filestr = rtrim($filestr, '|');
-                $fids = explode('|', $filestr);
-            }
+            $uploadDir = FCPATH . 'assets/uploads/';
+
+            $uploadedFiles = $_FILES['file'];
+
+            $fileCount = count($uploadedFiles['name']);
 
             $form = [
                 'student' => $this->input->post('student'),
@@ -267,15 +373,27 @@ class Diary extends Trs_Controller
 
             if ($id)
             {
-                foreach ($fids as $fid)
-                {
-                    $upform = [
-                        'diary_id' => $id,
-                        'modified_by' => $this->user->id,
-                        'modified_on' => time()
-                    ];
+                if ($fileCount > 0) {
+                    for ($i = 0; $i < $fileCount; $i++) {
+                        $fileName = $_FILES['file']['name'][$i];
+                        $fileTmpName = $_FILES['file']['tmp_name'][$i];
+                        $fileSize = $_FILES['file']['size'][$i];
+                        $fileError = $_FILES['file']['error'][$i];
 
-                    $this->diary_m->update_files($fid, $upform);
+                        $destination = $uploadDir . $fileName;
+
+                        if (move_uploaded_file($fileTmpName, $destination)) {
+                            $upform = [
+                                'student' => $this->input->post('student'),
+                                'diary_id' => $id,
+                                'filename' => $fileName,
+                                'created_by' => $this->user->id,
+                                'modified_on' => time()
+                            ];
+
+                            $this->diary_m->insert_dairy_filenames($upform);
+                        }
+                    }
                 }
 
                 $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
@@ -302,7 +420,7 @@ class Diary extends Trs_Controller
         }
     }
 
-    function upload($cat)
+    function upload1($cat)
     {
         if (!$this->ion_auth->logged_in())
         {
@@ -370,6 +488,75 @@ class Diary extends Trs_Controller
             echo json_encode($file_info);
         }
     }
+
+    function upload($cat)
+    {
+        if (!$this->ion_auth->logged_in()) {
+            echo 'login';
+            return FALSE;
+        }
+
+        // Check if file was uploaded
+        if (!isset($_FILES['files']) || !is_uploaded_file($_FILES['files']['tmp_name'])) {
+            echo json_encode('No file uploaded.');
+            return;
+        }
+
+        // Handle file upload
+        $this->load->library('upload');
+        $upload_path = FCPATH . 'uploads/diary/';
+
+        if (!file_exists($upload_path)) {
+            mkdir($upload_path, DIR_WRITE_MODE, true);
+        }
+
+        if (!is_dir($upload_path)) {
+            mkdir($upload_path);
+        }
+        if (!is_dir($upload_path . date('Y') . '/')) {
+            mkdir($upload_path . date('Y') . '/');
+        }
+        if (!is_dir($upload_path . date('Y') . '/' . date('M'))) {
+            mkdir($upload_path . date('Y') . '/' . date('M') . '/');
+        }
+
+        $this->upload_config = [
+            'upload_path' => $upload_path . date('Y') . '/' . date('M') . '/',
+            'allowed_types' => 'jpg|png|jpeg|gif',
+            'max_size' => 20048,
+            'remove_space' => TRUE,
+            'encrypt_name' => TRUE,
+        ];
+
+        $this->upload->initialize($this->upload_config);
+
+        if (!$this->upload->do_upload('files')) {
+            $upload_error = $this->upload->display_errors();
+            echo json_encode($upload_error);
+        } else {
+            $file_info = $this->upload->data();
+            $file_info['path'] = date('Y') . '/' . date('M') . '/';
+
+            $user = $this->ion_auth->get_user();
+            $form = [
+                'filename' => $file_info['file_name'],
+                'file_size' => $this->_file_sizer($file_info['file_size']),
+                'path' => $file_info['path'],
+                'status' => 1,
+                'cat' => $cat,
+                'created_on' => time(),
+                'created_by' => $user->id
+            ];
+
+            $id = $this->diary_m->create_file($form);
+            if ($id) {
+                $file_info['fid'] = $id;
+            }
+
+            echo json_encode($file_info);
+        }
+    }
+
 
     function edit($id = FALSE)
     {

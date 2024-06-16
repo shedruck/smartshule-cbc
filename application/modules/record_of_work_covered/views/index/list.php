@@ -1,74 +1,89 @@
-<div class="portlet mt-2">
-    <div class="portlet-heading portlet-default border-bottom">
-        <h3 class="portlet-title text-dark">
-           <b>  Record Of Work Covered    </b>
-        </h3>
-		<div class="pull-right">
-		
-		 <?php echo anchor( 'record_of_work_covered/trs/create/'.$page, '<i class="glyphicon glyphicon-plus"></i> '.lang('web_add_t', array(':name' => 'Record Of Work Covered')), 'class="btn btn-primary"');?>
-		 
-		  <a class="btn btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
-			</div> 
-      
-        <div class="clearfix"></div>
-        <hr>
-    </div>
-           
-              
-                 <?php if ($record_of_work_covered): ?>
-                 <div class="block-fluid">
-				<table id="datatable-buttons" class="table table-striped table-bordered">
-	 <thead>
-                <th>#</th>
-				
-				<th>Level</th>
-				<th>Period</th>
-				<th>Week</th>
-				<th>Learning Area</th>
-				<th>Strand</th>
-				<th>Sub-strand</th>
-				<th>Work Covered</th>
-				<th>Reflection</th>	<th ><?php echo lang('web_options');?></th>
-		</thead>
-		<tbody>
-		<?php 
-                             $i = 0;
-                               $classes = $this->portal_m->get_class_options();  
-                
-            foreach ($record_of_work_covered as $p ): 
-			$sub = $this->portal_m->get_subject($p->level);
-                 $i++;
-                     ?>
-	 <tr>
-                <td><?php echo $i . '.'; ?></td>
-                <td><?php echo $classes[$p->level];?></td>				
-				<td>Term <?php echo $p->term;?> <br><?php echo $p->year;?> </td>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header">
+				<h6 class="float-start">Record Of Work Covered</h6>
+				<div class="btn-group btn-group-sm float-end">
+					<a class="btn btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
+				</div>
+			</div>
+			<div class="card-body p-3 mb-2">
+				<div class="table-responsive">
+					<table id="datatable-basic" class="table table-bordered">
+						<thead>
+							<th>#</th>
+							<th>Level</th>
+							<th>Period</th>
+							<th>Week</th>
+							<th>Learning Area</th>
+							<th>Strand</th>
+							<th>Sub-strand</th>
+							<th>Work Covered</th>
+							<th><?php echo lang('web_options'); ?></th>
+						</thead>
+						<tbody>
+							<?php
+							$i = 0;
+							$classes = $this->portal_m->get_class_options();
 
-					<td><?php echo $p->week;?> <br><b>Date:</b> <?php echo date('d M Y', $p->date);?></td>
-					<td><?php echo strtoupper($sub[$p->subject]);?></td>
-					<td><?php echo $p->strand;?></td>
-					<td><?php echo $p->substrand;?></td>
-					<td><?php echo $p->work_covered;?></td>
-					<td><?php echo $p->reflection;?></td>
-					
-					<td width='220'>
-						 <div class='btn-group center text-center'>
-							 <a class="btn btn-sm btn-success" href='<?php echo site_url('record_of_work_covered/trs/view/'.$p->id.'/'.$this->session->userdata['session_id']);?>'><i class='fa fa-share'></i> View</a>
-							<a class="btn btn-sm btn-primary" href='<?php echo site_url('record_of_work_covered/trs/edit/'.$p->id.'/'.$this->session->userdata['session_id']);?>'><i class='fa fa-edit'></i> Edit</a>
-							<a  class="btn btn-sm btn-danger" onClick="return confirm('<?php echo lang('web_confirm_delete')?>')" href='<?php echo site_url('record_of_work_covered/trs/delete/'.$p->id.'/'.$this->session->userdata['session_id']);?>'><i class='fa fa-trash'></i> Trash</a>
-						</div>
-					</td>
+							foreach ($payload as $p) :
+								$i++;
+							?>
+								<tr>
+									<td><?php echo $i . '.'; ?></td>
+									<td><?php echo isset($this->classes[$p->schemes->level]) ? $this->classes[$p->schemes->level] : ''; ?></td>
 
-			
-				</tr>
- 			<?php endforeach ?>
-		</tbody>
+									<td>Term <?php echo $p->schemes->term; ?> <br><?php echo $p->schemes->year; ?> </td>
 
-	</table>
+									<td><?php echo $p->schemes->week; ?> </td>
+									<td><?php echo isset($subjects[$p->schemes->subject]) ? strtoupper($subjects[$p->schemes->subject]) : ''; ?></td>
+									<td><?php echo $p->schemes->strand; ?></td>
+									<td><?php echo $p->schemes->substrand; ?></td>
+									<td><?php echo $p->work_covered; ?></td>
 
-	
+
+									<td width='220'>
+										<div class="btn-group my-2">
+                                            <button type="button" class="btn btn-success-light dropdown-toggle rounded-pill" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Action
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item btn btn-sm text-success" href='<?php echo site_url('record_of_work_covered/trs/view/' . $p->plan . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-share'></i> View</a></li>
+
+                                                <li><a class="dropdown-item btn btn-sm text-primary" href='<?php echo site_url('record_of_work_covered/trs/edit/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-edit'></i> Edit</a></li>
+
+                                                <li><a class="dropdown-item btn btn-sm text-danger" onClick="return confirm('<?php echo lang('web_confirm_delete') ?>')" href='<?php echo site_url('record_of_work_covered/trs/delete/' . $p->id . '/' . $this->session->userdata['session_id']); ?>'><i class='fa fa-trash'></i> Trash</a></li>
+                                            </ul>
+                                        </div>
+									</td>
+
+
+								</tr>
+							<?php endforeach ?>
+						</tbody>
+					</table>
+
+
+				</div>
+			</div>
+			<div class="card-footer">
+				<div class="form-check d-inline-block">
+					<!-- <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+					<label class="form-check-label" for="flexCheckChecked">
+						Confirm
+					</label> -->
+				</div>
+				<div class="float-end d-inline-block btn-list">
+
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<?php else: ?>
- 	<p class='text'><?php echo lang('web_no_elements');?></p>
- <?php endif ?>
+<style>
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+	}
+</style>

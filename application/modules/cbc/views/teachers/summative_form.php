@@ -1,4 +1,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+
 <?php
 if ($this->input->get()) {
     $get = (object) $this->input->get();
@@ -6,11 +10,15 @@ if ($this->input->get()) {
     $get = [];
 }
 
-if ($exam == 1) {
-    $extype = 1;
-} else if ($exam == 2) {
+
+if ($exam_type->type == 1) {
     $extype = 2;
+} else if ($exam_type->type == 2) {
+    $extype = 1;
+} else {
+    $extype = null; // Explicitly set $extype to null if it doesn't match 1 or 2
 }
+
 
 ?>
 
@@ -34,26 +42,9 @@ if ($exam == 1) {
     </div>
 </div>
 
-<?php if ($this->session->flashdata('inserted_message')) : ?>
-    <div class="alert-container inserted-alert">
-        <div class="alert alert-solid-success" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-            <i class="fa fa-check-circle-o me-2" aria-hidden="true"></i><?php echo $this->session->flashdata('inserted_message')['text']; ?>
-        </div>
-    </div>
-<?php endif; ?>
+<?php
 
-<?php if ($this->session->flashdata('updated_message')) : ?>
-    <div class="alert-container updated-alert">
-        <div class="alert alert-solid-success" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-            <i class="fa fa-check-circle-o me-2" aria-hidden="true"></i><?php echo $this->session->flashdata('updated_message')['text']; ?>
-        </div>
-    </div>
-<?php endif; ?>
-
-
-
+?>
 
 
 
@@ -72,11 +63,6 @@ if ($exam == 1) {
                 </div>
                 <div class="col-lg-4 col-xl-4">
                     <?php
-                    $exams = array(
-                        1 => 'Opener Exam',
-                        2 => 'Mid Term Exam',
-                        3 => 'End Term Exam'
-                    );
 
                     echo form_dropdown('exam', ['' => 'Select Exam'] + $exams, $exam, 'class="js-example-placeholder-exam js-states form-control" id="exam"')
                     ?>
@@ -86,7 +72,7 @@ if ($exam == 1) {
                         <?php
                         $checkmarko = $this->cbc_tr->check_exists($sub, $exam, $cls);
 
-                        echo form_dropdown('grading', ['' => 'Select Exam'] + $gradings, $checkmarko->gid, 'class="js-example-placeholder-grading js-states form-control" id="grading" required')
+                        echo form_dropdown('grading', ['' => 'Select Grading System'] + $gradings, $checkmarko->gid, 'class="js-example-placeholder-grading js-states form-control" id="grading" required')
                         ?>
                         <input type="number" id="input-placeholder" max="<?php echo $extype == 2 ? '4' : '100' ?>" name="outof" value="<?php echo $extype == 1 ? ($checkmarko) ? $checkmarko->outof : '' : '4' ?>" class="form-control mt-2" placeholder="Outof" <?php echo $extype == 2 ? 'readonly' : '' ?> required>
                     <?php endif; ?>
@@ -97,7 +83,7 @@ if ($exam == 1) {
                     <div class="p-4 border-end w-100">
                         <?php if (isset($students)) : ?>
                             <div class="table-responsive push">
-                                <input type="number" name="extype" value="<?php echo $extype ?>" class="form-control" hidden>
+                                <input type="number" name="extype" value="<?php echo $exam_type->type ?>" class="form-control" hidden>
                                 <table class="table table-bordered text-nowrap">
                                     <tbody>
                                         <tr class="table-primary bg-primary">
@@ -110,45 +96,54 @@ if ($exam == 1) {
                                                 <th class="text-center tx-fixed-white">ME - 3</th>
                                                 <th class="text-center tx-fixed-white">AE - 2</th>
                                                 <th class="text-center tx-fixed-white">BE - 1</th>
+
                                             <?php endif; ?>
                                         </tr>
                                         <?php
                                         $index = 1;
-                                        foreach ($students as $p) {
+
+                                        if ($extype === "" || $extype === null) {
                                         ?>
-
                                             <tr>
-                                                <td class="">
-                                                    <input type="hidden" name="student[<?php echo $p->id ?>]" value="<?php echo $p->id ?>">
-
-                                                    <?php echo $index ?>
+                                                <td colspan="7">
+                                                    <div class="alert alert-danger">Please do Exam Setting first!!!</div>
                                                 </td>
-                                                <td>
-                                                    <p class="font-w600 mb-1"><?php echo $p->admission_number ?></p>
-                                                    <div class="text"><?php echo $p->first_name . ' ' . $p->middle_name . ' ' . $p->last_name ?> </div>
-                                                </td>
-                                                <?php if ($extype == 1) : ?>
-                                                    <td>
-                                                        <?php
-                                                        $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
-                                                        ?>
-
-                                                        <input type="number" id="secondInput" name="score[<?php echo $p->id ?>]" value="<?php echo ($score) ? $score->score : '' ?>" class="form-control secondInput" id="input-placeholder" placeholder="Score">
-                                                    </td>
-                                                <?php
-                                                elseif ($extype == 2) :
-                                                    $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
-                                                ?>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="4" name="score[<?php echo $p->id ?>]" id="Radio-md" <?php echo $score ? $score->score == 4 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="3" name="score[<?php echo $p->id ?>]" id="Radio-md" <?php echo $score ? $score->score == 3 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="2" name="score[<?php echo $p->id ?>]" id="Radio-md" <?php echo $score ? $score->score == 2 ? 'checked' : '' : '' ?>></td>
-                                                    <td style="text-align: center;"><input class="form-check-input" type="radio" value="1" name="score[<?php echo $p->id ?>]" id="Radio-md" <?php echo $score ? $score->score == 1 ? 'checked' : '' : '' ?>></td>
-                                                <?php endif; ?>
                                             </tr>
+                                            <?php
+                                        } else {
+                                            foreach ($students as $p) {
+                                            ?>
+                                                <tr>
+                                                    <td class="">
+                                                        <input type="hidden" name="student[<?php echo $p->id ?>]" value="<?php echo $p->id ?>">
+                                                        <?php echo $index ?>
+                                                    </td>
+                                                    <td>
+                                                        <p class="font-w600 mb-1"><?php echo $p->admission_number ?></p>
+                                                        <div class="text"><?php echo $p->first_name . ' ' . $p->middle_name . ' ' . $p->last_name ?> </div>
+                                                    </td>
+                                                    <?php if ($extype == 1) : ?>
+                                                        <td>
+                                                            <?php
+                                                            $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
+                                                            ?>
+                                                            <input type="number" id="secondInput" name="score[<?php echo $p->id ?>]" value="<?php echo ($score) ? $score->score : '' ?>" class="form-control secondInput" id="input-placeholder" placeholder="Score">
+                                                        </td>
+                                                    <?php elseif ($extype == 2) :
+                                                        $score = $this->cbc_tr->get_stu_marks($sub, $exam, $p->id);
+                                                    ?>
+                                                        <td style="text-align: center;"><input class="form-check-input custom-checkbox" type="checkbox" value="4" name="score[<?php echo $p->id ?>]" id="Checkbox-md_4_<?php echo $p->id ?>" <?php echo $score ? $score->score == 4 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input custom-checkbox" type="checkbox" value="3" name="score[<?php echo $p->id ?>]" id="Checkbox-md_3_<?php echo $p->id ?>" <?php echo $score ? $score->score == 3 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input custom-checkbox" type="checkbox" value="2" name="score[<?php echo $p->id ?>]" id="Checkbox-md_2_<?php echo $p->id ?>" <?php echo $score ? $score->score == 2 ? 'checked' : '' : '' ?>></td>
+                                                        <td style="text-align: center;"><input class="form-check-input custom-checkbox" type="checkbox" value="1" name="score[<?php echo $p->id ?>]" id="Checkbox-md_1_<?php echo $p->id ?>" <?php echo $score ? $score->score == 1 ? 'checked' : '' : '' ?>></td>
 
 
+                                                    <?php endif; ?>
+                                                </tr>
                                         <?php $index++;
-                                        } ?>
+                                            }
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -179,20 +174,38 @@ if ($exam == 1) {
             </div>
             <div class="card-footer">
                 <div class="form-check d-inline-block">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                    <input class="form-check-input custom-checkbox" type="checkbox" value="" id="flexCheckChecked">
                     <label class="form-check-label" for="flexCheckChecked">
                         Confirm
                     </label>
                 </div>
                 <div class="float-end d-inline-block btn-list">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <a class="btn btn-secondary" id="cancelButton">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submitButton"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button>
+                    <a class="btn btn-secondary" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 <?php echo form_close() ?>
+
+<!-- // disable submit button before confirm -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var checkbox = document.getElementById("flexCheckChecked");
+        var submitButton = document.getElementById("submitButton");
+
+        var isChecked = localStorage.getItem("confirmCheckbox");
+        checkbox.checked = isChecked === "true";
+        submitButton.disabled = !checkbox.checked;
+
+        checkbox.addEventListener("change", function() {
+            localStorage.setItem("confirmCheckbox", checkbox.checked);
+            submitButton.disabled = !checkbox.checked;
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {
@@ -248,7 +261,7 @@ if ($exam == 1) {
     });
 </script>
 
-
+<!-- prevent marks bigger then outof -->
 <script>
     $(document).ready(function() {
         $('form').submit(function(event) {
@@ -281,6 +294,25 @@ if ($exam == 1) {
         });
     });
 </script>
+
+<!-- disable and clear radio buttons  -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        <?php foreach ($students as $p) : ?>
+            var checkbox_<?php echo $p->id ?> = document.getElementById("flexCheckChecked_<?php echo $p->id ?>");
+            var radioButtons_<?php echo $p->id ?> = document.querySelectorAll('input[type="radio"][name="score[<?php echo $p->id ?>]"]');
+
+            checkbox_<?php echo $p->id ?>.addEventListener("change", function() {
+                // Uncheck the radio buttons
+                radioButtons_<?php echo $p->id ?>.forEach(function(radioButton) {
+                    radioButton.checked = false;
+                    radioButton.disabled = checkbox_<?php echo $p->id ?>.checked; // Disable the radio buttons if checkbox is checked
+                });
+            });
+        <?php endforeach; ?>
+    });
+</script>
+
 
 
 <style>
@@ -350,4 +382,69 @@ if ($exam == 1) {
     .alert {
         position: relative;
     }
+
+    .custom-checkbox {
+        width: 1.3em;
+        /* Set the width of the checkbox */
+        height: 1.3em;
+        /* Set the height of the checkbox */
+    }
+
+    .custom-checkbox:checked {
+        transform: scale(1.2);
+        
+    }
 </style>
+
+<script>
+    // Get all checkboxes with the class "form-check-input"
+    var checkboxes = document.querySelectorAll('.form-check-input');
+
+    // Add an event listener to each checkbox
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('click', function() {
+            // If the checkbox is checked, uncheck all other checkboxes in the same group
+            if (this.checked) {
+                checkboxes.forEach(function(otherCheckbox) {
+                    if (otherCheckbox !== checkbox && otherCheckbox.name === checkbox.name) {
+                        otherCheckbox.checked = false;
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<?php if ($this->session->flashdata('updated_message')) : ?>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Retrieve the inserted message text
+        var insertedMessage = "<?php echo $this->session->flashdata('updated_message')['text']; ?>";
+
+        // Show toast notification
+        Toastify({
+            text: insertedMessage,
+            duration: 3000, // Duration in milliseconds
+            gravity: "top", // Position of the toast on the screen (top, bottom, left, right)
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Background color
+            stopOnFocus: true // Stop auto-hide on toast hover
+        }).showToast();
+    </script>
+<?php endif; ?>
+
+<?php if ($this->session->flashdata('inserted_message')) : ?>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Retrieve the inserted message text
+        var insertedMessage = "<?php echo $this->session->flashdata('inserted_message')['text']; ?>";
+
+        // Show toast notification
+        Toastify({
+            text: insertedMessage,
+            duration: 3000, // Duration in milliseconds
+            gravity: "top", // Position of the toast on the screen (top, bottom, left, right)
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", // Background color
+            stopOnFocus: true // Stop auto-hide on toast hover
+        }).showToast();
+    </script>
+<?php endif; ?>

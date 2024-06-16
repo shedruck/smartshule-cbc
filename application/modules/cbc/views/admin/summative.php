@@ -116,7 +116,7 @@ foreach ($this->classlist as $cid => $cl) {
                     <span class="text-uppercase"><?php echo $r->student->cl->name ?> &nbsp; Term <?php echo $term; ?> - <?php echo $year; ?></span>
                 </p>
             </div>
-
+            
             <div class="clearfix"></div>
             <?php
             if (empty($r->assess)) {

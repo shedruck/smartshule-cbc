@@ -13,8 +13,7 @@
 		 <div class="clearfix"></div>
       <hr>
     </div>
-	
-	
+		
 	<div class="blog-list-wrapper">
                             <div class="row">
                                 <div class="col-sm-8">

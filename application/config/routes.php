@@ -284,3 +284,8 @@ $route['mpesa/(:num)'] = 'mpesa/index/$1';
 
 //Routes For igcse
 $route['igcse/(:num)'] = 'igcse/index/$1';
+
+
+//Routes For attendance new  module 
+$route['attendance/(:num)'] = 'attendance/index/$1';
+$route['trs/attendance/list'] = 'attendance/list';
