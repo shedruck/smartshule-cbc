@@ -1307,7 +1307,43 @@ class Trs extends Trs_Controller
 
     //Function to do Analysis
     public function analysis($level,$tid) {
-        $data = [];
+        $thread = $this->cbc_tr->find($tid, 'cbc_exam_threads');
+        $exams = $this->cbc_tr->find_exams($thread->term, $thread->year);
+        $classtreams = $this->cbc_tr->class_group_streams($level);
+        $subjects = $this->cbc_tr->get_all_class_subjects2($level);
+
+        //Prepare Streams 
+        $streams = [];
+
+        foreach ($classtreams as $cls) {
+            $streams[$cls->id] = $this->streams[$cls->id];
+        }
+
+
+        //Receive Send
+        if ($this->input->post()) {
+            $post = (object) $this->input->post();
+
+            //Get Class Summary
+            $classsummary = $this->cbc_tr->prepare_class_summary($level,$tid,$this->input->post('compare'));
+
+            // echo "<pre>";
+            //     // print_r($post);
+            //     print_r($classsummary);
+            // echo "</pre>";
+            // die;
+            $data['summary'] = $classsummary;
+        }
+
+        $data['threads'] = $this->cbc_tr->populate('cbc_exam_threads','id','name');
+        $data['subjects'] = $subjects;
+        $data['streams'] = $streams;
+        $data['thread'] = $thread;
+        $data['exams'] = $exams;
+        $data['level'] = $level;
+        $data['tid'] = $tid;
+        $data['comparison'] = $this->input->post('compare'); 
+        $data['gradings'] = $this->cbc_tr->populate('grading_system', 'id', 'title');
 
         $this->template->title('View Exam Analysis')->build('teachers/analysis', $data);
     }
