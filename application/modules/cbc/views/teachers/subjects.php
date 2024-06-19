@@ -4,7 +4,7 @@
       <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><b>CBC SUBJECTS</b></h5>
         <div>
-          <a href="<?php echo base_url('cbc/trs/fix_class') ?>" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-cog"></i>Manage Subjects</a>
+          <!-- <a href="<?php echo base_url('cbc/trs/fix_class') ?>" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-cog"></i>Manage Subjects</a> -->
           <?php echo anchor('cbc/trs/add_subject', '<i class="glyphicon glyphicon-plus"></i> ' . lang('web_add_t', array(':name' => 'Subjects')), 'class="btn btn-primary btn-sm"'); ?>
           <a class="btn btn-sm btn-secondary" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
         </div>

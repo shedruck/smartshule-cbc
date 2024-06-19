@@ -4,7 +4,8 @@
       <div class="card-header d-flex justify-content-between align-items-center">
         <h6 class="mb-0"><b>EDIT SUBJECT</b></h6>
         <div>
-          <a class="btn btn-sm btn-secondary" href="<?php echo base_url('admin/cbc/subjects'); ?>"><i class="fa fa-caret-left"></i> Go Back</a>
+          <a class="btn btn-sm btn-secondary" href="<?php echo base_url('cbc/trs/subjects'); ?>"><i class="fa fa-caret-left"></i> Go Back</a>
+         
         </div>
       </div>
 
@@ -74,7 +75,7 @@
       </div>
       <div class="card-footer">
         <div class="float-end">
-          <a href="<?php echo base_url('admin/cbc/subjects') ?>" class="btn btn-secondary mb-1 d-inline-flex"><i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel</a>
+          <a href="<?php echo base_url('cbc/trs/subjects') ?>" class="btn btn-secondary mb-1 d-inline-flex"><i class="fe fe-arrow-left-circle me-1 lh-base"></i> Cancel</a>
           <button type="submit" class="btn btn-primary mb-1 d-inline-flex" onclick="return confirm('Are you sure?')">
             <i class="fe fe-check-square me-1 lh-base"></i> Submit
           </button>

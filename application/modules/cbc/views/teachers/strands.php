@@ -4,7 +4,7 @@
       <div class="card-header d-flex justify-content-between align-items-center">
         <h6 class="mb-0"><b>Subject: <?php echo $la->name; ?></b></h6>
         <div>
-          <a class="btn btn-sm btn-secondary" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
+          <a class="btn btn-sm btn-secondary" href="<?php echo base_url('cbc/trs/subjects'); ?>"><i class="fa fa-caret-left"></i> Go Back</a>
         </div>
       </div>
 
@@ -71,7 +71,7 @@
                       <?php foreach ($p->topics as $s) : ?>
                         <li class="mt-1">
                           <?php echo $s->name; ?>
-                          <a class="btn-link" href='<?php echo site_url('admin/cbc/edit_sub/' . $s->id . '/' . $la->id); ?>'> Edit</a>
+                          <a class="btn-link" href='<?php echo site_url('cbc/trs/edit_sub/' . $s->id . '/' . $la->id); ?>'> Edit</a>
                           &nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-secondary btn-sm" title="Delete" onClick="return confirm('<?php echo lang('web_confirm_delete') ?>')" href='<?php echo site_url('cbc/trs/delete_substrand/' . $s->id . '/' . $la->id); ?>'> x </a>
                         </li>
                       <?php endforeach; ?>
@@ -85,7 +85,7 @@
                       <a class="btn btn-info btn-sm" href='<?php echo site_url('cbc/trs/edit_strand/' . $p->id . '/' . $la->id); ?>'>
                         <i class='glyphicon glyphicon-edit'></i> Edit
                       </a>
-                      <a class="btn btn-primary btn-sm" href='<?php echo site_url('admin/cbc/edit_la/' . $p->id); ?>'>
+                      <a class="btn btn-primary btn-sm" href='<?php echo site_url('cbc/trs/edit_la/' . $p->id . '/' . $la->id); ?>'>
                         <i class='glyphicon glyphicon-edit'></i> Sub-Strands
                       </a>
                     </div>

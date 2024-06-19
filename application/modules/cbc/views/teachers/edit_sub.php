@@ -2,9 +2,9 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="mb-0"><b>EDIT STRAND</b></h6>
+        <h6 class="mb-0"><b>EDIT SUB-STRAND</b></h6>
         <div>
-          <a class="btn btn-sm btn-secondary" href="<?php echo base_url('cbc/trs/learning_areas/' . $la); ?>"><i class="fa fa-caret-left"></i> Go Back</a>
+          <a class="btn btn-sm btn-secondary" href="<?php echo base_url('cbc/trs/learning_areas/'.$la); ?>"><i class="fa fa-caret-left"></i> Go Back</a>
         </div>
       </div>
 
@@ -14,7 +14,7 @@
             <div class="card-body p-2">
               <div class="head">
                 <div class="icon"><span class="icosg-target1"></span></div>
-                <h4 class="text-center"><b>Edit Strand</b></h4>
+                <h4 class="text-center"><b>Edit Sub-Strand</b></h4>
                 <div class="right"></div>
               </div>
 

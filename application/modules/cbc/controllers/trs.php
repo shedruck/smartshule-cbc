@@ -1007,6 +1007,7 @@ class Trs extends Trs_Controller
 
         $recs = $this->cbc_tr->check_social($st, $t, $y);
 
+        
         if ($this->input->post()) {
 
             if (!empty($recs)) {
@@ -1101,6 +1102,7 @@ class Trs extends Trs_Controller
 
             if ($pp || $ok) {
                 redirect('cbc/trs/social_report/' . $cls);
+                
             }
         }
     }
@@ -2146,6 +2148,7 @@ class Trs extends Trs_Controller
             }
         }
 
+        $data['la'] = $la;
         $data['result'] = $get;
         //load the view and the layout
         $this->template->title('Edit Strand ')->build('teachers/edit_st', $data);
@@ -2169,5 +2172,239 @@ class Trs extends Trs_Controller
         }
         redirect('cbc/trs/learning_areas/' . $la);
     }
-   
+
+    function edit_la($id = 0, $la = 0)
+    {
+        //redirect if no $id
+        if (!$id) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/subjects');
+        }
+
+        $row = $this->cbc_tr->find1($id, 'cbc_la');
+
+
+        if (empty($row)) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/subjects');
+        }
+
+        $data['subject'] = $this->cbc_m->find($row->subject, 'cbc_subjects');
+
+        if ($this->input->post('topic')) {
+            $post = $this->input->post('topic');
+            
+            $i = 0;
+            foreach ($post as $p) {
+                if (empty($p)) {
+                    continue; 
+                }
+                $i++;
+                $form = [
+                        'name' => $p,
+                        'strand' => $id,
+                        'status' => 1,
+                        'modified_by' => $this->user->id,
+                        'modified_on' => time()
+                    ];
+
+                $this->cbc_tr->create_sub($form, 'cbc_topics');
+            }
+
+           
+            if ($i) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                redirect("cbc/trs/edit_la/" . $id);
+            }
+        }
+
+
+        $row->topics = $this->cbc_tr->get_topics($id);
+
+        $data['la'] = $la;
+        $data['post'] = $row;
+        //load the view and the layout
+        $this->template->title('Edit Learning Areas ')->build('teachers/form_la', $data);
+    }
+    public function tasks($id)
+    {
+        $post = $this->input->post('tasks');
+        $id1 = $this->input->post('topic_id');
+
+        // print_r($post);
+        // die;
+
+        $successfulInserts = 0;
+        foreach ($post as $pt) {
+            if (empty($pt)) {
+                continue;
+            }
+
+            $form = [
+                'name' => $pt,
+                'topic' => $id1,
+                'status' => 1,
+                'created_by' => $this->user->id,
+                'created_on' => time()
+            ];
+
+            $done = $this->cbc_m->create_sub($form, 'cbc_tasks');
+
+            if ($done) {
+                $successfulInserts++;
+            }
+        }
+
+        if ($successfulInserts > 0) {
+            $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+        } else {
+            $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+        }
+
+        redirect('cbc/trs/edit_la/' . $id);
+    }
+
+
+    function update_task($id, $sub)
+    {       
+        $task = $this->input->post('task');
+
+        
+        if (!empty($task)) {
+            $form = [
+                'name' => $task,
+                'modified_by' => $this->user->id,
+                'modified_on' => time()
+            ];
+
+            $done = $this->cbc_tr->update_with($id, $form, 'cbc_tasks');
+        }
+
+        if ($done) {
+            $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+            redirect('cbc/trs/edit_la/' . $sub);
+        } else {
+            $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+            redirect('cbc/trs/edit_la/' . $sub);
+        }
+    }
+
+    function remove_task($id = 0, $parent = 0)
+    {
+        if (!$id || !$parent) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/subjects');
+        }
+
+        if (!$this->cbc_tr->task_exists($id)) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+
+            redirect('cbc/trs/subjects');
+        }
+
+        //delete the item
+        if ($this->cbc_tr->delete_task($id) == TRUE) {
+            $this->session->set_flashdata('message', array('type' => 'sucess', 'text' => lang('web_delete_success')));
+        } else {
+            $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_delete_failed')));
+        }
+
+        redirect("cbc/trs/edit_la/" . $parent);
+    }
+
+    function get_remarks()
+    {
+        if ($this->input->post()) {
+            $post = (object) $this->input->post();
+
+            $has_rmks = $this->cbc_m->has_remarks($post->subject, $post->topic, $post->task);
+
+            echo json_encode($has_rmks);
+        }
+    }
+
+
+    function add_remarks()
+    {
+        $mess = [];
+        if ($this->input->post()) {
+            $post = (object) $this->input->post();
+
+            $form_data = [
+                'subject' => $post->subject,
+                'la' => $post->la,
+                'topic' => $post->topic,
+                'task' => $post->task,
+                'ee_remarks' => $post->ee_remarks,
+                'ae_remarks' => $post->ae_remarks,
+                'me_remarks' => $post->me_remarks,
+                'be_remarks' => $post->be_remarks,
+                'created_on' => time(),
+                'created_by' => $this->user->id
+            ];
+
+
+
+
+            $has_rmks = $this->cbc_m->has_remarks($post->subject, $post->topic, $post->task);
+
+            if ($has_rmks) {
+                $ok = $this->cbc_m->update_with($has_rmks->id, $form_data, 'cbc_remarks');
+            } else {
+                $ok =  $this->cbc_m->create_sub($form_data, 'cbc_remarks');
+            }
+
+
+            if ($ok) {
+                $mess = ['status' => 200, 'message' => 'Remarks saved successfully'];
+            } else {
+                $mess = ['status' => 201, 'message' => 'Something went wrong'];
+            }
+
+            echo json_encode($mess);
+        }
+    }
+
+
+    function edit_sub($id = 0, $la = 0)
+    {
+
+        if (!$id) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/learning_areas/' . $la);
+        }
+        if (!$this->cbc_tr->exists($id, 'cbc_topics')) {
+            $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
+            redirect('cbc/trs/learning_areas/' . $la);
+        }
+        //fetch item to show in edit form
+        $get = $this->cbc_tr->find($id, 'cbc_topics');
+
+        //create control variables
+        $data['updType'] = 'edit';
+
+        if ($this->input->post('name')) {
+            $form = [
+                'name' => $this->input->post('name'),
+                'modified_by' => $this->user->id,
+                'modified_on' => time()
+            ];
+
+            $done = $this->cbc_tr->update_with($id, $form, 'cbc_topics');
+
+            if ($done) {
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_edit_success')));
+                redirect('cbc/trs/learning_areas/' . $la);
+            } else {
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => $done->errors->full_messages()));
+                redirect('cbc/trs/learning_areas/' . $la);
+            }
+        }
+
+        $data['la'] = $la;
+
+        $data['result'] = $get;
+        //load the view and the layout
+        $this->template->title('Edit Sub Strand ')->build('teachers/edit_sub', $data);
+    }
 }

@@ -56,11 +56,12 @@
                             <a href="<?php echo base_url('cbc/trs') ?>" class="side-menu__item <?php echo ($this->uri->segment(1) === "cbc" && $this->uri->segment(2) === "trs" && !$this->uri->segment(3) || in_array($this->uri->segment(3), $thirdsegsarr)) ? 'active' : ''; ?>">CBC Assessments</a>
                         </li>
                         <li class="slide has-sub">
-                            <a href="javascript:void(0);" class="side-menu__item">CBC management
-                                <i class="fe fe-chevron-right side-menu__angle"></i></a>
+                            <?php $set2 = array('subjects'); ?>
+                            <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(3), $set2) ? 'active open' : ''; ?>">CBC management
+                                <i class="fe fe-chevron-right side-menu__angle <?php echo in_array($this->uri->segment(3), $set1) ? 'active open' : ''; ?>"></i></a>
                             <ul class="slide-menu child2">
-                                <li class="slide">
-                                    <a href="javascript:void(0);" class="side-menu__item">CBC content</a>
+                                <li class="slide <?php echo $this->uri->segment(3) === "subjects" ? 'active' : '';  ?>">
+                                    <a href="<?php echo base_url('cbc/trs/subjects') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "subjects" ? 'active' : '';  ?>">CBC Content</a>
                                 </li>
                                 <li class="slide">
                                     <a href="javascript:void(0);" class="side-menu__item">Approve Results</a>

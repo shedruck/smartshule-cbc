@@ -22,7 +22,7 @@
                 <?php
                 $options = array('' => 'Select student') + $students;
                 $attributes = 'class="form-control js-example-basic-single" id="student" onchange="checkFields()"';
-                echo form_dropdown('student', $options, '', $attributes);
+                echo form_dropdown('student', $options, $student, $attributes);
                 ?>
                 <?php echo form_error('student'); ?>
 
@@ -35,8 +35,8 @@
               <div class="col-md-9">
                 <?php
                 $option = array('1' => 'Term 1', '2' => 'Term 2', '3' => 'Term 3');
-                $attributes = 'class="form-control" id="term" onchange="checkFields()"';
-                echo form_dropdown('term', $option, '', $attributes);
+                $attributes = 'class="form-control js-example-basic-single" id="term" onchange="checkFields()"';
+                echo form_dropdown('term', $option, $t, $attributes);
                 ?>
                 <?php echo form_error('term'); ?>
               </div>
@@ -49,8 +49,8 @@
                 <?php
                 $years = range(2022, date('Y'));
                 $years = array_combine($years, $years);
-                $attributes = 'class="form-control" id="years"'; // Adding the id attribute
-                echo form_dropdown('year', $years, '', $attributes);
+                $attributes = 'class="form-control js-example-basic-single" id="years"'; // Adding the id attribute
+                echo form_dropdown('year', $years, $y, $attributes);
                 ?>
                 <?php echo form_error('year'); ?>
               </div>

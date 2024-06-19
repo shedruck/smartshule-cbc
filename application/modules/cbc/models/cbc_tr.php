@@ -484,14 +484,27 @@ class Cbc_tr extends MY_Model
 
      //Get Subject Teacher
      function get_subject_teacher($class,$sub,$term,$year) {
-        return $this->db
+        $row = $this->db
                     ->where('class',$class)
                     ->where('subject',$sub)
                     ->where('term',$term)
                     ->where('year',$year)
-                    ->type('type',1)
+                    ->where('type',1)
                     ->get('subjects_assign')
                     ->row();
+
+        if ($row) {
+            $teacher = $this->find_teacher($row->teacher);
+            return ucwords($teacher->first_name.' '.$teacher->last_name);
+        } else {
+            return 'Not Assigned';
+        }
+        
+     }
+
+     function find_teacher($id) {
+        $this->select_all_key('teachers');
+        return $this->db->where(array('id' => $id))->get('teachers')->row();
      }
 
      //Get Class Teacher 
@@ -826,6 +839,15 @@ class Cbc_tr extends MY_Model
     function get_classgrp($id)
     {
         return $this->db->where('id', $id)->get('classes')->row();
+    }
+
+    function task_exists($id)
+    {
+        return $this->db->where(['id' => $id])->count_all_results('cbc_tasks') > 0;
+    }
+    function delete_task($id)
+    {
+        return $this->db->delete('cbc_tasks', array('id' => $id));
     }
 
     function get_topics($id, $sub = 0)
