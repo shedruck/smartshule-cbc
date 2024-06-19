@@ -22,11 +22,12 @@ class Cbc_tr extends MY_Model
     }
 
     //Get Mark by id
-    function find_mark($id) {
+    function find_mark($id)
+    {
         return $this->db
-                    ->where('id',$id)
-                    ->get('cbc_marks')
-                    ->row();
+            ->where('id', $id)
+            ->get('cbc_marks')
+            ->row();
     }
 
     function find1($id, $table = 'cbc')
@@ -36,32 +37,167 @@ class Cbc_tr extends MY_Model
     
 
     //Check if Combined Marks is already there
-    function check_marks($tid,$stu,$sub) {
+    function check_marks($tid, $stu, $sub)
+    {
         return $this->db
-                    ->where('tid',$tid)
-                    ->where('student',$stu)
-                    ->where('subject',$sub)
-                    ->get('cbc_subs_included')
-                    ->row();
+            ->where('tid', $tid)
+            ->where('student', $stu)
+            ->where('subject', $sub)
+            ->get('cbc_subs_included')
+            ->row();
     }
 
     //Check if Final Results already computed
-    function check_final_results($tid,$student) {
+    function check_final_results($tid, $student)
+    {
         return $this->db
-                    ->where('tid',$tid)
-                    ->where('student',$student)
-                    ->get('cbc_final_results')
-                    ->row();
+            ->where('tid', $tid)
+            ->where('student', $student)
+            ->get('cbc_final_results')
+            ->row();
     }
 
-    
+    //Function to prepare Exam Summary
+    function prepare_class_summary($level, $tid, $compare = false)
+    {
+        //Selected Thread Variables
+        $out = [];
+        $streams = [];
+        $ovrmarks = [];
+        $ovrpts = [];
+        $gid = 0;
+        $type = 0;
+
+        //Comparison Thread Variables
+        $compareout = [];
+        $comparestreams = [];
+        $compareovrmarks = [];
+        $compareovrpts = [];
+        $comparegid = 0;
+        $comparetype = 0;
+
+        //Work on producing Thread output
+        
+        
+        $results = $this->db
+                        ->where('classgrp', $level)
+                        ->where('tid', $tid)
+                        ->get('cbc_final_results')
+                        ->result();
+        
+        if (count($results) == 0) {
+                $out = [];
+            } else {
+        foreach ($results as $key => $res) {
+            $streams[$res->class] = $res->class;
+            $gid = $res->gid;
+            $type = $res->type;
+            $ovrmarks[] = $res->average_marks;
+            $ovrpts[] = $res->average_points;
+        }
+
+        //Prepare payload for overall Class Average
+        $out = array(
+            '0' => array(
+                'ovrmarksavg' => $type == 1 ? round(array_sum($ovrmarks) / count($ovrmarks), 0) : round(array_sum($ovrmarks) / count($ovrmarks), 2),
+                'ovrptsavg' => $type == 1 ? round(array_sum($ovrpts) / count($ovrpts), 0) : round(array_sum($ovrpts) / count($ovrpts), 2),
+                'studentcount' => count($results),
+                'gid' => $gid,
+                'type' => $type
+            )
+        );
+
+        //Prepare Scores for Individual Classes
+        foreach ($streams as $streamid => $stream) {
+            $streammarks = $this->get_stream_ovr_means($level, $stream, $tid, $type, $gid, $compare);
+
+            $out[$stream] = $streammarks;
+        }
+    }
+
+        //Start working on comparison
+        $compareresults = $this->db
+                            ->where('classgrp', $level)
+                            ->where('tid', $compare)
+                            ->get('cbc_final_results')
+                            ->result();
+
+        if (count($compareresults) == 0) {
+            $compareout = [];
+        } else {
+        foreach ($compareresults as $key => $res) {
+            $comparestreams[$res->class] = $res->class;
+            $comparegid = $res->gid;
+            $comparetype = $res->type;
+            $compareovrmarks[] = $res->average_marks;
+            $compareovrpts[] = $res->average_points;
+        }
+
+        //Prepare payload for overall Class Average
+        $compareout = array(
+            '0' => array(
+                'ovrmarksavg' => $comparetype == 1 ? round(array_sum($compareovrmarks) / count($compareovrmarks), 0) : round(array_sum($compareovrmarks) / count($compareovrmarks), 2),
+                'ovrptsavg' => $comparetype == 1 ? round(array_sum($compareovrpts) / count($compareovrpts), 0) : round(array_sum($compareovrpts) / count($compareovrpts), 2),
+                'studentcount' => count($compareresults),
+                'gid' => $comparegid,
+                'type' => $comparetype
+            )
+        );
+
+        //Prepare Scores for Individual Classes
+        foreach ($comparestreams as $streamid => $stream) {
+            $comparestreammarks = $this->get_stream_ovr_means($level, $stream, $compare, $comparetype, $comparegid);
+
+            $compareout[$stream] = $comparestreammarks;
+        }
+    }
+
+       return array(
+            'summary' => $out,
+            'comparisonsummary' => $compareout
+       );
+    }
+
+    //Prepare Means for Individual Class Means
+    function get_stream_ovr_means($level, $class, $tid, $type, $gid)
+    {
+        $results = $this->db
+            ->where('classgrp', $level)
+            ->where('class', $class)
+            ->where('tid', $tid)
+            ->get('cbc_final_results')
+            ->result();
+
+        $marks = [];
+        $pts = [];
+        $out = [];
+
+        foreach ($results as $key => $res) {
+            $marks[] = $res->average_marks;
+            $pts[] = $res->average_points;
+        }
+
+        $out = array(
+            'ovrmarksavg' => $type == 1 ? round(array_sum($marks) / count($marks), 0) : round(array_sum($marks) / count($marks), 2),
+            'ovrptsavg' => $type == 1 ? round(array_sum($pts) / count($pts), 0) : round(array_sum($pts) / count($pts), 2),
+            'studentcount' => count($results),
+            'gid' => $gid,
+            'type' => $type
+        );
+
+
+
+        return $out;
+    }
+
 
     //Check Grade
-    function get_grade($gid,$marks) {
+    function get_grade($gid, $marks)
+    {
         $gradingsystem = $this->db
-                              ->where('grade_id',$gid)
-                              ->get('gs_grades')
-                              ->result();
+            ->where('grade_id', $gid)
+            ->get('gs_grades')
+            ->result();
 
         foreach ($gradingsystem as $gs) {
             if ($marks >= $gs->minimum_marks && $marks <= $gs->maximum_marks) {
@@ -106,20 +242,21 @@ class Cbc_tr extends MY_Model
         return $fn;
     }
 
-    function my_classes2() {
+    function my_classes2()
+    {
         if ($this->profile->special == 1) {
             return $this->get_all_classes();
         } else {
             return $this->get_assigned_classes_only();
         }
-        
     }
 
     //Function to get all classes
-    function get_all_classes() {
+    function get_all_classes()
+    {
         $list = $this->db
-                     ->get('classes')
-                     ->result();
+            ->get('classes')
+            ->result();
 
         $pop =  $this->count_students();
         $out = [];
@@ -139,7 +276,8 @@ class Cbc_tr extends MY_Model
     }
 
     //Function to get only assigned Classes
-    function get_assigned_classes_only() {
+    function get_assigned_classes_only()
+    {
         $list =  $this->db->where('teacher', $this->profile->id)->where(['term' => $this->school->term, 'year' => $this->school->year, 'type' => 1])->group_by('class')->get('subjects_assign')->result();
 
         $fn = [];
@@ -177,16 +315,17 @@ class Cbc_tr extends MY_Model
     }
 
     //function to get level marks
-    function get_marks($level,$exams) {
+    function get_marks($level, $exams)
+    {
         if (count($exams) == 0) {
             return [];
         }
 
         return $this->db
-                    ->where('class_grp',$level)
-                    ->where_in('exam',$exams)
-                    ->get('cbc_marks')
-                    ->result();
+            ->where('class_grp', $level)
+            ->where_in('exam', $exams)
+            ->get('cbc_marks')
+            ->result();
     }
 
     function populate($table, $id, $name)
@@ -302,15 +441,16 @@ class Cbc_tr extends MY_Model
     }
 
     //Function to get all class subjects
-    function get_all_class_subjects3($clas) {
+    function get_all_class_subjects3($clas)
+    {
         $list =  $this->db
-                    ->where(
-                        [
-                            'class_id' => $clas,
-                        ]
-                    )
-                    ->get('subjects_classes')
-                    ->result();
+            ->where(
+                [
+                    'class_id' => $clas,
+                ]
+            )
+            ->get('subjects_classes')
+            ->result();
 
         $out = [];
 
@@ -327,24 +467,27 @@ class Cbc_tr extends MY_Model
     }
 
     //Get Subject Marks
-    function get_subject_scores($tid,$student,$subject) {
+    function get_subject_scores($tid, $student, $subject)
+    {
         return $this->db
-                    ->where('tid',$tid)
-                    ->where('student',$student)
-                    ->where('subject',$subject)
-                    ->get('cbc_subs_included')
-                    ->row();
+            ->where('tid', $tid)
+            ->where('student', $student)
+            ->where('subject', $subject)
+            ->get('cbc_subs_included')
+            ->row();
     }
 
-    function get_subject($id) {
+    function get_subject($id)
+    {
         return $this->db
-                    ->where('id',$id)
-                    ->get('subjects')
-                    ->row();
+            ->where('id', $id)
+            ->get('subjects')
+            ->row();
     }
 
     //Function to get Marks
-    function get_students_by_group($group = false) {
+    function get_students_by_group($group = false)
+    {
         $streams = $this->get_streams($group);
 
         $stus = [];
@@ -369,11 +512,12 @@ class Cbc_tr extends MY_Model
             $result = array_merge($result, $students);
         }
 
-        return $result;        
-     }
+        return $result;
+    }
 
-     //Get streams 
-     function get_streams($group) {
+    //Get streams 
+    function get_streams($group)
+    {
         $list = $this->db->where('class', $group)->get('classes')->result();
 
         $strlist = [];
@@ -383,7 +527,7 @@ class Cbc_tr extends MY_Model
         }
 
         return $strlist;
-     }
+    }
 
 
     //Get Class Group
@@ -392,7 +536,8 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $clas)->get('classes')->row();
     }
 
-    function get_students_by_stream($class = false) {
+    function get_students_by_stream($class = false)
+    {
         $this->select_all_key('admission');
         $this->db->where($this->dx('class') . " ='" . $class . "'", NULL, FALSE);
         $list = $this->db->get('admission')->result();
@@ -404,7 +549,7 @@ class Cbc_tr extends MY_Model
         }
 
         return $stus;
-     }
+    }
 
     function get_students_perstream($class = false)
     {
@@ -415,124 +560,131 @@ class Cbc_tr extends MY_Model
         $stus = [];
 
         foreach ($list as $key => $l) {
-            $stus[$l->id] = $l->first_name.'  '. $l->last_name;
+            $stus[$l->id] = $l->first_name . '  ' . $l->last_name;
         }
 
         return $stus;
     }
 
-     //Get final results by students 
-     function results($tid,$students = array()) {
+    //Get final results by students 
+    function results($tid, $students = array())
+    {
         return $this->db
-                    ->where(array('tid' => $tid))
-                    ->where_in('student',$students)
-                    ->order_by('total_marks','DESC')
-                    ->get('cbc_final_results')
-                    ->result();
-     }
+            ->where(array('tid' => $tid))
+            ->where_in('student', $students)
+            ->order_by('total_marks', 'DESC')
+            ->get('cbc_final_results')
+            ->result();
+    }
 
-     //Compare the Previous Overall Score
-     function prev_score($tid,$stu) {
+    //Compare the Previous Overall Score
+    function prev_score($tid, $stu)
+    {
         return $this->db
-                ->where(array('tid' => $tid))
-                ->where(array('student' => $stu))
-                ->get('cbc_final_results')
-                ->row();
-     }
+            ->where(array('tid' => $tid))
+            ->where(array('student' => $stu))
+            ->get('cbc_final_results')
+            ->row();
+    }
 
-     function student_scores($tid,$stu) {
+    function student_scores($tid, $stu)
+    {
         // print_r($subids);
         // die;
         return $this->db
-                    ->where(array('tid' => $tid))
-                    ->where(array('student' => $stu))
-                    // ->where_in(array('subject' => $subids))
-                    ->get('cbc_subs_included')
-                    ->result();
-     }
+            ->where(array('tid' => $tid))
+            ->where(array('student' => $stu))
+            // ->where_in(array('subject' => $subids))
+            ->get('cbc_subs_included')
+            ->result();
+    }
 
-     //CompareScore 
-     function compare_score($tid,$stu,$sub) {
+    //CompareScore 
+    function compare_score($tid, $stu, $sub)
+    {
         return $this->db
-                ->where(array('tid' => $tid))
-                ->where(array('student' => $stu))
-                ->where(array('subject' => $sub))
-                ->get('cbc_subs_included')
-                ->row();
-     }
+            ->where(array('tid' => $tid))
+            ->where(array('student' => $stu))
+            ->where(array('subject' => $sub))
+            ->get('cbc_subs_included')
+            ->row();
+    }
 
-     //The last four performances
-     function last_four_scores($student,$type) {
+    //The last four performances
+    function last_four_scores($student, $type)
+    {
         return $this->db
-                    ->where('student',$student)
-                    ->where('type',$type)
-                    ->order_by('tid','ASC')
-                    ->limit(4)
-                    ->get('cbc_final_results')
-                    ->result();
-     }
+            ->where('student', $student)
+            ->where('type', $type)
+            ->order_by('tid', 'ASC')
+            ->limit(4)
+            ->get('cbc_final_results')
+            ->result();
+    }
 
-     function teacher_assigned($class,$sub,$term,$year) {
+    function teacher_assigned($class, $sub, $term, $year)
+    {
         return $this->db
-                    ->where('class',$class)
-                    ->where('subject',$sub)
-                    ->where('term',$term)
-                    ->where('year',$year)
-                    ->get('subjects_assign')
-                    ->row();
-     }
+            ->where('class', $class)
+            ->where('subject', $sub)
+            ->where('term', $term)
+            ->where('year', $year)
+            ->get('subjects_assign')
+            ->row();
+    }
 
-     //Get Subject Teacher
-     function get_subject_teacher($class,$sub,$term,$year) {
+    //Get Subject Teacher
+    function get_subject_teacher($class, $sub, $term, $year)
+    {
         $row = $this->db
-                    ->where('class',$class)
-                    ->where('subject',$sub)
-                    ->where('term',$term)
-                    ->where('year',$year)
-                    ->where('type',1)
-                    ->get('subjects_assign')
-                    ->row();
+            ->where('class', $class)
+            ->where('subject', $sub)
+            ->where('term', $term)
+            ->where('year', $year)
+            ->where('type', 1)
+            ->get('subjects_assign')
+            ->row();
 
         if ($row) {
             $teacher = $this->find_teacher($row->teacher);
-            return ucwords($teacher->first_name.' '.$teacher->last_name);
+            return ucwords($teacher->first_name . ' ' . $teacher->last_name);
         } else {
             return 'Not Assigned';
         }
-        
-     }
+    }
 
-     function find_teacher($id) {
+    function find_teacher($id)
+    {
         $this->select_all_key('teachers');
         return $this->db->where(array('id' => $id))->get('teachers')->row();
-     }
+    }
 
-     //Get Class Teacher 
-     function get_teacher($cls) {
+    //Get Class Teacher 
+    function get_teacher($cls)
+    {
         $row = $this->db
-                    ->where('id',$cls)
-                    ->get('classes')
-                    ->row();
+            ->where('id', $cls)
+            ->get('classes')
+            ->row();
 
         $user = $this->ion_auth->get_user($row->class_teacher);
 
         if ($user) {
             return "_";
         } else {
-            return ucwords($user->first_name.' '.$user->last_name);
+            return ucwords($user->first_name . ' ' . $user->last_name);
         }
-        
-        
-     }
+    }
 
-     function subscores($tid,$classgrp,$sub) {
+    function subscores($tid, $classgrp, $sub)
+    {
         return $this->db
-                    ->where(array('tid' => $tid))
-                    ->where(array('classgrp' => $classgrp))
-                    ->where(array('subject' => $sub))
-                    ->get('cbc_subs_included')
-                    ->result();
-     }
+            ->where(array('tid' => $tid))
+            ->where(array('classgrp' => $classgrp))
+            ->where(array('subject' => $sub))
+            ->get('cbc_subs_included')
+            ->result();
+    }
 
 
 
@@ -621,7 +773,7 @@ class Cbc_tr extends MY_Model
         $tasks = [];
 
         foreach ($list as $y => $li) {
-           
+
             $tasks[$li->id] = $li->name;
         }
         return $tasks;
@@ -709,32 +861,34 @@ class Cbc_tr extends MY_Model
         return $this->db->where('id', $id)->where('status', 1)->get('cbc_tasks')->row();
     }
 
-    function find($id,$table)
+    function find($id, $table)
     {
         return $this->db->where('id', $id)->get($table)->row();
     }
 
     //Get Term Exams
-    function find_exams($term = false, $year = false) {
+    function find_exams($term = false, $year = false)
+    {
         if ($term) {
-            $this->db->where('term',$term);
+            $this->db->where('term', $term);
         }
 
         if ($year) {
-            $this->db->where('year',$year);
+            $this->db->where('year', $year);
         }
 
         return $this->db
-                    ->get('cbc_threads')
-                    ->result();
+            ->get('cbc_threads')
+            ->result();
     }
 
     //Get Class Group Streams
-    function class_group_streams($class) {
+    function class_group_streams($class)
+    {
         $list = $this->db
-                     ->where('class',$class)
-                     ->get('classes')
-                     ->result();
+            ->where('class', $class)
+            ->get('classes')
+            ->result();
 
         $out = [];
 
@@ -803,7 +957,7 @@ class Cbc_tr extends MY_Model
 
     function exam_threads()
     {
-        $list = $this->db->where('status',1)->order_by('id', 'DESC')->get('cbc_exam_threads')->result();
+        $list = $this->db->where('status', 1)->order_by('id', 'DESC')->get('cbc_exam_threads')->result();
         // $ex = array(); // Initialize the array
 
         // foreach ($list as $l) {
@@ -1041,7 +1195,7 @@ class Cbc_tr extends MY_Model
     function find_student1($cls)
     {
         $this->select_all_key('admission');
-        
+
         $list = $this->db->where($this->dx('class') . " ='" . $cls . "'", NULL, FALSE)->get('admission')->result();
 
         $myst = [];
@@ -1183,7 +1337,7 @@ class Cbc_tr extends MY_Model
 
         $data = $this->db->where_in('attendance_id', $id)->get('class_attendance_list')->result();
 
-         $presentCounts = array();
+        $presentCounts = array();
 
         // Iterate through the data
         foreach ($data as $row) {
@@ -1191,7 +1345,7 @@ class Cbc_tr extends MY_Model
             $status = $row->status;
 
             if (!isset($presentCounts[$student])) {
-               $presentCounts[$student] = 0;
+                $presentCounts[$student] = 0;
             }
 
             if (strcasecmp($status, 'present') === 0) {
@@ -1208,22 +1362,23 @@ class Cbc_tr extends MY_Model
     }
 
 
-   function get_students_by_class($cls){
+    function get_students_by_class($cls)
+    {
 
         $this->select_all_key('admission');
         $this->db->where($this->dx('class') . " ='" . $cls . "'", NULL, FALSE);
         return $this->db->get('admission')->result();
-
-   }
+    }
 
     public function get_clsgroup($class)
     {
-        $this->db->where('id', $class); 
-        $query = $this->db->get('classes'); 
+        $this->db->where('id', $class);
+        $query = $this->db->get('classes');
         return $query->row();
     }
 
-    function  get_subids($cls){
+    function  get_subids($cls)
+    {
         $this->db->where('class_id', $cls);
         $query = $this->db->get('cbc');
         return $query->result();
@@ -1238,13 +1393,13 @@ class Cbc_tr extends MY_Model
 
     public function insert_input($input, $st, $ex)
     {
-       
+
         $data = array(
             'remarks' => $input
         );
         $this->db->where('student', $st);
         $this->db->where('exam', $ex);
-        $result = $this->db->update('cbc_marks', $data); 
+        $result = $this->db->update('cbc_marks', $data);
         return $result;
     }
 
