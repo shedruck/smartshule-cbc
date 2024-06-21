@@ -366,7 +366,6 @@ class Admin extends Admin_Controller
             if ($assess)
             {
                 $strands = $this->cbc_m->get_assess_strands($assess->id, 0, $subject);
-
                 if (empty($strands))
                 {
                     $subs = $this->cbc_m->get_assess_subs_join($assess->id, $subject);

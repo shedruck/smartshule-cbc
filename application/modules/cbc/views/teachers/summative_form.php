@@ -180,9 +180,8 @@ if ($exam_type->type == 1) {
                     </label>
                 </div>
                 <div class="float-end d-inline-block btn-list">
-                    <button type="submit" class="btn btn-primary" id="submitButton"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button>
-                    <a class="btn btn-secondary" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
-
+                    <button type="submit" class="btn btn-primary " id="submitButton"><i class="fe fe-check-square me-1 lh-base"></i>Submit</button>
+                      <a class="btn btn-secondary" href="<?php echo base_url('cbc/trs/begin_summative_form/'); ?>"><i class="fa fa-caret-left"></i> Go Back</a>
                 </div>
             </div>
         </div>
@@ -392,7 +391,7 @@ if ($exam_type->type == 1) {
 
     .custom-checkbox:checked {
         transform: scale(1.2);
-        
+
     }
 </style>
 

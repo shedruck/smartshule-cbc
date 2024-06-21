@@ -1,6 +1,11 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
+
+require_once FCPATH . 'vendor/autoload.php';
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class Api extends Public_Controller
 {
@@ -11,23 +16,20 @@ class Api extends Public_Controller
     {
         parent::__construct();
 
-        if (strpos(current_url(), 'authorize') === false)
-        {
+        if (strpos(current_url(), 'authorize') === false) {
             header("Access-Control-Allow-Origin:*");
             header('Content-type: application/json');
             header("Access-Control-Allow-Methods:GET,POST,OPTIONS");
             header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding, Authorization, X-API-Version, X-Requested-With");
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Max-Age: 86400');
-        }
-        else
-        {
+        } else {
             $this->template
-                              ->set_layout('api.php')
-                              ->set_partial('meta', 'partials/meta.php')
-                              ->set_partial('header', 'partials/header.php')
-                              ->set_partial('sidebar', 'partials/sidebar.php')
-                              ->set_partial('footer', 'partials/footer.php');
+                ->set_layout('api.php')
+                ->set_partial('meta', 'partials/meta.php')
+                ->set_partial('header', 'partials/header.php')
+                ->set_partial('sidebar', 'partials/sidebar.php')
+                ->set_partial('footer', 'partials/footer.php');
         }
 
         $this->load->model('api_m');
@@ -43,19 +45,16 @@ class Api extends Public_Controller
         $response = new OAuth2\Response();
 
         // validate the authorize request
-        if (!$server->validateAuthorizeRequest($request, $response))
-        {
+        if (!$server->validateAuthorizeRequest($request, $response)) {
             $response->send();
             die;
         }
         $user_id = 6137;
 
-        if ($this->input->post())
-        {
+        if ($this->input->post()) {
             $is_authorized = ($this->input->post('authorized') === 'yes');
             $server->handleAuthorizeRequest($request, $response, $is_authorized, $user_id);
-            if ($is_authorized)
-            {
+            if ($is_authorized) {
                 // this is only here so that you get to see your code in the cURL request. Otherwise, we'd redirect back to the client
                 $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=') + 5, 40);
                 //exit("SUCCESS! Authorization Code: $code");
@@ -66,14 +65,13 @@ class Api extends Public_Controller
         $data['qs'] = $this->input->server('QUERY_STRING');
         $this->template->title(' Authorize Smartshule ')->build('admin/authorize', $data);
     }
-  
+
     function auth()
     {
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $res = $server->getResponse()->send();
             die();
         }
@@ -108,8 +106,7 @@ class Api extends Public_Controller
         $parent->kids = $this->portal_m->get_kids($user->id);
         $kids = [];
         $bal = 0;
-        foreach ($parent->kids as $k)
-        {
+        foreach ($parent->kids as $k) {
             $bal += $k->balance;
             $student = $this->worker->get_student($k->student_id);
             $kid = [
@@ -167,8 +164,7 @@ class Api extends Public_Controller
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $server->getResponse()->send();
             die();
         }
@@ -176,13 +172,10 @@ class Api extends Public_Controller
         $classes = $this->api_m->get_class_options();
         $streams = $this->api_m->populate('class_stream', 'id', 'name');
         $crow = $this->api_m->fetch_class($id);
-        if (!$crow)
-        {
+        if (!$crow) {
             $ct = ' - ';
             $st = ' - ';
-        }
-        else
-        {
+        } else {
             $ct = isset($classes[$crow->class]) ? $classes[$crow->class] : ' - ';
             $st = isset($streams[$crow->stream]) ? $streams[$crow->stream] : ' - ';
         }
@@ -205,12 +198,10 @@ class Api extends Public_Controller
         $row = $this->api_m->fetch_class($stud->class);
         $st = '';
         $grp = '';
-        if (isset($row->stream))
-        {
+        if (isset($row->stream)) {
             $st = isset($streams[$row->stream]) ? $streams[$row->stream] : '';
         }
-        if (isset($row->class))
-        {
+        if (isset($row->class)) {
             $grp = isset($groups[$row->class]) ? $groups[$row->class] : '';
         }
         $by = $this->ion_auth->get_user($stud->created_by);
@@ -260,8 +251,7 @@ class Api extends Public_Controller
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $server->getResponse()->send();
             die();
         }
@@ -270,18 +260,15 @@ class Api extends Public_Controller
         $term = $this->input->get('term');
         $year = $this->input->get('year');
 
-        if (!$term)
-        {
+        if (!$term) {
             $term = get_term(date('m'));
         }
-        if (!$year)
-        {
+        if (!$year) {
             $year = date('Y');
         }
 
         $res = $this->api_m->get_tuition_invoices($cursor, $limit, $term, $year);
-        foreach ($res as $r)
-        {
+        foreach ($res as $r) {
             $r->description = "Tuition Fee";
         }
         echo json_encode(array('invoices' => $res), JSON_NUMERIC_CHECK);
@@ -296,8 +283,7 @@ class Api extends Public_Controller
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $server->getResponse()->send();
             die();
         }
@@ -306,12 +292,10 @@ class Api extends Public_Controller
         $term = $this->input->get('term');
         $year = $this->input->get('year');
 
-        if (!$term)
-        {
+        if (!$term) {
             $term = get_term(date('m'));
         }
-        if (!$year)
-        {
+        if (!$year) {
             $year = date('Y');
         }
 
@@ -329,8 +313,7 @@ class Api extends Public_Controller
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $server->getResponse()->send();
             die();
         }
@@ -339,12 +322,10 @@ class Api extends Public_Controller
         $term = $this->input->get('term');
         $year = $this->input->get('year');
 
-        if (!$term)
-        {
+        if (!$term) {
             $term = get_term(date('m'));
         }
-        if (!$year)
-        {
+        if (!$year) {
             $year = date('Y');
         }
 
@@ -364,8 +345,7 @@ class Api extends Public_Controller
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $server->getResponse()->send();
             die();
         }
@@ -424,10 +404,8 @@ class Api extends Public_Controller
 
         $post = array();
         $data = $this->api_m->filter_stock($month);
-        foreach ($data as $p)
-        {
-            if ($p->qty < 1)
-            {
+        foreach ($data as $p) {
+            if ($p->qty < 1) {
                 continue;
             }
             $post[$p->date][] = $p;
@@ -445,8 +423,7 @@ class Api extends Public_Controller
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $server->getResponse()->send();
             die();
         }
@@ -465,8 +442,7 @@ class Api extends Public_Controller
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             $server->getResponse()->send();
             die();
         }
@@ -487,8 +463,7 @@ class Api extends Public_Controller
         $server = $this->oauth_server->init_server();
 
         // Handle a request to a resource and authenticate the access token
-        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
-        {
+        if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
             //echo json_encode(array('error' => $server->getResponse()->getstatusText(), 'code' => $server->getResponse()->getstatusCode()));
             $server->getResponse()->send();
             die();
@@ -516,8 +491,7 @@ class Api extends Public_Controller
 
     function filter_pos($array)
     {
-        return array_filter($array, function ($num)
-        {
+        return array_filter($array, function ($num) {
             return $num > 0;
         });
     }
@@ -540,8 +514,7 @@ class Api extends Public_Controller
     function token_parent()
     {
         $res = $this->oauth_server->token();
-        if (empty($res))
-        {
+        if (empty($res)) {
             echo json_encode(['success' => false, 'message' => 'Wrong Username or Password. Try Again']);
             exit();
         }
@@ -575,8 +548,7 @@ class Api extends Public_Controller
         $student = $this->api_m->find_student($id);
         $payload = $this->worker->process_statement($id);
         $fee = $this->api_m->fetch_balance($id);
-        if ($return)
-        {
+        if ($return) {
             return (object) ['arrears' => $arrs, 'statement' => $payload];
         }
         echo json_encode(['student' => $student, 'fee' => $fee, 'arrears' => $arrs, 'statement' => $payload], JSON_NUMERIC_CHECK);
@@ -588,20 +560,16 @@ class Api extends Public_Controller
         $response = [];
         $pid = $this->input->get('ParentId');
 
-        if ($pid)
-        {
+        if ($pid) {
             $parent = $this->ion_auth->get_single_parent($pid);
-            if ($parent)
-            {
+            if ($parent) {
                 $students = $this->portal_m->get_kids($parent->user_id);
-                foreach ($students as $s)
-                {
+                foreach ($students as $s) {
                     $student = $this->worker->get_student($s->student_id);
                     $fee = $this->api_m->fetch_balance($student->id);
 
                     $link = '';
-                    if (!empty($student->photo))
-                    {
+                    if (!empty($student->photo)) {
                         $passport = $this->admission_m->passport($student->photo);
                         $link = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
                     }
@@ -618,14 +586,10 @@ class Api extends Public_Controller
                     ];
                     $response["Response"]['Data']['students'][] = $details;
                 }
-            }
-            else
-            {
+            } else {
                 $response["Response"]['status'] = ['code' => 0, 'message' => 'Failed! Parent not Found'];
             }
-        }
-        else
-        {
+        } else {
             $response["Response"]['status'] = ['code' => 0, 'message' => 'Failed! Parent not Found'];
         }
 
@@ -634,21 +598,18 @@ class Api extends Public_Controller
 
     function Profile($id)
     {
-       $this->auth();
+        $this->auth();
 
-        if ($id)
-        {
+        if ($id) {
             $student = $this->worker->get_student($id);
-            if (empty($student) || !isset($student->id))
-            {
+            if (empty($student) || !isset($student->id)) {
                 echo json_encode(["Profile" => []]);
                 exit();
             }
             $fee = $this->api_m->fetch_balance($student->id);
-            
+
             $link = '';
-            if (!empty($student->photo))
-            {
+            if (!empty($student->photo)) {
                 $passport = $this->admission_m->passport($student->photo);
                 $link = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
             }
@@ -671,8 +632,7 @@ class Api extends Public_Controller
 
             $parent = $this->ion_auth->get_single_parent($student->parent_id);
 
-            if (!empty($parent))
-            {
+            if (!empty($parent)) {
                 $profile['Parents'] = [
                     [
                         "Name" => $parent->first_name . ' ' . $parent->last_name,
@@ -688,9 +648,7 @@ class Api extends Public_Controller
             }
 
             $response = ["Profile" => $profile];
-        }
-        else
-        {
+        } else {
             $response = ["Profile" => []];
         }
 
@@ -705,8 +663,7 @@ class Api extends Public_Controller
         $response = [];
         $res = $this->oauth_server->token();
 
-        if (empty($res))
-        {
+        if (empty($res)) {
             $response["Response"]['status'] = ['code' => 0, 'message' => 'Failed ! Invalid Login Details'];
             echo json_encode($response);
             exit();
@@ -720,16 +677,14 @@ class Api extends Public_Controller
         $response["Response"]['Data'] = ['parentID' => $parent->id, 'emailAddress' => $parent->email, 'firstName' => $parent->first_name, 'gender' => null, 'accountStatus' => 'Active', 'students' => []];
 
         $students = $this->portal_m->get_kids($user->id);
-        foreach ($students as $s)
-        {
+        foreach ($students as $s) {
             $student = $this->worker->get_student($s->student_id);
             $fee = $this->api_m->fetch_balance($student->id);
             $tm = get_term(date('m'));
             $waiver = $this->admission_m->get_waiver($student->id, $tm);
 
             $link = '';
-            if (!empty($student->photo))
-            {
+            if (!empty($student->photo)) {
                 $passport = $this->admission_m->passport($student->photo);
                 $link = base_url('uploads/' . $passport->fpath . '/' . $passport->filename);
             }
@@ -799,16 +754,14 @@ class Api extends Public_Controller
         $row = $this->api_m->get_token($token);
 
         $user = $this->ion_auth->get_user($row->user_id);
-        if ($sub)
-        {
+        if ($sub) {
             return $user;
         }
         $parent = $this->portal_m->get_profile($user->id);
         $parent->kids = $this->portal_m->get_kids($user->id);
         $kids = [];
         $bal = 0;
-        foreach ($parent->kids as $k)
-        {
+        foreach ($parent->kids as $k) {
             $bal += $k->balance;
             $student = $this->worker->get_student($k->student_id);
             $kid = [
@@ -842,8 +795,7 @@ class Api extends Public_Controller
         $response['BankInfo'] = [];
         $bnks = $this->api_m->find_banks();
 
-        foreach ($bnks as $b)
-        {
+        foreach ($bnks as $b) {
             $bk = [
                 "BANKACCOUNTID" => $b->id,
                 "BANKNAME" => $b->bank_name,
@@ -864,20 +816,14 @@ class Api extends Public_Controller
     {
         $phone = $this->input->get('phone_no');
         $response = [];
-        if ($phone)
-        {
+        if ($phone) {
             $parent = $this->ion_auth->find_parent($phone);
-            if ($parent)
-            {
+            if ($parent) {
                 $response = ["Check" => "Already Exists"];
-            }
-            else
-            {
+            } else {
                 $response = ["Check" => "Failed"];
             }
-        }
-        else
-        {
+        } else {
             $response = ["Check" => "Missing Parameter"];
         }
         echo json_encode($response);
@@ -890,36 +836,24 @@ class Api extends Public_Controller
         $password = $this->input->post('password');
         $code = $this->input->post('code');
 
-        if ($username && $password && $code)
-        {
+        if ($username && $password && $code) {
             $parent = $this->ion_auth->find_parent($username);
             $user = $this->ion_auth->get_user($parent->user_id);
-            if ($user->activation_code == $code)
-            {
-                if (strlen($password) > 7)
-                {
+            if ($user->activation_code == $code) {
+                if (strlen($password) > 7) {
                     $kp = $this->ion_auth->reset_password($parent->user_id, $password);
-                    if ($kp)
-                    {
+                    if ($kp) {
                         $response = ["Update" => "Success"];
-                    }
-                    else
-                    {
+                    } else {
                         $response = ["Update" => "Failed"];
                     }
-                }
-                else
-                {
+                } else {
                     $response = ["Update" => "Failed ! Short Password"];
                 }
-            }
-            else
-            {
+            } else {
                 $response = ["Update" => "Failed ! Invalid Code"];
             }
-        }
-        else
-        {
+        } else {
             $response = ["Update" => "Missing Parameter"];
         }
         echo json_encode($response);
@@ -929,33 +863,24 @@ class Api extends Public_Controller
     {
         $response = [];
         $username = $this->input->get('phone_no');
-        if ($username)
-        {
+        if ($username) {
             $parent = $this->ion_auth->find_parent($username);
-            if ($parent)
-            {
+            if ($parent) {
                 $usr = $this->ion_auth->get_user($parent->user_id);
-                if ($usr)
-                {
+                if ($usr) {
                     $code = $this->ion_auth->ref_no(6);
                     $this->ion_auth->make_update($parent->user_id, ['forgotten_password_code' => $code, 'activation_code' => $code, 'modified_on' => time()]);
 
                     $message = "Your activation code is " . $code;
                     $this->sms_m->send_sms($username, $message);
                     $response = ["Check" => $code];
-                }
-                else
-                {
+                } else {
                     $response = ["Check" => "Failed. User not Found"];
                 }
-            }
-            else
-            {
+            } else {
                 $response = ["Check" => "Failed. Parent not Found"];
             }
-        }
-        else
-        {
+        } else {
             $response = ["Check" => "Missing Parameter"];
         }
         echo json_encode($response);
@@ -969,21 +894,18 @@ class Api extends Public_Controller
         $img = $this->input->post('ImageinBase64');
         $file_name = $this->input->post('File_Name');
         $student = $this->worker->get_student($sid);
-        if (!$student)
-        {
+        if (!$student) {
             $response = ["Check" => "Student not Found"];
         }
 
-        if ($sid && $img && $file_name)
-        {
+        if ($sid && $img && $file_name) {
             $binary = base64_decode($img);
 
             header('Content-Type: bitmap; charset=utf-8');
             $fname = 'pic_' . $file_name;
 
             $dest = FCPATH . "/uploads/student/" . date('Y') . '/';
-            if (!is_dir($dest))
-            {
+            if (!is_dir($dest)) {
                 mkdir($dest, 0777, true);
             }
             $file = fopen($dest . $fname, 'wb');
@@ -992,20 +914,19 @@ class Api extends Public_Controller
 
             $this->load->model('admission/admission_m');
             $file_id = $this->admission_m->save_photo(
-                              [
-                                  'filename' => $fname,
-                                  'filesize' => 0,
-                                  'fpath' => 'student/' . date('Y') . '/',
-                                  'created_by' => 999,
-                                  'created_on' => now()
-            ]);
+                [
+                    'filename' => $fname,
+                    'filesize' => 0,
+                    'fpath' => 'student/' . date('Y') . '/',
+                    'created_by' => 999,
+                    'created_on' => now()
+                ]
+            );
 
             $this->admission_m->update_attributes($sid, ['photo' => $file_id]);
 
             $response = ["Check" => "Success", "path" => base_url("/uploads/student/" . date('Y') . '/' . $fname)];
-        }
-        else
-        {
+        } else {
             $response = ["Check" => "Failed"];
         }
 
@@ -1020,39 +941,36 @@ class Api extends Public_Controller
         $file_name = $this->input->post('File_Name');
         $img = $this->input->post('ImageinBase64');
         $parent = $this->ion_auth->get_single_parent($pid);
-        if (!$parent)
-        {
+        if (!$parent) {
             $response = ["Check" => "Failed. Parent not Found."];
         }
-        if ($pid && $img && $file_name)
-        {
+        if ($pid && $img && $file_name) {
             $binary = base64_decode($img);
 
             header('Content-Type: bitmap; charset=utf-8');
             $fname = 'p_' . $file_name;
             $dest = FCPATH . "/uploads/parents/" . date('Y') . '/';
-            if (!is_dir($dest))
-            {
+            if (!is_dir($dest)) {
                 mkdir($dest, 0777, true);
             }
             $file = fopen($dest . $fname, 'wb');
             fwrite($file, $binary);
             fclose($file);
 
-            $file_id = $this->api_m->save_rec('parents_passports',
-                              [
-                                  'filename' => $fname,
-                                  'filesize' => 0,
-                                  'fpath' => 'parents/' . date('Y') . '/',
-                                  'created_by' => 999,
-                                  'created_on' => time()
-            ]);
+            $file_id = $this->api_m->save_rec(
+                'parents_passports',
+                [
+                    'filename' => $fname,
+                    'filesize' => 0,
+                    'fpath' => 'parents/' . date('Y') . '/',
+                    'created_by' => 999,
+                    'created_on' => time()
+                ]
+            );
 
             $this->api_m->update_k_data('parents', $pid, ['father_photo' => $file_id]);
             $response = ["Check" => "Success", "path" => base_url('uploads/parents/' . date('Y') . '/' . $fname)];
-        }
-        else
-        {
+        } else {
             $response = ["Check" => "Failed. Missing Parameters"];
         }
 
@@ -1065,21 +983,15 @@ class Api extends Public_Controller
         $response = [];
         $sid = $this->input->post('Sid');
 
-        if ($sid)
-        {
+        if ($sid) {
             $student = $this->worker->get_student($sid);
-            if (!empty($student))
-            {
+            if (!empty($student)) {
                 $row = $this->api_m->get_passport($student->photo);
                 $response = ["Check" => "Success", "path" => base_url('uploads/' . $row->fpath . $row->filename)];
-            }
-            else
-            {
+            } else {
                 $response = ["Check" => "Failed"];
             }
-        }
-        else
-        {
+        } else {
             $response = ["Check" => "Failed"];
         }
         echo json_encode($response);
@@ -1092,21 +1004,15 @@ class Api extends Public_Controller
         $pid = $this->input->get('Parentid');
         $response = [];
 
-        if ($pid)
-        {
+        if ($pid) {
             $parent = $this->ion_auth->get_single_parent($pid);
-            if (!empty($parent))
-            {
+            if (!empty($parent)) {
                 $row = $this->api_m->get_parent_passport($parent->father_photo);
                 $response = ["Check" => "Success", "path" => base_url('uploads/' . $row->fpath . $row->filename)];
-            }
-            else
-            {
+            } else {
                 $response = ["Check" => "Failed"];
             }
-        }
-        else
-        {
+        } else {
             $response = ["Check" => "Failed"];
         }
         echo json_encode($response);
@@ -1117,16 +1023,12 @@ class Api extends Public_Controller
         $this->auth();
         $response = [];
         $evnts = $this->api_m->get_events();
-        if (!empty($evnts))
-        {
+        if (!empty($evnts)) {
             $response["events"] = [];
-            foreach ($evnts as $e)
-            {
+            foreach ($evnts as $e) {
                 $response["events"][] = ["title" => $e->title, "date" => date('d M Y', $e->date), "start_time" => $e->start, "end_time" => $e->end, "description" => $e->description, "created_on" => date('Y-m-d', $e->created_on)];
             }
-        }
-        else
-        {
+        } else {
             $response["events"] = array();
         }
 
@@ -1138,24 +1040,17 @@ class Api extends Public_Controller
         $this->auth();
         $response = [];
         $sid = $this->input->post('Sid');
-        if ($sid)
-        {
+        if ($sid) {
             $events = $this->api_m->getex_activities($sid);
-            if (!empty($events))
-            {
+            if (!empty($events)) {
                 $response["activites"] = [];
-                foreach ($events as $e)
-                {
+                foreach ($events as $e) {
                     $response["activites"][] = ["activity" => $e->activity_name, "term" => $e->term, "year" => $e->year];
                 }
-            }
-            else
-            {
+            } else {
                 $response = ["activites" => array()];
             }
-        }
-        else
-        {
+        } else {
             $response = ["activites" => array()];
         }
         echo json_encode($response);
@@ -1171,8 +1066,7 @@ class Api extends Public_Controller
         $from = $this->input->get('fromDate') ? strtotime($this->input->get('fromDate')) : 0;
         $to = $this->input->get('toDate') ? strtotime($this->input->get('toDate')) : 0;
 
-        if (!$adm)
-        {
+        if (!$adm) {
             $response = ["Report" => []];
             echo json_encode($response);
             exit();
@@ -1183,8 +1077,7 @@ class Api extends Public_Controller
 
         $res = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
 
-        foreach ($dr->result as $d)
-        {
+        foreach ($dr->result as $d) {
             $student = $this->worker->get_student($d->student);
             $user = $this->ion_auth->get_user($d->created_by);
             $pc = $this->api_m->get_comment($d->id, $res['user_id'], 1);
@@ -1224,8 +1117,7 @@ class Api extends Public_Controller
         $from = $this->input->get('fromDate') ? strtotime($this->input->get('fromDate')) : 0;
         $to = $this->input->get('toDate') ? strtotime($this->input->get('toDate')) : 0;
 
-        if (!$adm)
-        {
+        if (!$adm) {
             $response = ["Report" => []];
             echo json_encode($response);
             exit();
@@ -1234,8 +1126,7 @@ class Api extends Public_Controller
         $dr = $this->api_m->get_diary_extra($adm, $page, $per, $from, $to);
         $report = [];
         $activities = $this->api_m->populate('activities', 'id', 'name');
-        foreach ($dr->result as $d)
-        {
+        foreach ($dr->result as $d) {
             $student = $this->worker->get_student($d->student);
             $user = $this->ion_auth->get_user($d->created_by);
             $report[] = [
@@ -1263,8 +1154,7 @@ class Api extends Public_Controller
     {
         $this->auth();
         $id = $this->input->get('admNo');
-        if (!$id)
-        {
+        if (!$id) {
             $response = ["Report" => []];
             echo json_encode($response);
             exit();
@@ -1282,12 +1172,9 @@ class Api extends Public_Controller
         $students = $this->portal_m->get_kids($res['user_id']);
         $bal = 0;
         $rows = [];
-        foreach ($students as $k)
-        {
-            if ($id)
-            {
-                if ($k->student_id != $id)
-                {
+        foreach ($students as $k) {
+            if ($id) {
+                if ($k->student_id != $id) {
                     continue;
                 }
             }
@@ -1313,8 +1200,7 @@ class Api extends Public_Controller
         $this->auth();
 
         $id = $this->input->get('admNo');
-        if (!$id)
-        {
+        if (!$id) {
             $response = ["Report" => []];
             echo json_encode($response);
             exit();
@@ -1327,15 +1213,11 @@ class Api extends Public_Controller
 
         ksort($res->statement);
         $txs = [];
-        foreach ($res->statement as $y => $p)
-        {
+        foreach ($res->statement as $y => $p) {
             ksort($p);
-            foreach ($p as $term => $trans)
-            {
-                foreach ($trans as $type => $paidd)
-                {
-                    foreach ($paidd as $paid)
-                    {
+            foreach ($p as $term => $trans) {
+                foreach ($trans as $type => $paidd) {
+                    foreach ($paidd as $paid) {
                         $paid['type'] = $type;
                         $txs[$y][$term][] = $paid;
                     }
@@ -1343,10 +1225,8 @@ class Api extends Public_Controller
             }
         }
 
-        foreach ($txs as $y => $p)
-        {
-            foreach ($p as $term => $trans)
-            {
+        foreach ($txs as $y => $p) {
+            foreach ($p as $term => $trans) {
                 $mf = ['year' => $y, 'term' => $this->terms[$term], 'balance_bf' => number_format($ibal, 2)];
 
                 $st_paid = sort_by_field($trans, 'date');
@@ -1359,22 +1239,19 @@ class Api extends Public_Controller
                 $exc = 0;
                 $exw = 0;
                 $lines = [];
-                foreach ($st_paid as $paidd)
-                {
+                foreach ($st_paid as $paidd) {
                     $paid = (object) $paidd;
                     $debit = $paid->type == 'Debit' ? $paid->amount : 0;
                     $debit += $paid->type == 'Sales' ? $paid->amount : 0;
                     $credit = $paid->type == 'Credit' ? $paid->amount : 0;
                     $sales_paid = $paid->type == 'Sold' ? $paid->amount : 0;
-                    if ($debit)
-                    {
+                    if ($debit) {
                         $idw = $paid->date;
                     }
                     $waiver = $paid->type == 'Waivers' ? $paid->amount : 0;
                     $bw = 0;
                     $bcg = 0;
-                    if (isset($paid->ex_type))
-                    {
+                    if (isset($paid->ex_type)) {
                         $wva = $paid->ex_type == 2 ? $paid->amount : 0;
                         $cg = $paid->ex_type == 1 ? $paid->amount : 0;
                         $exc += $cg;
@@ -1389,45 +1266,30 @@ class Api extends Public_Controller
                     $ibal += $bal;
                     $i++;
 
-                    if ($idw || $paid->type == 'Waivers')
-                    {
+                    if ($idw || $paid->type == 'Waivers') {
                         $wdate = date('d M Y', $paid->date);
-                    }
-                    else
-                    {
+                    } else {
                         $wdate = isset($this->terms[$term]) ? $this->terms[$term] : '';
                     }
                     $tdate = $paid->date > 0 ? date('d M Y', $paid->date) : $paid->date;
 
                     $mess = ucwords($paid->desc);
-                    if ((is_numeric($mess) && $mess == 0) || empty($paid->desc))
-                    {
+                    if ((is_numeric($mess) && $mess == 0) || empty($paid->desc)) {
                         $mess = 'Fee Payment';
-                    }
-                    elseif (is_numeric($mess))
-                    {
+                    } elseif (is_numeric($mess)) {
                         $mess = isset($extras[$mess]) ? $extras[$mess] : ' - ';
-                    }
-                    else
-                    {
+                    } else {
                         //
                     }
                     $wwv = $paid->desc ? 'Waiver - ' . $paid->desc : 'Fee Waiver';
 
-                    if ($waiver)
-                    {
+                    if ($waiver) {
                         $crd = number_format($waiver, 2);
-                    }
-                    elseif ($bw)
-                    {
+                    } elseif ($bw) {
                         $crd = number_format($bw, 2);
-                    }
-                    elseif ($sales_paid)
-                    {
+                    } elseif ($sales_paid) {
                         $crd = number_format($sales_paid, 2);
-                    }
-                    else
-                    {
+                    } else {
                         $crd = number_format($credit, 2);
                     }
 
@@ -1455,8 +1317,7 @@ class Api extends Public_Controller
         $term = $this->input->get('term');
         $year = $this->input->get('year');
 
-        if (!$term || !$year)
-        {
+        if (!$term || !$year) {
             $response = ["FoodTimeTable" => []];
             echo json_encode($response);
             exit();
@@ -1465,8 +1326,7 @@ class Api extends Public_Controller
         $tables = $this->api_m->populate('food_tt_tables', 'id', 'sub_code');
         $times = $this->api_m->populate('food_tt_times', 'id', 'name');
 
-        foreach ($tt as $p)
-        {
+        foreach ($tt as $p) {
             $time = isset($times[$p->time_]) ? $times[$p->time_] : ' -';
             $table = isset($tables[$p->table]) ? $tables[$p->table] : ' -';
             $term = isset($this->terms[$p->term]) ? $this->terms[$p->term] : ' -';
@@ -1502,8 +1362,7 @@ class Api extends Public_Controller
 
         $parsed = [];
 
-        foreach ($messages->result as $m)
-        {
+        foreach ($messages->result as $m) {
             $parsed[] = [
                 "id" => $m->id,
                 "phone" => $m->dest,
@@ -1523,12 +1382,10 @@ class Api extends Public_Controller
         $id = $this->input->post('id');
         $comment = $this->input->post('comment');
 
-        if ($id && $comment)
-        {
+        if ($id && $comment) {
             $res = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
 
-            if (!$this->api_m->diary_exists($id))
-            {
+            if (!$this->api_m->diary_exists($id)) {
                 $response["Response"]['status'] = ['code' => 0, 'message' => 'Failed! Diary does not exist'];
                 echo json_encode($response);
                 exit();
@@ -1536,9 +1393,7 @@ class Api extends Public_Controller
 
             $this->api_m->post_comment($id, $res['user_id'], $comment, 1);
             $response["Response"]['status'] = ['code' => 1, 'message' => 'Success'];
-        }
-        else
-        {
+        } else {
             $response["Response"]['status'] = ['code' => 0, 'message' => 'Failed! Missing Parameters'];
         }
 
@@ -1552,12 +1407,10 @@ class Api extends Public_Controller
         $id = $this->input->post('id');
         $comment = $this->input->post('comment');
 
-        if ($id && $comment)
-        {
+        if ($id && $comment) {
             $res = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
 
-            if (!$this->api_m->diary_exists($id, 2))
-            {
+            if (!$this->api_m->diary_exists($id, 2)) {
                 $response["Response"]['status'] = ['code' => 0, 'message' => 'Failed! Diary does not exist'];
                 echo json_encode($response);
                 exit();
@@ -1565,9 +1418,7 @@ class Api extends Public_Controller
 
             $this->api_m->post_comment($id, $res['user_id'], $comment, 2);
             $response["Response"]['status'] = ['code' => 1, 'message' => 'Success'];
-        }
-        else
-        {
+        } else {
             $response["Response"]['status'] = ['code' => 0, 'message' => 'Failed! Missing Parameters'];
         }
 
@@ -1582,8 +1433,7 @@ class Api extends Public_Controller
      */
     function generate_random($type = 'alnum', $length = 64)
     {
-        switch ($type)
-        {
+        switch ($type) {
             case 'alnum':
                 $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                 break;
@@ -1605,35 +1455,491 @@ class Api extends Public_Controller
             default:
                 $pool = (string) $type;
                 break;
-}
+        }
 
-        $crypto_rand_secure = function ($min, $max)
-        {
+        $crypto_rand_secure = function ($min, $max) {
             $range = $max - $min;
-            if ($range < 0)
-            {
+            if ($range < 0) {
                 return $min; // not so random...
             }
             $log = log($range, 2);
-            $bytes = (int) ( $log / 8 ) + 1; // length in bytes
+            $bytes = (int) ($log / 8) + 1; // length in bytes
             $bits = (int) $log + 1; // length in bits
-            $filter = (int) ( 1 << $bits ) - 1; // set all lower bits to 1
-            do
-            {
+            $filter = (int) (1 << $bits) - 1; // set all lower bits to 1
+            do {
                 $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
                 $rnd = $rnd & $filter; // discard irrelevant bits
-            }
-            while ($rnd >= $range);
+            } while ($rnd >= $range);
             return $min + $rnd;
         };
 
         $token = "";
         $max = strlen($pool);
-        for ($i = 0; $i < $length; $i++)
-        {
+        for ($i = 0; $i < $length; $i++) {
             $token .= $pool[$crypto_rand_secure(0, $max)];
         }
         return $token;
     }
 
+
+    public function export_form($user_id, $st = 43, $term, $year)
+    {
+
+        $this->load->model('cbc/cbc_m');
+
+        $stu = $this->worker->get_student($st);
+
+
+        if (!isset($stu->parent_user) || empty($stu->parent_user) || $stu->parent_user !== $user_id) {
+
+            echo json_encode(['success' => false, 'message' => 'No results found']);
+            exit();
+        } else {
+            $class = $stu->cl->id;
+            $student = $st;
+
+            $groups = $this->cbc_m->populate('class_groups', 'id', 'name');
+            $streams = $this->cbc_m->populate('class_stream', 'id', 'name');
+
+            $row = $this->cbc_m->fetch_class($class);
+
+            if (isset($row->stream)) {
+                $st = isset($streams[$row->stream]) ? $streams[$row->stream] : '';
+            }
+            if (isset($row->class)) {
+                $grp = isset($groups[$row->class]) ? $groups[$row->class] : '';
+            }
+            $row->name = $grp . ' ' . $st;
+
+
+            $meta = $this->cbc_m->get_assess_meta($class, $term, $year);
+
+            $subjects = $this->cbc_m->get_subs($meta->subjects);
+
+
+            $subs_id = array_keys($subjects);
+
+
+            $option = 1;
+
+            $assess = $this->cbc_m->get_assess_report2($class, $subs_id, $term, $year, $student);
+
+            // Loop through each object in $assess and extract the ID
+            foreach ($assess as $item) {
+                $ids = []; // Initialize $ids array here for each item
+                $ids[] = $item->id;
+
+                $sv = [];
+                if ($assess) {
+                    $strands = $this->cbc_m->get_assess_strands2($ids, 0, $subs_id);
+
+                    if (empty($strands)) {
+                        $subs = $this->cbc_m->get_assess_subs_join2($ids, $subjects);
+                        $rt = [];
+                        foreach ($subs as $sb) {
+                            $sv[$sb->strand]['subs'][$sb->sub_strand] = ['remarks' => $sb->remarks, 'rating' => $sb->rating];
+
+                            $tasks = $this->cbc_m->get_assess_tasks2($ids, $sb->strand, $sb->sub_strand);
+                            foreach ($tasks as $t) {
+                                $sv[$t->strand]['subs'][$t->sub_strand]['tasks'][$t->task] = ['task' => $t->task, 'rating' => $t->rating, 'remarks' => $t->remarks];
+                            }
+                        }
+                    } else {
+                        foreach ($strands as $str) {
+                            $sv[$str->strand]['rating'] = $str->rating;
+                            $rt = [];
+
+                            $subs = $this->cbc_m->get_assess_subs2($ids, $str->strand);
+
+                            if (empty($subs)) {
+                                //handle empty subs when tasks not empty
+                            } else {
+                                foreach ($subs as $sb) {
+                                    $sv[$sb->strand]['subs'][$sb->sub_strand] = ['remarks' => $sb->remarks, 'rating' => $sb->rating];
+
+                                    $tasks = $this->cbc_m->get_assess_tasks2($ids, $sb->strand, $sb->sub_strand);
+                                    foreach ($tasks as $t) {
+                                        $sv[$t->strand]['subs'][$t->sub_strand]['tasks'][$t->task] = ['task' => $t->task, 'rating' => $t->rating, 'remarks' => $t->remarks];
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    $substrands = $this->cbc_m->populate('cbc_topics', 'id', 'name');
+                    $las = $this->cbc_m->populate('cbc_la', 'id', 'name');
+                    $task_opts = $this->cbc_m->populate('cbc_tasks', 'id', 'name');
+
+                    $this->load->library('Dates');
+
+                    $map = [1 => 'BE', 2 => 'AE', 3 => 'ME', 4 => 'EE'];
+                    $tm = [];
+                    $ppl = $this->worker->get_student($student);
+                    $name = $ppl->first_name . ' ' . $ppl->last_name;
+                    $age = $ppl->dob > 10000 ? $this->dates->createFromTimeStamp($ppl->dob)->diffInYears() : '-';
+
+                    foreach ($sv as $strd => $rated) {
+                        $stw = isset($las[$strd]) ? $las[$strd] : ' - ';
+                        $rmk = [];
+                        if (isset($rated['subs'])) {
+                            foreach ($rated['subs'] as $k_s => $r) {
+                                $sub_name = isset($substrands[$k_s]) ? $substrands[$k_s] : ' - ';
+                                $fn = [];
+                                if (isset($r['tasks'])) {
+
+                                    // print_r($r['tasks']);
+                                    // die;
+                                    foreach ($r['tasks'] as $tk) {
+                                        $t_name = isset($task_opts[$tk['task']]) ? $task_opts[$tk['task']] : ' - ';
+
+                                        $t_rt = isset($tk['rating']) ? $tk['rating'] : '';
+                                        if ($option == 1) {
+                                            $x_rate = $t_rt ? $t_rt : '';
+                                        } else {
+                                            $x_rate = isset($map[$t_rt]) ? $map[$t_rt] : '';
+                                        }
+                                        $fn[] = (object) ['task' => $t_name, 'rating' => $x_rate, 'remarks' => $tk['remarks']];
+                                    }
+                                }
+
+                                $sb_rt = isset($r['rating']) ? $r['rating'] : '';
+                                if ($option == 1) {
+                                    $q_rate = $sb_rt ? $sb_rt : '';
+                                } else {
+                                    $q_rate = isset($map[$sb_rt]) ? $map[$sb_rt] : '';
+                                }
+                                $rmk[] = (object) ['name' => $sub_name, 'rating' => $q_rate, 'remarks' => isset($r['remarks']) ? $r['remarks'] : '', 'tasks' => $fn];
+                            }
+                        }
+                        $st_rt = isset($rated['rating']) ? $rated['rating'] : '';
+                        if ($option == 1) {
+                            $s_rate = $st_rt ? $st_rt : '';
+                        } else {
+                            $s_rate = isset($map[$st_rt]) ? $map[$st_rt] : '';
+                        }
+                        $tm[] = (object) ['name' => $stw, 'rating' => $s_rate, 'subs' => $rmk];
+                    }
+
+                    $learning_area = isset($item->subject) ? $item->subject : ''; // Assigning item's ID as learning area
+
+                    $result[] = (object) ['student' => $name, 'adm' => $ppl->admission_number, 'age' => $age, 'strands' => $tm, 'learning_area' => $learning_area];
+                }
+            }
+
+            $meta = $this->cbc_m->get_assess_meta($class, $term, $year);
+
+            $subjects = $this->cbc_m->get_subs($meta->subjects);
+            $students = $meta->students;
+            $term = $term;
+            $cls = $row;
+            $year = $year;
+            $result = $result;
+            $student = $stu;
+            $payload = $assess;
+        }
+
+
+        // echo "<pre>";
+        // print_r($result);
+        // echo "<pre>";
+        // die;
+
+        $options = new Options();
+        $options->set('dpi', '120');
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+
+        $html = $this->_get_html2($subjects, $student, $term, $cls, $year, $result, $payload);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $dompdf->stream("document.pdf", array("Attachment" => false));
+
+        // require_once APPPATH . 'libraries/vendor/autoload.php';
+        // $dompdf = new Dompdf\Dompdf();
+        // $options = new Dompdf\Options();
+        // $options->set('dpi', '120');
+        // $options->set('isRemoteEnabled', true);
+        // $dompdf->setOptions($options);
+
+
+        // // Get HTML content using _get_html2 function
+        // $html = $this->_get_html2($subjects, $student, $trm, $cls, $yr, $result);
+
+
+        // $dompdf->loadHtml($html);
+        // $dompdf->setPaper('A4', 'portrait');
+
+        // // Render the HTML as PDF
+        // $dompdf->render();
+
+        // // Output the generated PDF to Browser
+        // $dompdf->stream();
+    }
+
+
+    private function _get_html2($subjects, $student, $term, $cls, $year, $result, $payload)
+    {
+        ob_start(); // Start output buffering to capture HTML content
+?>
+
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8">
+            <title>Formative Report</title>
+            <!-- Bootstrap CSS -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+            <link type="text/css" href="<?php echo base_url('assets/themes/admin/css/bootstrap.css') ?>" rel="stylesheet">
+            <style>
+                /* Custom styles to enhance the PDF layout */
+                .slip {
+                    width: auto;
+                    min-height: auto;
+                    padding: 1cm;
+                    border-radius: 5px;
+                    background: white;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                }
+
+                @page {
+                    size: A4;
+                    margin: 0;
+                }
+
+
+                .cbc-img {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .cbc-img img {
+                    max-width: 100%;
+                }
+
+                /* Optional: Ensure images maintain their aspect ratio */
+                img {
+                    max-height: 68px;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 17px;
+
+                }
+
+                th,
+                td {
+                    padding: 4px;
+                    text-align: center;
+                    border: 1px solid #ccc;
+                    vertical-align: top;
+                    padding: 2px;
+                    line-height: 1.2;
+                }
+
+
+                .table-striped tbody tr:nth-of-type(odd) {
+                    background-color: white;
+
+                }
+
+                .table-striped tbody tr:nth-of-type(even) {
+                    background-color: #FCFCFC;
+
+                }
+
+                .form-group {
+                    padding: 4px;
+                }
+
+                /* Center align text in table cells */
+                .row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                    /* Adjust margin as needed */
+                }
+
+                .row img {
+                    max-width: 100%;
+                    height: auto;
+                }
+
+                .col-2,
+                .col-8 {
+                    flex: 0 0 auto;
+                    padding: 0;
+                    /* Remove padding */
+                    text-align: center;
+                    /* Center align content */
+                }
+
+                .col-8 h4 {
+                    margin-top: 10px;
+                    margin-bottom: 5px;
+
+                }
+
+                .col-8 p {
+                    margin-bottom: 0;
+
+                }
+
+                .dotted-underline {
+                    text-decoration: underline dotted;
+                }
+
+                .container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    /* Use viewport height for full screen */
+                }
+
+                .image-container {
+                    text-align: center;
+                }
+
+                .image-container img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    display: block;
+                    margin: 0 auto;
+                    /* Center the image horizontally */
+                }
+            </style>
+        </head>
+
+        <body>
+            <div class="container slip">
+                <!-- Top Section with Images and Text -->
+                <table style="width: 100%; border-collapse: collapse; border: none; ">
+                    <tr>
+                        <td style="width: 20%; text-align: left;  border: none">
+                            <!-- Header image -->
+                            <img src="<?php echo base_url('uploads/files/' . $this->school->document); ?>" alt="header" class="img-fluid">
+                        </td>
+                        <td style="width: 60%; text-align: center;  border: none">
+                            <h5><strong>FORMATIVE REPORT</strong></h5>
+                            <h6 class="text-uppercase">
+                                <strong>NAME:</strong> <span><?php echo $student->first_name . ' ' . $student->last_name; ?></span> &nbsp;&nbsp;&nbsp;
+                                <strong>ADM.</strong> <?php echo $student->admission_number; ?> &nbsp;&nbsp;&nbsp;
+                                <strong>Age:</strong> <?php echo $result->age; ?>
+                            </h6>
+
+                            <p class="text-uppercase">
+                                <?php echo $student->cl->name; ?> &nbsp; Term <?php echo $term; ?> - <?php echo $year; ?>
+                            </p>
+                        </td>
+                        <td style="width: 20%; text-align: right;  border: none">
+                            <?php
+                            $passport = $this->cbc_m->passport($student->photo);
+                            if (!empty($passport)) : ?>
+                                <!-- Student photo -->
+                                <img src="<?php echo base_url('uploads/' . $passport->fpath . '/' . $passport->filename); ?>" alt="student photo" class="img-fluid">
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </table>
+
+
+
+                <!-- CBC Image Section -->
+                <div class="container">
+                    <div class="image-container">
+                        <img src="<?php echo base_url('/uploads/files/key.png'); ?>" alt="CBC Key Image">
+                    </div>
+                </div>
+
+                <!-- Table Section -->
+                <?php
+                foreach ($result as $keyy => $sub) {
+                ?>
+                    <table class="table table-bordered table-spacing mt-4 p-0">
+                        <tbody>
+                            <tr style="background-color:#D3D3D3;">
+                                <td class="text-uppercase text-center" colspan="4" style="font-size: 20px; font-weight: bold;">
+                                    <?php echo $subjects[$sub->learning_area]; ?>
+                                </td>
+                            </tr>
+
+                            <?php
+                            $j = 0;
+                            foreach ($sub->strands as $rs) {
+                                $j++;
+                            ?>
+                                <tr class="fbg text-uppercase" style="background-color:#F0F0F0; font-size: 16px; font-weight:bold">
+                                    <td class="text-uppercase" width='8%'><?php echo $j; ?>.0 </td>
+                                    <td class="text-uppercase"><?php echo $rs->name; ?></td>
+                                    <td class="text-uppercase" width="8%" class="text-center">Ratings</td>
+                                    <td class="text-uppercase" width='40%'><?php if ($j == 1) { ?><span>Teacher Comments</span><?php } ?></td>
+                                </tr>
+                                <?php
+                                $k = 0;
+                                foreach ($rs->subs as $sb) {
+                                    $k++;
+                                ?>
+                                    <tr style="background-color:#F9F9F9;">
+                                        <td :class=" { 'fbg' : sub.tasks.length}"><?php echo $j; ?>.<?php echo $k; ?></td>
+                                        <td :class="{ 'fbg': sub.tasks.length}"><strong><?php echo $sb->name; ?></strong></td>
+                                        <td :class="{ 'fbg': sub.tasks.length}" class="text-center"> <?php echo $sb->rating; ?></td>
+                                        <td></td>
+                                    </tr>
+                                    <?php
+                                    $t = 0;
+                                    foreach ($sb->tasks as $tsk) {
+                                        $t++;
+                                    ?>
+                                        <tr v-for="(t, tx) in sub.tasks">
+                                            <td></td>
+                                            <td style="text-align:left"><?php echo $tsk->task; ?> </td>
+                                            <td><?php echo $tsk->rating; ?></td>
+                                            <td style="text-align:left"><?php echo $tsk->remarks; ?></td>
+                                        </tr>
+                            <?php
+                                    }
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                <?php
+                }
+                ?>
+
+
+                <!-- Remarks Section -->
+
+                <hr>
+                <table>
+                    <tr>
+                        <td style="border:none; text-align: left; "> <ins><b>Headteacher’s comments:</b></ins><br>
+                            <span class="editable remks" id="item_<?php echo $payload->id; ?>" data-rec="<?php echo $payload->id; ?>">
+                                <?php echo  $payload->headteacher_remarks ?>
+                            </span>
+                        </td>
+                        <td border:none>
+                            <!-- <img class="pull-right" src="<?php echo base_url('uploads/headteacher-signature.png'); ?>" width="200" height="80"> -->
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </body>
+
+        </html>
+
+<?php
+        $html = ob_get_clean();
+        return $html;
+    }
 }

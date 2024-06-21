@@ -402,3 +402,6 @@ $config['email_url'] = 'https://api.elasticemail.com/v2/email/send'; // Email se
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
+
+$config['composer_autoload'] = TRUE;
+

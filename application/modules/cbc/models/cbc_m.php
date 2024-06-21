@@ -124,6 +124,17 @@ class Cbc_m extends MY_Model
         return $this->db->select('cbc_assess_strands.id as id, strand, rating')->where(['assess_id' => $id])->get('cbc_assess_strands')->result();
     }
 
+
+    public function get_assess_strands1($ids)
+    {
+        return $this->db->select('cbc_assess_strands.id as id, strand, rating')
+        ->where_in('assess_id', $ids)
+        ->get('cbc_assess_strands')
+        ->result();
+    }
+
+
+
     function get_assess_subs_join($id, $subject)
     {
         return $this->db->select('cbc_assess_sub.id as id,strand, sub_strand, remarks, rating')
@@ -133,13 +144,29 @@ class Cbc_m extends MY_Model
             ->get('cbc_assess_sub')
             ->result();
     }
+    public function get_assess_subs_join1($id)
+    {
+        return $this->db->select('cbc_assess_sub.id as id, strand, sub_strand, remarks, rating')
+        ->where_in('assess_id', $id)
+        ->get('cbc_assess_sub')
+        ->result();
+    }
+
+
+    /// Below function to order substrands
 
     function get_assess_subs($id, $strand = 0)
     {
         if ($strand) {
             $this->db->where(['strand' => $strand]);
         }
-        return $this->db->select('id,strand, sub_strand, remarks, rating')->where(['assess_id' => $id])->get('cbc_assess_sub')->result();
+        return $this->db->select('id,strand, sub_strand, remarks, rating')->where(['assess_id' => $id])->order_by('sub_strand', 'ASC')->get('cbc_assess_sub')->result();
+    }
+
+    function get_assess_subs1($id)
+    {
+       
+        return $this->db->select('id,strand, sub_strand, remarks, rating')->where_in('assess_id', $id)->order_by('sub_strand', 'ASC')->get('cbc_assess_sub')->result();
     }
 
     function get_assess_tasks($id, $strand = 0, $sub = 0)
@@ -150,8 +177,16 @@ class Cbc_m extends MY_Model
         if ($sub) {
             $this->db->where(['sub_strand' => $sub]);
         }
-        return $this->db->select('id,strand,sub_strand, task, rating,remarks')->where(['assess_id' => $id,'status' => 1])->get('cbc_assess_tasks')->result();
+        return $this->db->select('id,strand,sub_strand, task, rating,remarks')->order_by('sub_strand', 'ASC')->where(['assess_id' => $id,'status' => 1])->get('cbc_assess_tasks')->result();
     }
+
+    function get_assess_tasks1($id)
+    {
+       
+        return $this->db->select('id,strand,sub_strand, task, rating,remarks')->order_by('sub_strand', 'ASC')->where_in('assess_id', $id)->where('status' , 1)->get('cbc_assess_tasks')->result();
+    }
+
+
 
     function get_summ_report($class, $term, $year)
     {
@@ -209,6 +244,15 @@ class Cbc_m extends MY_Model
             return $this->db->where(['class' => $class, 'subject' => $subject, 'term' => $term, 'year' => $year])->get('cbc_assess')->row();
         }
         return $this->db->where(['class' => $class, 'subject' => $subject, 'term' => $term, 'year' => $year])->get('cbc_assess')->result();
+    }
+
+    function get_assess_report1($class, $term, $year, $student = 0)
+    {
+        if ($student) {
+            $this->db->where(['student' => $student]);
+            return $this->db->where(['class' => $class, 'term' => $term, 'year' => $year])->get('cbc_assess')->result();
+        }
+        // return $this->db->where(['class' => $class, 'term' => $term, 'year' => $year])->get('cbc_assess')->result();
     }
 
     function get_assess_st($student, $subject, $term, $year)
@@ -1272,7 +1316,69 @@ class Cbc_m extends MY_Model
     }
 
 
-   
+
+    function get_assess_report2($class, $subjects, $term, $year, $student = 0)
+    {
+        if ($student) {
+            $this->db->where(['student' => $student]);
+        }
+        $this->db->where('class', $class)
+            ->where('term', $term)
+            ->where('year', $year)
+            ->where_in('subject', $subjects);
+
+        // Fetching single row if $student is specified, otherwise fetching multiple rows
+        return ($student) ? $this->db->get('cbc_assess')->result() : $this->db->get('cbc_assess')->result();
+    }
+
+    function get_assess_strands2($id, $strand = 0, $subject = 0)
+    {
+        if ($subject) {
+            $this->db->join('cbc_la', 'strand = cbc_la.id')->where_in('subject', $subject);
+        }
+        if ($strand) {
+            $this->db->where('strand', $strand);
+            return $this->db->select('id, strand, rating')->where_in('assess_id', $id)->get('cbc_assess_strands')->result();
+        }
+        return $this->db->select('cbc_assess_strands.id as id, strand, rating')->where_in('assess_id', $id)->get('cbc_assess_strands')->result();
+    }
+
+    function get_assess_subs_join2($id, $subjects)
+    {
+        return $this->db->select('cbc_assess_sub.id as id, strand, sub_strand, remarks, rating')
+        ->join('cbc_la', 'cbc_assess_sub.strand = cbc_la.id', 'left')
+            ->where_in('cbc_assess_sub.subject', $subjects)
+            ->where_in('cbc_assess_sub.assess_id', $id)
+            ->order_by('cbc_assess_sub.sub_strand', 'ASC')
+            ->get('cbc_assess_sub')
+            ->result();
+    }
+
+
+    function get_assess_tasks2($id, $strand = 0, $sub = 0)
+    {
+        if ($strand) {
+            $this->db->where('strand', $strand);
+        }
+        if ($sub) {
+            $this->db->where('sub_strand', $sub);
+        }
+        return $this->db->select('id, strand, sub_strand, task, rating, remarks')
+        ->where_in('assess_id', $id)
+        ->get('cbc_assess_tasks')
+        ->result();
+    }
+    function get_assess_subs2($id, $strand = 0)
+    {
+        if ($strand) {
+            $this->db->where('strand', $strand);
+        }
+        return $this->db->select('id, strand, sub_strand, remarks, rating')
+        ->where_in('assess_id', $id)
+            ->order_by('sub_strand', 'ASC')
+            ->get('cbc_assess_sub')
+            ->result();
+    }
 
 
 }

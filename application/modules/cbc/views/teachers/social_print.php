@@ -21,7 +21,6 @@
               <label class="col-md-3 form-label" for='title'>Student <span class='required'>*</span></label>
               <div class="col-md-9">
                 <?php
-                echo $student;
                 $options = array('' => 'Select student') + $students;
                 $attributes = 'class="form-control js-example-basic-single" id="student" onchange="checkFields()"';
                 echo form_dropdown('student', $options, $students[$student], $attributes);
