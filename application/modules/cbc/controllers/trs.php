@@ -547,10 +547,10 @@ class Trs extends Trs_Controller
 
 
             if ($md) {
-                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_edit_success')));
                 redirect("cbc/trs/manage_exams/" . $exam);
             } else {
-                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
+                $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_edit_failed')));
                 redirect("cbc/trs/manage_exams/" . $exam);
             }
         }
@@ -671,7 +671,7 @@ class Trs extends Trs_Controller
         // echo "<pre>";
         // die;
 
-        $data['subjects'] = $this->cbc_tr->populate('cbc_subjects', 'id', 'name');
+        $data['subjects'] = $this->cbc_tr->populate('subjects', 'id', 'name');
         $this->template->title('Generate Reports')->build('teachers/bulk_sum', $data);
     }
 
@@ -1329,16 +1329,33 @@ class Trs extends Trs_Controller
             //Get Class Summary
             $classsummary = $this->cbc_tr->prepare_class_summary($level,$tid,$this->input->post('compare'));
 
-            // echo "<pre>";
-            //     // print_r($post);
-            //     print_r($classsummary);
-            // echo "</pre>";
-            // die;
             $data['summary'] = $classsummary;
         }
 
+
+        $data['subjectwise'] = $this->cbc_tr->subjectwise_performance($level, $tid);
+
+        $data['compare'] = $this->cbc_tr->subjectwise_performance($level, $this->input->post('compare'));
+
+        $grading = $this->cbc_tr->get_grading($tid);
+
+        $data['gradingSystem'] = $this->cbc_tr->get_grad($grading->gid);
+
+        $data['streamwise'] = $this->cbc_tr->streamwise_performance($level, $tid);
+
+        $data['overal'] = $this->cbc_tr->overal_performance($level, $tid);
+        $data['overal_gender'] = $this->cbc_tr->overal_performance_pergender($level, $tid);
+        $data['overalc'] = $this->cbc_tr->overal_performance($level, $this->input->post('compare'));
+
+            //   echo "<pre>";
+            //   print_r($overal);
+            //   echo "</pre>";
+            //   die;
+
+    
         $data['threads'] = $this->cbc_tr->populate('cbc_exam_threads','id','name');
         $data['subjects'] = $subjects;
+        $data['subs'] = $subjects;
         $data['streams'] = $streams;
         $data['thread'] = $thread;
         $data['exams'] = $exams;

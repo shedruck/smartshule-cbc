@@ -164,22 +164,18 @@ if (isset($results)) {
                 ?>
                         <div class="row page-break" id="SingleReportForm">
                             <div class="col-md-12">
-                                <!-- <div class="card resultslip-card"> -->
-                                <!-- <div class="card-header">
-
-                            </div> -->
                                 <div class="card-body p-10">
                                     <div class="row" id="headerdiv">
-                                        <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4">
+                                        <div class="col-md-3 col-lg-3 col-sm-3 col-xl-3">
                                             <img src="<?php echo base_url('uploads/files/' . $settings->document); ?>" width="80" height="80" />
                                         </div>
-                                        <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4">
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-xl-6">
                                             <h5 class="blue-text text-center"><b><?php echo strtoupper($this->school->school) ?></b></h5>
                                             <h6 class="text-center"><?php echo strtoupper($this->school->postal_addr) ?></b></h6>
-                                            <h6 class="text-center"><?php echo $this->school->tel ?></h6>
-                                            <h6 class="text-center"><?php echo $this->school->email ?></h6>
+                                            <h6 class="text-center"><?php echo $this->school->tel ?> - <?php echo $this->school->email ?></h6>
+
                                         </div>
-                                        <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4 text-right">
+                                        <div class="col-md-3 col-lg-3 col-sm-3 col-xl-3 text-right">
                                             <?php
                                             $passport = $this->admission_m->passport($stu->photo);
                                             $fake = base_url('uploads/files/member.png');
@@ -193,15 +189,15 @@ if (isset($results)) {
                                         </div>
                                     </div>
 
-                                    <h6 class="text-center blue-bg">ACADEMIC TRANSCRIPT FOR - <?php echo $this->classes[$result->classgrp] ?> - <?php echo $thread->name ?> - (<?php echo $thread->year ?>/Term <?php echo $thread->term ?>) - <?php echo $types[$result->type] ?></h6>
+                                    <h6 class="text-center blue-bg mt-3">ACADEMIC TRANSCRIPT FOR - <?php echo $this->classes[$result->classgrp] ?> - <?php echo $thread->name ?> - (<?php echo $thread->year ?>/Term <?php echo $thread->term ?>) - <?php echo $types[$result->type] ?></h6>
 
                                     <div class="row" id="studentsdiv">
-                                        <div class="col-md-3 col-lg-3 col-sm-3 col-xl-3">
-                                            <h6>Name : <?php echo ucwords($stu->first_name . ' ' . $stu->last_name) ?></h6>
+                                        <div class="col-md-4 col-lg-4 col-sm-4 col-xl-4">
+                                            <h6>STUDENT NAME : <?php echo ucwords($stu->first_name . ' ' . $stu->last_name) ?></h6>
                                             <h6>ADM NO : <?php echo $stu->admission_number ?></h6>
                                             <h6>CLASS : <?php echo $this->streams[$stu->class] ?></h6>
                                         </div>
-                                        <div class="col-md-9 col-lg-9 col-sm-9 col-xl-9 text-right">
+                                        <div class="col-md-8 col-lg-8 col-sm-8 col-xl-8 text-right">
                                             <div id="performance_<?php echo $result->id ?>" class="graphdiv">
 
                                             </div>
@@ -209,192 +205,198 @@ if (isset($results)) {
                                     </div>
 
                                     <!-- Position Div Here -->
-                                    <div class="row mb-2 justify-content-center pt-1" id="positionsdiv">
-                                        <div class="col-md-2 col-lg-2 col-sm-2" style="display: flex;">
-                                            <div style="width: 60%;">
-                                                <h6 class="text-center">MEAN</h6>
-                                                <h6 class="text-center"><b><?php echo  $result->mean_grade ?>|<?php echo  $result->average_marks ?></b></h6>
-                                            </div>
-                                            <div style="width: 40%;">
-                                                <h5>
+                                    <div class="row mb-2 justify-content-center pt-1 mt-2" id="positionsdiv">
+                                        <!-- MEAN Section -->
+                                        <div class="col-md-2 col-lg-2 col-sm-2 position-box">
+                                            <div class="horizontal-align">
+                                                <div class="mean-grade">
+                                                    <h6 class="text-center">MEAN</h6>
+                                                </div>
+                                                <h5 class="diff-container">
                                                     <?php
                                                     if ($prevresults) {
                                                         $diff = $result->average_marks - $prevresults->average_marks;
                                                         if ($diff < 0) {
-                                                            $icon = '<span style="color: red;"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-down"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
                                                             $dig = $diff;
                                                         } elseif ($diff == 0) {
-                                                            $icon = '<span style="color: blue;"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-right"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
                                                             $dig = 0;
-                                                        } elseif ($diff > 0) {
-                                                            $icon = '<span style="color: #00cc00;"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
+                                                        } else {
+                                                            $icon = '<span class="arrow-up"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
                                                             $dig = '+' . $diff;
                                                         }
-
-                                                        echo '<span>' . $dig . '</span> ' . $icon;
+                                                        echo '<span class="diff-number">' . $dig . '</span> ' . $icon;
                                                     } else {
                                                         echo "___";
                                                     }
                                                     ?>
                                                 </h5>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2 col-lg-2 col-sm-2" style="display: flex;">
-                                            <div style="width: 70%;">
-                                                <h6 class="text-center">TOTAL</h6>
-                                                <h6 class="text-center"><b><?php echo  $result->total_marks ?>/<?php echo $totoutof; ?></b></h6>
+                                            <div class="mean-diff">
+                                                <h6 class="text-center"><b><?php echo $result->mean_grade ?>|<?php echo $result->average_marks ?></b></h6>
                                             </div>
-                                            <div style="width: 30%;">
-                                                <h5>
+                                        </div>
+
+                                        <!-- TOTAL Section -->
+                                        <div class="col-md-2 col-lg-2 col-sm-2 position-box">
+                                            <div class="horizontal-align">
+                                                <div class="total-marks">
+                                                    <h6 class="text-center">TOTAL</h6>
+                                                </div>
+                                                <h5 class="diff-container">
                                                     <?php
                                                     if ($prevresults) {
                                                         $diff = $result->total_marks - $prevresults->total_marks;
                                                         if ($diff < 0) {
-                                                            $icon = '<span style="color: red;"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-down"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
                                                             $dig = $diff;
                                                         } elseif ($diff == 0) {
-                                                            $icon = '<span style="color: blue;"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-right"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
                                                             $dig = 0;
-                                                        } elseif ($diff > 0) {
-                                                            $icon = '<span style="color: #00cc00;"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
+                                                        } else {
+                                                            $icon = '<span class="arrow-up"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
                                                             $dig = '+' . $diff;
                                                         }
-
-                                                        echo '<span>' . $dig . '</span> ' . $icon;
+                                                        echo '<span class="diff-number">' . $dig . '</span> ' . $icon;
                                                     } else {
                                                         echo "___";
                                                     }
                                                     ?>
                                                 </h5>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2 col-lg-2 col-sm-2" style="display: flex;">
-                                            <div style="width: 70%;">
-                                                <h6 class="text-center">TOTAL PTS</h6>
-                                                <h6 class="text-center"><b><?php echo $result->total_points ?></b></h6>
+                                            <div class="marks-diff">
+                                                <h6 class="text-center"><b><?php echo $result->total_marks ?>/<?php echo $totoutof; ?></b></h6>
                                             </div>
-                                            <div style="width: 30%;">
-                                                <h5>
+                                        </div>
+
+                                        <!-- TOTAL PTS Section -->
+                                        <div class="col-md-2 col-lg-2 col-sm-2 position-box">
+                                            <div class="horizontal-align">
+                                                <div class="total-points">
+                                                    <h6 class="text-center">TOTAL PTS</h6>
+                                                </div>
+                                                <h5 class="diff-container">
                                                     <?php
                                                     if ($prevresults) {
                                                         $diff = $result->total_points - $prevresults->total_points;
                                                         if ($diff < 0) {
-                                                            $icon = '<span style="color: red;"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-down"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
                                                             $dig = $diff;
                                                         } elseif ($diff == 0) {
-                                                            $icon = '<span style="color: blue;"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-right"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
                                                             $dig = 0;
-                                                        } elseif ($diff > 0) {
-                                                            $icon = '<span style="color: #00cc00;"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
+                                                        } else {
+                                                            $icon = '<span class="arrow-up"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
                                                             $dig = '+' . $diff;
                                                         }
-
-                                                        echo '<span>' . $dig . '</span> ' . $icon;
+                                                        echo '<span class="diff-number">' . $dig . '</span> ' . $icon;
                                                     } else {
                                                         echo "___";
                                                     }
                                                     ?>
                                                 </h5>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2 col-lg-2 col-sm-2" style="display: flex;">
-                                            <div style="width: 70%;">
-                                                <h6 class="text-center">OVR POS</h6>
-                                                <h6 class="text-center"><b><?php echo $result->class_rank ?></b></h6>
+                                            <div class="points-diff">
+                                                <h6 class="text-center"><b><?php echo $result->total_points ?></b></h6>
                                             </div>
-                                            <div style="width: 30%;">
-                                                <h5>
+                                        </div>
+
+                                        <!-- OVR POS Section -->
+                                        <div class="col-md-2 col-lg-2 col-sm-2 position-box">
+                                            <div class="horizontal-align">
+                                                <div class="class-rank">
+                                                    <h6 class="text-center">OVR POS</h6>
+                                                </div>
+                                                <h5 class="diff-container">
                                                     <?php
                                                     if ($prevresults) {
                                                         $diff = explode('/', $result->class_rank)[0] - explode('/', $prevresults->class_rank)[0];
                                                         if ($diff < 0) {
-                                                            $icon = '<span style="color: red;"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-down"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
                                                             $dig = $diff;
                                                         } elseif ($diff == 0) {
-                                                            $icon = '<span style="color: blue;"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-right"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
                                                             $dig = 0;
-                                                        } elseif ($diff > 0) {
-                                                            $icon = '<span style="color: #00cc00;"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
+                                                        } else {
+                                                            $icon = '<span class="arrow-up"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
                                                             $dig = '+' . $diff;
                                                         }
-
-                                                        echo '<span>' . $dig . '</span> ' . $icon;
+                                                        echo '<span class="diff-number">' . $dig . '</span> ' . $icon;
                                                     } else {
                                                         echo "___";
                                                     }
                                                     ?>
                                                 </h5>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2 col-lg-2 col-sm-2" style="display: flex;">
-                                            <div style="width: 70%;">
-                                                <h6 class="text-center">STR POS</h6>
-                                                <h6 class="text-center"><b><?php echo $result->stream_rank  ?></b></h6>
+                                            <div class="rank-diff">
+                                                <h6 class="text-center"><b><?php echo $result->class_rank ?></b></h6>
                                             </div>
-                                            <div style="width: 30%;">
-                                                <h5>
+                                        </div>
+
+                                        <!-- STR POS Section -->
+                                        <div class="col-md-2 col-lg-2 col-sm-2 position-box">
+                                            <div class="horizontal-align">
+                                                <div class="stream-rank">
+                                                    <h6 class="text-center">STR POS</h6>
+                                                </div>
+                                                <h5 class="diff-container">
                                                     <?php
                                                     if ($prevresults) {
                                                         $diff = explode('/', $result->stream_rank)[0] - explode('/', $prevresults->stream_rank)[0];
                                                         if ($diff < 0) {
-                                                            $icon = '<span style="color: red;"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-down"><i class="fa fa-long-arrow-down" aria-hidden="true"></i></span>';
                                                             $dig = $diff;
                                                         } elseif ($diff == 0) {
-                                                            $icon = '<span style="color: blue;"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
+                                                            $icon = '<span class="arrow-right"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
                                                             $dig = 0;
-                                                        } elseif ($diff > 0) {
-                                                            $icon = '<span style="color: #00cc00;"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
+                                                        } else {
+                                                            $icon = '<span class="arrow-up"><i class="fa fa-long-arrow-up" aria-hidden="true"></i></span>';
                                                             $dig = '+' . $diff;
                                                         }
-
-                                                        echo '<span>' . $dig . '</span> ' . $icon;
+                                                        echo '<span class="diff-number">' . $dig . '</span> ' . $icon;
                                                     } else {
                                                         echo "___";
                                                     }
                                                     ?>
                                                 </h5>
                                             </div>
+                                            <div class="stream-diff">
+                                                <h6 class="text-center"><b><?php echo $result->stream_rank ?></b></h6>
+                                            </div>
                                         </div>
                                     </div>
-                                    <!-- Position Div Here -->
+
+
+                                    <!-- Table Div Here -->
 
                                     <div class="row" style="margin-top: 10px;">
                                         <div class="col-lg-12 col-md-12">
                                             <table class="table border table-bordered" cellpadding="0" cellspacing="0" width="100%">
-                                                <!-- <thead> -->
-                                                    <tr class="table-success">
-                                                        <th></th>
-                                                        <th class="text-center" colspan="<?php echo count(explode(',', $result->examsids)) ?>"><b>EXAMS INVOLVED</b></th>
-                                                        <th colspan="5"></th>
-                                                    </tr>
-                                                    <tr class="table-success">
-                                                        <th>LEARNING AREAS</th>
-                                                        <?php
-                                                        $exids = explode(',', $result->examsids);
-                                                        foreach ($exids as $exkey => $mtihani) {
-                                                        ?>
-                                                            <th><?php echo $actualexams[$mtihani] ?></th>
-                                                        <?php } ?>
-                                                        <th>SCORE</th>
-                                                        <th>DEV.</th>
-                                                        <th>GRADE</th>
-                                                        <!-- <th>CLASS RANK</th> -->
-                                                        <!-- <th>STREAM RANK</th> -->
-                                                        <th>COMMENT</th>
-                                                        <th>TEACHER</th>
-                                                    </tr>
-                                                <!-- </thead> -->
+                                                <tr class="table-success">
+                                                    <th></th>
+                                                    <th class="text-center" colspan="<?php echo count(explode(',', $result->examsids)) ?>"><b>EXAMS INVOLVED</b></th>
+                                                    <th colspan="5"></th>
+                                                </tr>
+                                                <tr class="table-success">
+                                                    <th>LEARNING AREAS</th>
+                                                    <?php
+                                                    $exids = explode(',', $result->examsids);
+                                                    foreach ($exids as $exkey => $mtihani) {
+                                                    ?>
+                                                        <th><?php echo $actualexams[$mtihani] ?></th>
+                                                    <?php } ?>
+                                                    <th>SCORE</th>
+                                                    <th>DEV.</th>
+                                                    <th>GRADE</th>
+                                                    <th>COMMENT</th>
+                                                    <th>TEACHER</th>
+                                                </tr>
                                                 <tbody>
                                                     <?php
-
                                                     foreach ($subscores as $key => $score) {
-
                                                         $subscount++;
                                                         $scoreoutof += $score->combinedmarks;
-
-                                                        // echo "<pre>";
-                                                        //     print_r($score);
-                                                        // echo "</pre>";
                                                     ?>
                                                         <tr>
                                                             <td><?php echo $subjects[$score->subject] ?></td>
@@ -410,15 +412,13 @@ if (isset($results)) {
                                                                 if ($score->type == 1) {
                                                                     $convertedscore = $examscore->score;
                                                                 } else {
-                                                                    // $convertedscore = $examscore->score;
                                                                     $convertedscore =  $examscore ? round(($examscore->score * $theweights[$exkey]) / $examscore->outof, 0) : '_';
                                                                 }
-
                                                             ?>
-                                                                <td><?php echo $convertedscore ?></td>
+                                                                <td style="text-align:center"><?php echo $convertedscore ?></td>
                                                             <?php } ?>
-                                                            <td><?php echo $score->combinedmarks ?></td>
-                                                            <td>
+                                                            <td style="text-align:center"><?php echo $score->combinedmarks ?></td>
+                                                            <td style="text-align:center">
                                                                 <?php
                                                                 $compscore = $this->cbc_tr->compare_score($comparison, $result->student, $score->subject);
 
@@ -441,9 +441,7 @@ if (isset($results)) {
                                                                 }
                                                                 ?>
                                                             </td>
-                                                            <td><?php echo $score->grade ?></td>
-                                                            <!-- <td><?php echo $score->ovr_rank ?></td> -->
-                                                            <!-- <td><?php echo $score->stream_rank ?></td> -->
+                                                            <td style="text-align:center"><?php echo $score->grade ?></td>
                                                             <td><?php echo $score->remarks ?></td>
                                                             <td>
                                                                 <?php
@@ -456,10 +454,10 @@ if (isset($results)) {
                                                         </tr>
                                                     <?php } ?>
                                                 </tbody>
-
                                             </table>
                                         </div>
                                     </div>
+
 
                                     <div class="row" id="footerdiv">
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
@@ -475,21 +473,20 @@ if (isset($results)) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mt-3">
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
-                                            <div style="display: flex;">
-                                                <div style="width: 60%;">
-                                                    <h6 class="text-center">Scan to Access your Smartshule Portal to view more details of your child.</h6>
-                                                    <h6 class="text-center"><b>Username : <u><?php echo $userparo->email ?></u></b></h6>
+                                            <div style="display: flex; align-items: center;">
+                                                <div style="width: 60%; text-align: center;">
+                                                    <h6 class="slim-text">Scan to Access your Smartshule Portal to view more details of your child.</h6>
+                                                    <h6 class="slim-text"><b>Username: <u><?php echo $userparo->email ?></u></b></h6>
                                                 </div>
-                                                <div style="width: 40%">
+                                                <div style="width: 40%; display: flex; justify-content: center;">
                                                     <input style="display: none;" type="text" name="loginlink" id="loginlink_<?php echo $result->id ?>" value="<?php echo base_url('login') ?>">
-                                                    <div id="qrcode_<?php echo $result->id ?>" class="qrcode" style="width: 150px;">
-
-                                                    </div>
+                                                    <div id="qrcode_<?php echo $result->id ?>" class="qrcode" style="width: 150px;"></div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6">
                                             <table style="width: 100%; border: none;">
                                                 <tr>
@@ -517,10 +514,7 @@ if (isset($results)) {
                                     </div>
 
                                 </div>
-                                <!-- <div class="card-footer text-end">
 
-                            </div> -->
-                                <!-- </div> -->
                             </div>
                             <!-- <div class="page-break"></div> -->
                             <!-- COL-END -->
@@ -532,10 +526,7 @@ if (isset($results)) {
             </div>
             <div class="card-footer">
                 <div class="form-check d-inline-block">
-                    <!-- <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-					<label class="form-check-label" for="flexCheckChecked">
-						Confirm
-					</label> -->
+
                 </div>
                 <div class="float-end d-inline-block btn-list">
 
@@ -549,8 +540,22 @@ if (isset($results)) {
 
 <style>
     .qrcode {
-        width: 150px;
+        width: 120px;
         height: auto;
+        padding: 6px;
+        text-align: center;
+    }
+
+    .slim-text {
+        font-size: 14px;
+        font-weight: normal;
+        /* margin: 5px 0; */
+
+    }
+
+    u {
+        text-decoration: none;
+
     }
 
     .resultslip-card {
@@ -589,13 +594,129 @@ if (isset($results)) {
         margin: 10px;
     }
 
+
+    #studentsdiv h6 {
+        font-size: 1.0em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .graphdiv {
+        margin-top: 10px;
+    }
+
+    .position-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+        gap: 3px;
+
+    }
+
+    .horizontal-align {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        /* Reduces the space between number and arrow */
+    }
+
+    .position-box h6 {
+        font-size: 0.9em;
+        margin: 2px 0;
+        /* Reduced margin */
+        color: #555;
+    }
+
+    .position-box h5 {
+        font-size: 0.9em;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .diff-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        /* Reduced space between number and icon */
+    }
+
+    .diff-number {
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+
+    .arrow-down {
+        color: red;
+    }
+
+    .arrow-up {
+        color: #00cc00;
+    }
+
+    .arrow-right {
+        color: blue;
+    }
+
+    .total-points,
+    .points-diff,
+    .stream-rank,
+    .stream-diff,
+    .mean-grade,
+    .total-marks,
+    .class-rank {
+        margin-bottom: 3px;
+        /* Reduced space between upper and lower divs */
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 3rem;
+        background-color: transparent;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        padding: 6px;
+        border: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+
+    .table th {
+        font-weight: bold;
+    }
+
+
+
+    .table td {
+        white-space: nowrap;
+        /* Prevent text wrapping */
+    }
+
+
+    .fa {
+        margin-left: 3px;
+
+    }
+
+
+    @media (max-width: 768px) {
+
+        .table th,
+        .table td {
+            padding: 6px;
+            font-size: 0.9em;
+            /* Slightly smaller font size */
+        }
+    }
+
     @media print {
-        /* .card {
-            padding: 10px;
-            width: 100%;
-            border: none !important;
-            box-shadow: none !important;
-        } */
 
         .text-right {
             text-align: right;
@@ -632,6 +753,9 @@ if (isset($results)) {
             float: left;
             width: 50%;
         }
+
+
+
     }
 </style>
 <script>
@@ -805,7 +929,7 @@ if (isset($results)) {
                 }, ],
                 chart: {
                     type: 'bar',
-                    height: 150,
+                    height: 180,
                     width: '65%',
                 },
                 plotOptions: {
@@ -867,48 +991,94 @@ if (isset($results)) {
             $scrss = [];
             foreach ($examscores as $exa => $scr) {
                 $scrss[] = $scr;
-                // $exxs[] = $mitihani[$exa];
                 $exxs[] = "'" . $actualexams[$exa] . "'";
             }
         ?>
 
-            // console.log();
-            // Prepare data for the chart for each student
+            // Prepare data for the area chart for each student
             let seriesData_<?php echo $stu ?> = [{
                 name: "Scores",
-                // data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
                 data: [<?php echo implode(',', $scrss); ?>]
             }];
 
-            // Chart options for each student
+            // Area chart options for each student
             let options_<?php echo $stu ?> = {
                 chart: {
-                    type: 'line',
-                    height: 200,
+                    type: 'area', // Changed from 'line' to 'area'
+                    height: 180,
                     zoom: {
                         enabled: false
                     }
                 },
                 series: seriesData_<?php echo $stu ?>,
                 xaxis: {
-                    // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
                     categories: [<?php echo implode(',', $exxs) ?>]
-                },
-                title: {
-                    // text: 'Monthly Sales Data',
-                    align: 'left'
                 },
                 yaxis: {
                     title: {
-                        text: 'Totals'
+                        text: 'Totals',
+                        style: {
+                            fontSize: '12px', // Adjust font size
+                            fontWeight: 'bold',
+                            color: '#263238'
+                        },
+                        offsetX: 0, // Horizontal offset
+                        offsetY: 0, // Vertical offset
+                    },
+                    labels: {
+                        formatter: function(val) {
+                            return val.toFixed(0); // Formatting to avoid decimal overlap
+                        }
+                    },
+                    tickAmount: 6, // Number of ticks in the y-axis to spread out the labels
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth' // Ensures smooth curves
+                },
+                fill: {
+                    colors: ['#008FFB'], // Set the fill color for the area
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: false,
+                        opacityFrom: 0.7, // Adjust to match the given example
+                        opacityTo: 0.2, // Adjust to match the given example
+                        stops: [0, 90, 100]
+                    }
+                },
+                colors: ['#008FFB'], // Set the line color to match the fill
+                grid: {
+                    show: true,
+                    borderColor: '#e7e7e7',
+                    strokeDashArray: 0,
+                    xaxis: {
+                        lines: {
+                            show: false // Disable horizontal lines
+                        }
+                    },
+                    yaxis: {
+                        lines: {
+                            show: false // Disable vertical lines
+                        }
                     }
                 },
                 tooltip: {
-                    enabled: true
+                    x: {
+                        format: 'dd/MM/yy HH:mm'
+                    }
                 }
             };
 
-            // Render the chart for each student
+            // Render the area chart for each student
             let chart_<?php echo $stu ?> = new ApexCharts(document.querySelector("#examscomparison_<?php echo $stu ?>"), options_<?php echo $stu ?>);
             chart_<?php echo $stu ?>.render();
 

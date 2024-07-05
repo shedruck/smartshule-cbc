@@ -239,7 +239,7 @@
                           <span class="fw-semibold fs-14">Date Joined: </span>
                         </div>
                         <div class="col-md-9">
-                          <span class="fs-15 text-primary"><?php echo $this->profile->date_joined ?></span>
+                          <span class="fs-15 text-primary"><?php echo date("d M Y", $this->profile->date_joined) ?></span>
                         </div>
                       </div>
 

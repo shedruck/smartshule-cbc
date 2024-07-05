@@ -91,7 +91,7 @@
                                 </li>
 
                                 <li class="slide <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">
-                                    <a href="<?php echo base_url('cbc/trs/joint_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">Joint Exam Reports</a>
+                                    <a href="<?php echo base_url('cbc/trs/joint_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">Generate Joined Reports</a>
                                 </li>
 
                                 <!-- <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">

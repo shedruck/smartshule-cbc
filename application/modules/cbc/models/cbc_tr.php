@@ -1574,4 +1574,157 @@ class Cbc_tr extends MY_Model
         return $this->db->delete($table, ['id' => $id]);
     }
 
+
+    public function subjectwise_performance($clsgrp, $tid)
+    {
+        $results = $this->db->select('subject, combinedmarks, grade')
+        ->where('classgrp', $clsgrp)
+            ->where('tid', $tid)
+            ->get('cbc_subs_included')
+            ->result();
+
+          $subjects = [];
+
+        foreach ($results as $row) {
+            $subjects[$row->subject][] = $row->combinedmarks;
+        }
+
+        $subjectStatistics = [];
+        foreach ($subjects as $subject => $marks) {
+            $subjectStatistics[] = [
+                'subject' => $subject,
+                'mean_combinedmarks' => array_sum($marks) / count($marks),
+                'student_count' => count($marks)
+            ];
+        }
+
+        // Sort the subjects by mean_combinedmarks in descending order
+        usort($subjectStatistics, function ($a, $b) {
+            return $b['mean_combinedmarks'] <=> $a['mean_combinedmarks'];
+        });
+
+        return $subjectStatistics;
+    }
+
+
+    public function get_grading($tid){
+        $results = $this->db->select('gid')
+            ->where('tid', $tid)
+            ->get('cbc_final_results')
+            ->row();
+            
+            return $results;
+    }
+
+    public function get_grad($gid)
+    {
+        $results = $this->db->select('*')
+            ->where('grade_id', $gid)
+            ->get('gs_grades')
+            ->result();
+
+        return $results;
+    }
+
+    function getGradeDetails($marks, $gradingSystem)
+    {
+        foreach ($gradingSystem as $grade) {
+            if ($marks >= $grade->minimum_marks && $marks <= $grade->maximum_marks) {
+                return [
+                    "grade" => $grade->grade,
+                    "points" => $grade->points,
+                    "comment" => $grade->comment
+                ];
+            }
+        }
+        return null; // Return null if no matching grade is found
+    }
+
+
+    public function streamwise_performance($clsgrp, $tid)
+    {
+        // Fetch data from the database
+        $results = $this->db->select('subject, combinedmarks, grade, class')
+        ->where('classgrp', $clsgrp)
+            ->where('tid', $tid)
+            ->get('cbc_subs_included')
+            ->result();
+
+        $classSubjects = [];
+
+        // Group data by class and subject
+        foreach ($results as $row) {
+            $classSubjects[$row->class][$row->subject][] = $row->combinedmarks;
+        }
+
+        $classSubjectStatistics = [];
+
+        // Calculate statistics for each class and subject
+        foreach ($classSubjects as $class => $subjects) {
+            $subjectStatistics = [];
+
+            foreach ($subjects as $subject => $marks) {
+                $subjectStatistics[] = [
+                    'class' => $class,
+                    'subject' => $subject,
+                    'mean_combinedmarks' => array_sum($marks) / count($marks),
+                    'student_count' => count($marks)
+                ];
+            }
+
+            // Sort subjects by mean_combinedmarks in descending order
+            usort($subjectStatistics, function ($a, $b) {
+                return $b['mean_combinedmarks'] <=> $a['mean_combinedmarks'];
+            });
+
+            $classSubjectStatistics[] = [
+                'class' => $class,
+                'subjects' => $subjectStatistics
+            ];
+        }
+
+        return $classSubjectStatistics;
+    }
+
+
+    public function overal_performance($clsgrp, $tid)
+    {
+        // Fetch data from the database
+        $results = $this->db->select('*')
+        ->where('classgrp', $clsgrp)
+            ->where('tid', $tid)
+            ->order_by('total_marks', 'DESC')
+            ->get('cbc_final_results')
+            ->result(); 
+        return $results;
+        
+    }
+
+    public function overal_performance_pergender($clsgrp, $tid)
+    {
+        // Fetch data from the database
+        $results = $this->db->select('*')
+            ->where('classgrp', $clsgrp)
+            ->where('tid', $tid)
+            ->order_by('total_marks', 'DESC')
+            ->limit(10) 
+            ->get('cbc_final_results')
+            ->result();
+        return $results;
+    }
+
+    public function overalcomp_performance($clsgrp, $tid)
+    {
+        // Fetch data from the database
+        $results = $this->db->select('*')
+            ->where('classgrp', $clsgrp)
+            ->where('tid', $tid)
+            ->order_by('total_marks', 'DESC')
+            ->get('cbc_final_results')
+            ->result();
+        return $results;
+    }
+
+
+
 }

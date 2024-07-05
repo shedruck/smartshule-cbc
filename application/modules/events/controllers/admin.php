@@ -34,101 +34,116 @@ class Admin extends Admin_Controller
                 $this->template->title(' Events & Announcements ')->build('admin/list', $data);
         }
 
-        function create($page = NULL)
+        public function create($page = NULL)
         {
-                //create control variables
+                // Create control variables
                 $data['updType'] = 'create';
-                $data['page'] = ( $this->uri->segment(4) ) ? $this->uri->segment(4) : $page;
-                //Rules for validation
+                $data['page'] = ($this->uri->segment(4)) ? $this->uri->segment(4) : $page;
 
-                if ($this->input->post('announce'))
-                {
+                // Rules for validation
+                if ($this->input->post('announce')) {
                         $this->form_validation->set_rules($this->ann_validation());
                 }
-                else
-                {
-                        $this->form_validation->set_rules($this->validation());
-                }
 
-                //validate the fields of form
-                if ($this->form_validation->run())
-                {         //Validation OK!
+                // Validate the fields of the form
+                if ($this->form_validation->run()) {
+
+                        $uploadDir = FCPATH . 'assets/uploads/';
+
+                        $uploadedFiles = $_FILES['file'];
+                        $fileCount = count($uploadedFiles['name']);
+
                         $user = $this->ion_auth->get_user();
-                        if ($this->input->post('announce'))
-                        {
+
+                        if ($this->input->post('announce')) {
                                 $form_data = array(
-                                    'title' => $this->input->post('stitle'),
-                                    'cat' => 2,
-                                    'description' => $this->input->post('desc'),
-                                    'created_by' => $user->id,
-                                    'created_on' => time()
+                                        'title' => $this->input->post('stitle'),
+                                        'cat' => $this->input->post('cat'),
+                                        'description' => $this->input->post('desc'),
+                                        'created_by' => $user->id,
+                                        'created_on' => time()
                                 );
                         }
-                        else
-                        {
-                                $form_data = array(
-                                    'title' => $this->input->post('title'),
-                                    'date' => strtotime($this->input->post('date')),
-                                    'start' => $this->input->post('start'),
-                                    'end' => $this->input->post('end'),
-                                    'venue' => $this->input->post('venue'),
-                                    'cat' => 1,
-                                    'description' => $this->input->post('description'),
-                                    'created_by' => $user->id,
-                                    'created_on' => time()
-                                );
-                        }
+
                         $ok = $this->events_m->create($form_data);
 
-                        if ($ok)
-                        {
-                                $details = implode(' , ', $this->input->post());
-								$user = $this->ion_auth->get_user();
-									$log = array(
-										'module' =>  $this->router->fetch_module(), 
-										'item_id' => $ok, 
-										'transaction_type' => $this->router->fetch_method(), 
-										'description' => base_url('admin').'/'.$this->router->fetch_module().'/'.$this->router->fetch_method().'/'.$ok, 
-										'details' => $details,   
-										'created_by' => $user -> id,   
-										'created_on' => time()
-									);
+                        // Define allowed MIME types and extensions
+                        $allowedMimeTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+                        $allowedExtensions = ['pdf', 'jpeg', 'jpg', 'png'];
 
-								  $this->ion_auth->create_log($log);
-								
-								$this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                        if ($ok) {
+                                if ($fileCount > 0) {
+                                        for ($i = 0; $i < $fileCount; $i++) {
+                                                $fileName = $_FILES['file']['name'][$i];
+                                                $fileTmpName = $_FILES['file']['tmp_name'][$i];
+                                                $fileSize = $_FILES['file']['size'][$i];
+                                                $fileError = $_FILES['file']['error'][$i];
+
+                                                // Extract file extension and MIME type
+                                                $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                                $fileMimeType = mime_content_type($fileTmpName);
+
+                                                // Check file extension and MIME type
+                                                if (in_array($fileExtension, $allowedExtensions) && in_array($fileMimeType, $allowedMimeTypes)) {
+                                                        $destination = $uploadDir . $fileName;
+
+                                                        if (move_uploaded_file($fileTmpName, $destination)) {
+                                                                $upform = [
+                                                                        'filename' => $fileName,
+                                                                        'file_path' => $uploadDir,
+                                                                        'has_attachment' => 1
+                                                                ];
+
+                                                                $this->events_m->insert_event_filenames($ok, $upform);
+                                                        } else {
+                                                                // Handle file move error
+                                                                $this->session->set_flashdata('message', array('type' => 'error', 'text' => "Error moving the file: $fileName"));
+                                                        }
+                                                } else {
+                                                        // Handle invalid file type
+                                                        $this->session->set_flashdata('message', array('type' => 'error', 'text' => "Invalid file type for file: $fileName"));
+                                                }
+                                        }
+                                }
                         }
-                        else
-                        {
+
+                        // Logging and feedback
+                        if ($ok) {
+                                $details = implode(' , ', $this->input->post());
+                                $user = $this->ion_auth->get_user();
+                                $log = array(
+                                        'module' => $this->router->fetch_module(),
+                                        'item_id' => $ok,
+                                        'transaction_type' => $this->router->fetch_method(),
+                                        'description' => base_url('admin') . '/' . $this->router->fetch_module() . '/' . $this->router->fetch_method() . '/' . $ok,
+                                        'details' => $details,
+                                        'created_by' => $user->id,
+                                        'created_on' => time()
+                                );
+
+                                $this->ion_auth->create_log($log);
+
+                                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_create_success')));
+                        } else {
                                 $this->session->set_flashdata('message', array('type' => 'error', 'text' => lang('web_create_failed')));
                         }
 
                         redirect('admin/events/');
-                }
-                else
-                {
+                } else {
                         $get = new StdClass();
 
-                        if ($this->input->post('announce'))
-                        {
-                                foreach ($this->ann_validation() as $field)
-                                {
-                                        $get->{$field['field']} = set_value($field['field']);
-                                }
-                        }
-                        else
-                        {
-                                foreach ($this->validation() as $field)
-                                {
+                        if ($this->input->post('announce')) {
+                                foreach ($this->ann_validation() as $field) {
                                         $get->{$field['field']} = set_value($field['field']);
                                 }
                         }
 
                         $data['result'] = $get;
-                        //load the view and the layout
+                        // Load the view and the layout
                         $this->template->title('Events & Announcements')->build('admin/create', $data);
                 }
         }
+
 
         /**
          * Edit 
@@ -136,125 +151,136 @@ class Admin extends Admin_Controller
          * @param int $id
          * @param int $page
          */
-        function edit($id = FALSE, $page = 0)
+        public function edit($id = FALSE, $page = 0)
         {
-                //redirect if no $id
-                if (!$id)
-                {
+                // Redirect if no $id
+                if (!$id) {
                         $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
                         redirect('admin/events/');
                 }
-                if (!$this->events_m->exists($id))
-                {
+                if (!$this->events_m->exists($id)) {
                         $this->session->set_flashdata('message', array('type' => 'warning', 'text' => lang('web_object_not_exist')));
                         redirect('admin/events');
                 }
-                //search the item to show in edit form
+                // Search the item to show in edit form
                 $get = $this->events_m->find($id);
 
-
-                if ($this->input->post('announce'))
-                {
+                if ($this->input->post('announce')) {
                         $this->form_validation->set_rules($this->ann_validation());
-                }
-                else
-                {
+                } else {
                         $this->form_validation->set_rules($this->validation());
                 }
 
-                //create control variables
+                // Create control variables
                 $data['updType'] = 'edit';
                 $data['page'] = $page;
 
-                if ($this->form_validation->run())  //validation has been passed
-                {
+                if ($this->form_validation->run()) {  // Validation has been passed
                         $user = $this->ion_auth->get_user();
-                        if ($this->input->post('announce'))
-                        {
+                        if ($this->input->post('announce')) {
                                 $form_data = array(
-                                    'title' => $this->input->post('stitle'),
-                                    'description' => $this->input->post('desc'),
-                                    'created_by' => $user->id,
-                                    'created_on' => time()
+                                        'title' => $this->input->post('stitle'),
+                                        'cat' => $this->input->post('cat'),
+                                        'description' => $this->input->post('desc'),
+                                        'modified_by' => $user->id,
+                                        'modified_on' => time()
                                 );
                         }
-                        else
-                        {
-                                $form_data = array(
-                                    'title' => $this->input->post('title'),
-                                    'date' => strtotime($this->input->post('date')),
-                                    'start' => $this->input->post('start'),
-                                    'end' => $this->input->post('end'),
-                                    'venue' => $this->input->post('venue'),
-                                    'description' => $this->input->post('description'),
-                                    'modified_by' => $user->id,
-                                    'modified_on' => time());
-                        }
+
                         $done = $this->events_m->update_attributes($id, $form_data);
 
-                        if ($done)
-                        {
-                                $details = implode(' , ', $this->input->post());
-								$user = $this->ion_auth->get_user();
-									$log = array(
-										'module' =>  $this->router->fetch_module(), 
-										'item_id' => $done, 
-										'transaction_type' => $this->router->fetch_method(), 
-										'description' => base_url('admin').'/'.$this->router->fetch_module().'/'.$this->router->fetch_method().'/'.$done, 
-										'details' => $details,   
-										'created_by' => $user -> id,   
-										'created_on' => time()
-									);
+                        if ($done) {
+                                // Handle file upload
+                                $uploadDir = FCPATH . 'assets/uploads/';
+                                $allowedMimeTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+                                $allowedExtensions = ['pdf', 'jpeg', 'jpg', 'png'];
 
-								  $this->ion_auth->create_log($log);
-								  
-								
-								$this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_edit_success')));
+                                if (isset($_FILES['file'])) {
+                                        $uploadedFiles = $_FILES['file'];
+                                        $fileCount = count($uploadedFiles['name']);
+
+                                        if ($fileCount > 0) {
+                                                for ($i = 0; $i < $fileCount; $i++) {
+                                                        $fileName = $_FILES['file']['name'][$i];
+                                                        $fileTmpName = $_FILES['file']['tmp_name'][$i];
+                                                        $fileSize = $_FILES['file']['size'][$i];
+                                                        $fileError = $_FILES['file']['error'][$i];
+
+                                                        // Extract file extension and MIME type
+                                                        $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                                        $fileMimeType = mime_content_type($fileTmpName);
+
+                                                        // Check file extension and MIME type
+                                                        if (in_array($fileExtension, $allowedExtensions) && in_array($fileMimeType, $allowedMimeTypes)) {
+                                                                $destination = $uploadDir . $fileName;
+
+                                                                if (move_uploaded_file($fileTmpName, $destination)) {
+                                                                        // Optionally, remove old files if replacing
+                                                                        // (Implement logic to check and delete old files if necessary)
+
+                                                                        $upform = [
+                                                                                'filename' => $fileName,
+                                                                                'file_path' => $uploadDir,
+                                                                                'has_attachment' => 1
+                                                                        ];
+
+                                                                        $this->events_m->insert_event_filenames($id, $upform);
+                                                                } else {
+                                                                        // Handle file move error
+                                                                        $this->session->set_flashdata('message', array('type' => 'error', 'text' => "Error moving the file: $fileName"));
+                                                                }
+                                                        } else {
+                                                                // Handle invalid file type
+                                                                $this->session->set_flashdata('message', array('type' => 'error', 'text' => "Invalid file type for file: $fileName"));
+                                                        }
+                                                }
+                                        }
+                                }
+
+                                // Logging and feedback
+                                $details = implode(' , ', $this->input->post());
+                                $user = $this->ion_auth->get_user();
+                                $log = array(
+                                        'module' => $this->router->fetch_module(),
+                                        'item_id' => $done,
+                                        'transaction_type' => $this->router->fetch_method(),
+                                        'description' => base_url('admin') . '/' . $this->router->fetch_module() . '/' . $this->router->fetch_method() . '/' . $done,
+                                        'details' => $details,
+                                        'created_by' => $user->id,
+                                        'created_on' => time()
+                                );
+
+                                $this->ion_auth->create_log($log);
+
+                                $this->session->set_flashdata('message', array('type' => 'success', 'text' => lang('web_edit_success')));
                                 redirect("admin/events/");
-                        }
-                        else
-                        {
+                        } else {
                                 $this->session->set_flashdata('message', array('type' => 'error', 'text' => $done->errors->full_messages()));
                                 redirect("admin/events/");
                         }
-                }
-                else
-                {
-                        if ($this->input->post('announce') || $get->cat == 2)
-                        {
-                                foreach (array_keys($this->ann_validation()) as $field)
-                                {
-                                        if (isset($_POST[$field]))
-                                        {
+                } else {
+                        if ($this->input->post('announce')) {
+                                foreach (array_keys($this->ann_validation()) as $field) {
+                                        if (isset($_POST[$field])) {
                                                 $get->$field = $this->form_validation->$field;
                                         }
                                 }
-                                if (isset($get->title))
-                                {
+                                if (isset($get->title)) {
                                         $get->stitle = $get->title;
                                 }
-                                if (isset($get->description))
-                                {
+                                if (isset($get->description)) {
                                         $get->desc = $get->description;
                                 }
                                 unset($get->description);
                                 unset($get->title);
                         }
-                        else
-                        {
-                                foreach (array_keys($this->validation()) as $field)
-                                {
-                                        if (isset($_POST[$field]))
-                                        {
-                                                $get->$field = $this->form_validation->$field;
-                                        }
-                                }
-                        }
                 }
-                $data['result'] = $get;
-                //load the view and the layout
+
+                $data['result'] = $this->events_m->find($id);
+                // Load the view and the layout
                 $this->template->title('Edit Event ')->build('admin/create', $data);
         }
+
 
         function delete($id = NULL, $page = 1)
         {

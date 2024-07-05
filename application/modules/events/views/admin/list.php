@@ -9,7 +9,7 @@
         <div class="block-fluid">
             <table class="fpTable" cellpadding="0" cellspacing="0" width="100%">
                 <thead>
-                <th>#</th><th>Title</th><th>Date</th><th>Start</th><th>End</th><th>Description</th>	<th ><?php echo lang('web_options'); ?></th>
+                <th>#</th><th>Title</th><th>Date</th><th>Description</th>	<th ><?php echo lang('web_options'); ?></th>
                 </thead>
                 <tbody>
                     <?php
@@ -26,8 +26,8 @@
                                 <td><?php echo $i . '.'; ?></td>					
                                 <td><?php echo $p->title; ?></td>
                                 <td><?php echo $p->date > 10000 ? date('d M Y', $p->date) : ''; ?></td>
-                                <td><?php echo $p->start; ?></td>
-                                <td><?php echo $p->end; ?></td>
+                                <!-- <td><?php echo $p->start; ?></td>
+                                <td><?php echo $p->end; ?></td> -->
                                 <td width="32%"><?php echo $p->description; ?></td>
                                 <td width='30'>
                                     <div class='btn-group'>

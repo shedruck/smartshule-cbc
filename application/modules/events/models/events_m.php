@@ -14,6 +14,12 @@ class Events_m extends MY_Model{
         return $this->db->insert_id();
     }
 
+
+    function insert_event_filenames($id, $data)
+    {
+        $this->db->where('id', $id)->update('events', $data);
+        
+    } 
     function find($id)
     {
         return $this->db->where(array('id' => $id))->get('events')->row();
