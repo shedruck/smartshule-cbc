@@ -68,10 +68,11 @@
                                 </li>
                             </ul>
                         </li>
+                        <?php $examsarr = array('all_exams','bulk_formative','formative_perstudent','generate_reports','joint_reports') ?>
                         <li class="slide has-sub">
-                            <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>">Exams
-                                <i class="fe fe-chevron-right side-menu__angle <?php echo in_array($this->uri->segment(1), $set1) ? 'active open' : ''; ?>"></i></a>
-                            <ul class="slide-menu child2">
+                            <a href="javascript:void(0);" class="side-menu__item <?php echo in_array($this->uri->segment(3), $examsarr) ? 'active open' : ''; ?>">Exams
+                                <i class="fe fe-chevron-right side-menu__angle <?php echo in_array($this->uri->segment(3), $examsarr) ? 'active open' : ''; ?>"></i></a>
+                            <ul class="slide-menu child2 <?php echo in_array($this->uri->segment(3), $examsarr) ? 'active open' : ''; ?>">
                                 <!-- <li class="slide <?php echo $this->uri->segment(3) === "set_exam" ? 'active open' : '';  ?>">
                                     <a href="<?php echo base_url('cbc/trs/set_exam') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "set_exam" ? 'active' : '';  ?>">Exam Setup</a>
                                 </li> -->
@@ -91,7 +92,7 @@
                                 </li>
 
                                 <li class="slide <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">
-                                    <a href="<?php echo base_url('cbc/trs/joint_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">Generate Joined Reports</a>
+                                    <a href="<?php echo base_url('cbc/trs/joint_reports') ?>" class="side-menu__item <?php echo $this->uri->segment(3) === "joint_reports" ? 'active' : '';  ?>">Generate Joined/Exam Reports</a>
                                 </li>
 
                                 <!-- <li class="slide <?php echo $this->uri->segment(3) === "summ_single" ? 'active' : '';  ?>">
