@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h6 class="float-start"><?php echo ucfirst($student->first_name . ' ' . $student->last_name) ?> Profile</h6>
+                <h6 class="float-start"> <span class="text-primary text-bold"><?php echo ucfirst($student->first_name . ' ' . $student->last_name) ?> </span> - Profile</h6>
                 <div class="btn-group btn-group-sm float-end" role="group">
 
                 </div>

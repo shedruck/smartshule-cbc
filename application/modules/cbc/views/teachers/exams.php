@@ -22,7 +22,7 @@
       <div class="card-header">
         <h6 class="float-start">ALL EXAMS</h6>
         <div class="float-end">
-          <?php echo anchor('cbc/trs/set_exam', '<i class="fa fa-plus">
+          <?php echo anchor('cbc/trs/set_exam', '<i class="fa fa-square-plus">
                     </i> ' . lang('web_add_t', array(':name' => 'Exam')), 'class="btn btn-primary btn-sm"'); ?>
           <?php echo anchor('cbc/trs/all_exams', '<i class="fa fa-list">
                     </i> ' . lang('web_list_all', array(':name' => 'Exams')), 'class="btn btn-info btn-sm"'); ?>

@@ -4,7 +4,7 @@
       <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><b>E-NOTES</b></h5>
         <div>
-          <?php echo anchor('enotes/trs/new_enotes/' . $this->session->userdata['session_id'], '<i class="fa fa-plus"></i> New E-Notes', 'class="btn btn-primary btn-sm"'); ?>
+          <?php echo anchor('enotes/trs/new_enotes/' . $this->session->userdata['session_id'], '<i class="fa fa-square-plus"></i> New E-Notes', 'class="btn btn-primary btn-sm"'); ?>
           <a class="btn btn-sm btn-secondary mr-2" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
         </div>
       </div>
@@ -41,7 +41,7 @@
                     </td>
                     <td><?php echo $classes[$p->class]; ?></td>
                     <td>
-                      <?php echo strtoupper($sub[$p->subject]); ?>
+                      <span class="text-primary fw-bold"><?php echo strtoupper($sub[$p->subject]); ?></span>
                       <br><b>Topic:</b> <?php echo $p->topic; ?>
                       <br><b>Subtopic:</b> <?php echo $p->subtopic; ?>
                     </td>

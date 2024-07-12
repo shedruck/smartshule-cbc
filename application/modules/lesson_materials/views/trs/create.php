@@ -12,8 +12,9 @@ krsort($yrs);
 			<div class="card-header">
 				<h6 class="float-start">Lesson Materials</h6>
 				<div class="btn-group btn-group-sm float-end">
+				<?php echo anchor('lesson_materials/trs/', '<i class="fa fa-list"></i> All Lesson Materials', 'class="btn btn-primary btn-sm pull-right"'); ?>
 					<a class="btn btn-sm btn-danger pull-right" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
-					<?php echo anchor('lesson_materials/trs/', '<i class="fa fa-plus"></i> All Lesson Materials', 'class="btn btn-primary btn-sm pull-right"'); ?>
+					
 				</div>
 			</div>
 			<div class="card-body p-3 mb-2">

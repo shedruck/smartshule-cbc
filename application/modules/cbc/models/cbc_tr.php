@@ -1725,6 +1725,13 @@ class Cbc_tr extends MY_Model
         return $results;
     }
 
+    function get_stpassport($ph){
+        $this->db->where('id', $ph);
+        $query = $this->db->get('passports');
+        return $query->row();
+      }
+    
+
 
 
 }

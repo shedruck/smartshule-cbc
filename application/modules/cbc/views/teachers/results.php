@@ -4,7 +4,7 @@
             <div class="card-header">
                 <h6 class="float-start"><?php echo $thread->name ?></h6>
                 <div class="btn-group btn-group-sm float-end" role="group">
-                    <a href="<?php echo base_url('cbc/trs/joint_reports') ?>" class="btn btn-sm btn-primary">All Threads</a>
+                    <a href="<?php echo base_url('cbc/trs/joint_reports') ?>" class="btn btn-sm btn-primary"><i class="fa-solid fa-list"></i> All Threads</a>
                     <a class="btn btn-sm btn-secondary mr-2" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <a type="button" href="<?php echo base_url('cbc/trs/reports/'.$key.'/'.$thread->id) ?>" class="btn btn-info btn-sm">Reports Forms</a>
-                                            <a type="button" href="<?php echo base_url('cbc/trs/analysis/'.$key.'/'.$thread->id) ?>" class="btn btn-primary btn-sm">Analyze</a>
+                                            <a type="button" href="<?php echo base_url('cbc/trs/analysis/'.$key.'/'.$thread->id) ?>" class="btn btn-primary btn-sm">Analysis</a>
                                             <a type="button" href="<?php echo base_url('cbc/trs/marksheet/'.$key.'/'.$thread->id) ?>" class="btn btn-danger btn-sm">Marks Sheet</a>
                                             <a type="button" href="<?php echo base_url('cbc/trs/sync/'.$key.'/'.$thread->id) ?>" class="btn btn-success btn-sm">Compute</a>
                                         </div>

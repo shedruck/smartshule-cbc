@@ -15,7 +15,7 @@ krsort($yrs);
                     <?php echo anchor('lesson_plan/trs/create', '<i class="fa fa-plus">
                     </i> ' . lang('web_add_t', array(':name' => 'Lesson Plan')), 'class="btn btn-primary"'); ?>
                     <?php echo anchor('lesson_plan/trs', '<i class="fa fa-list">
-                    </i> ' . lang('web_list_all', array(':name' => 'Lesson Plan')), 'class="btn btn-primary"'); ?>
+                    </i> ' . lang('web_list_all', array(':name' => 'Lesson Plan')), 'class="btn btn-warning"'); ?>
                     <a class="btn btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
                 </div>
             </div>

@@ -4,8 +4,10 @@
 			<div class="card-header">
 				<h6 class="float-start">Lesson Materials</h6>
 				<div class="btn-group btn-group-sm float-end" role="group">
-					<a class="btn btn-sm btn-danger pull-right" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
-					<?php echo anchor('lesson_materials/trs/new_lesson_materials/' . $this->session->userdata['session_id'], '<i class="fa fa-plus"></i> New Lesson Material', 'class="btn btn-primary btn-sm pull-right"'); ?>
+					
+					
+				<?php echo anchor('lesson_materials/trs/new_lesson_materials/' . $this->session->userdata['session_id'], '<i class="fa fa-square-plus"></i> New Lesson Material', 'class="btn btn-primary btn-sm pull-right"'); ?>
+				<a class="btn btn-sm btn-danger pull-right" onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
 				</div>
 			</div>
 			<div class="card-body p-3 mb-2">

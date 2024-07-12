@@ -5,9 +5,11 @@
 			<div class="card-header">
 				<h6 class="float-start">Schemes of Work</h6>
 				<div class="btn-group btn-group-sm float-end" role="group">
-					<?php echo anchor('schemes_of_work/trs/create/' . $page, '<i class="glyphicon glyphicon-plus"></i> ' . lang('web_add_t', array(':name' => 'Schemes of work')), 'class="btn btn-primary"'); ?>
-					<?php echo anchor('schemes_of_work/trs/upload_excel/', '<i class="glyphicon glyphicon-plus"></i> ' . lang('web_add_t', array(':name' => 'Upload')), 'class="btn btn-info"'); ?>
-					<a class="btn btn-warning" href="<?php echo base_url('schemes_of_work/trs/report') ?>">Report</a>
+					<?php echo anchor('schemes_of_work/trs/create/' . $page, '<i class="fa fa-square-plus">
+                    </i> ' . lang('web_add_t', array(':name' => 'Schemes of work')), 'class="btn btn-primary"'); ?>
+					<?php echo anchor('schemes_of_work/trs/upload_excel/', '<i class="fa fa-square-plus">
+                    </i> ' . lang('web_add_t', array(':name' => 'Upload')), 'class="btn btn-info"'); ?>
+					<a class="btn btn-warning" href="<?php echo base_url('schemes_of_work/trs/report') ?>"> Report</a>
 					<a class="btn btn-danger " onclick="goBack()"><i class="fa fa-caret-left"></i> Go Back</a>
 				</div>
 			</div>

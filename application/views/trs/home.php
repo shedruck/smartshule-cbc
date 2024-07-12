@@ -292,7 +292,20 @@
                       <tr>
                         <td class="ps-3">
                           <div class="d-flex align-items-center position-relative">
-                            <img class="avatar brround avatar-md me-3" alt="avatra-img" src="../assets/images/users/18.jpg">
+                            
+                            <?php                        
+
+                            $photo = $this->cbc_tr->get_stpassport($stud->photo);
+                            ?>
+
+                            <?php if (isset($stud->photo) && $stud->photo !== null) { ?>
+                              <div class="avatar brround avatar-md me-3">
+                                <img src="<?php echo base_url('uploads/' . $photo->fpath . '' . $photo->filename); ?>" class="rounded-circle img-circle" alt="img">
+                              </div>
+                            <?php } else { ?>
+                              <img class="avatar brround avatar-md me-3" alt="avatra-img" src="../assets/images/users/18.jpg">
+                            <?php } ?>
+
                             <div class="flex-grow-1">
                               <p class="mb-0"> <?php echo ucwords($name) ?></p>
                             </div>
